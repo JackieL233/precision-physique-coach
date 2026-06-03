@@ -24,9 +24,9 @@ Contributions are welcome, especially improvements that make the skill safer, cl
 Run:
 
 ```bash
-python scripts/validate_skill.py skills/precision-physique-coach
+python scripts/validate_skill.py skills/pro-card-physique-coach
 python -m unittest tests.test_skill_completeness
-python skills/precision-physique-coach/scripts/estimate_targets.py --sex male --age 30 --height-cm 178 --weight-kg 80 --activity moderate --goal fat-loss
-python skills/precision-physique-coach/scripts/analyze_checkin.py --goal fat-loss --weekly-change-pct -0.7 --adherence 0.9 --recovery good
-python skills/precision-physique-coach/scripts/analyze_training_volume.py --session-csv examples/sample-session-log.csv
+python skills/pro-card-physique-coach/scripts/estimate_targets.py --sex male --age 30 --height-cm 178 --weight-kg 80 --activity moderate --goal fat-loss
+python skills/pro-card-physique-coach/scripts/analyze_checkin.py --goal fat-loss --weekly-change-pct -0.7 --adherence 0.9 --recovery good
+python skills/pro-card-physique-coach/scripts/analyze_training_volume.py --session-csv examples/sample-session-log.csv
 ```

@@ -13,7 +13,7 @@ Use this to port the skill across LLM systems.
 ## Runtime Pattern
 
 1. Load `SKILL.md`.
-2. Detect request type: new plan, check-in, nutrition, exercise substitution, safety, education, or adaptation.
+2. Detect request type: pro-card roadmap, new plan, existing-plan audit, contest prep, posing, check-in, nutrition, exercise substitution, safety, education, or adaptation.
 3. Retrieve only the relevant reference files named in `SKILL.md`.
 4. Ask for missing safety-critical data before prescribing high-intensity work.
 5. Produce a concise plan with assumptions and next check-in.
@@ -24,17 +24,19 @@ Use this to port the skill across LLM systems.
 Use:
 
 ```text
-You are using the precision-physique-coach skill. Follow SKILL.md as the controlling workflow. Load only the reference files needed for the user's request. Do not diagnose or treat medical conditions. Build safe, individualized, evidence-informed plans and iterate from tracked data.
+You are using the pro-card-physique-coach skill. Follow SKILL.md as the controlling workflow. Load only the reference files needed for the user's request. Do not diagnose or treat medical conditions. Build safe, individualized, evidence-informed plans and iterate from tracked data.
 ```
 
 ## Retrieval Hints
 
-- Safety, pain, medical, pregnancy, eating concerns -> `safety-screening.md`.
+- Safety, pain, medical, pregnancy, eating concerns, drug questions -> `safety-screening.md`.
 - Missing profile or first consultation -> `intake-assessment.md`.
+- IFBB Pro aspiration, pro card roadmap, division choice, official rules -> `pro-card-roadmap.md`.
 - Existing plan review or optimization -> `plan-optimization.md`.
 - Exercise choice by muscle or joint -> `anatomy-and-movement.md`, `exercise-library.md`.
 - Split or mesocycle -> `training-programming.md`, `phase-templates.md`.
 - Session log, hard sets, tonnage, training quality -> `session-execution-and-volume.md`.
+- Contest prep, posing, stage conditioning, peak week -> `contest-prep-and-posing.md`.
 - Calories/macros/supplements -> `nutrition-body-composition.md`.
 - Check-in or plateau -> `data-tracking-adjustment.md`, `adaptation-playbook.md`.
 
@@ -42,7 +44,7 @@ You are using the precision-physique-coach skill. Follow SKILL.md as the control
 
 For an app or agent:
 
-- Intake form -> plan generator -> weekly check-in -> trend analyzer -> coach response.
+- Intake form -> pro-card roadmap or plan generator -> weekly check-in -> trend analyzer -> coach response.
 - Keep safety screening before plan generation.
 - Keep user-editable assumptions.
 - Store data as trends, not isolated values.

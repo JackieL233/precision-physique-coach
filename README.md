@@ -1,28 +1,31 @@
-# Precision Physique Coach Skill
+# Pro Card Physique Coach Skill
 
-[中文说明](README.zh-CN.md)
+[????](README.zh-CN.md)
 
-An open-source AI skill for personalized physique coaching: hypertrophy, fat loss, recomposition, nutrition targets, gym exercise selection, recovery, injury-risk controls, and data-driven check-ins.
+An open-source AI skill for serious physique coaching and long-term bodybuilding development: training plans, existing-plan audits, improvement seasons, contest prep, posing, nutrition, recovery, injury-risk controls, workout logs, and data-driven check-ins for users who may aspire to an IFBB Pro / pro card level goal.
 
-The project is designed as a portable skill that can be adapted for Codex, ChatGPT-style skill systems, Claude projects, Gemini Gems, custom agent prompts, or other LLM runtimes. The canonical skill lives in:
+This project is not affiliated with, endorsed by, or an official resource of the IFBB Pro League, NPC, or NPC Worldwide. Always verify current qualification paths, divisions, rules, event details, and pro-card availability with official organizers.
 
-`skills/precision-physique-coach/`
+The canonical skill lives in:
+
+`skills/pro-card-physique-coach/`
 
 ## What It Does
 
-- Builds individualized bodybuilding and fitness plans from goals, body data, equipment, schedule, training age, and constraints.
+- Builds individualized bodybuilding and fitness plans from goals, body data, equipment, schedule, training age, division target, and constraints.
 - Audits and optimizes existing plans instead of blindly replacing them.
-- Supports hypertrophy, fat loss, lean gaining, recomposition, maintenance, deloads, and return-to-training.
+- Supports hypertrophy, improvement season, fat loss, recomposition, maintenance, deloads, contest prep, and return-to-training.
+- Helps map a long-term IFBB Pro / pro card aspiration into seasons, weak-point priorities, readiness criteria, and official-rule checkpoints.
 - Creates periodized training plans with exercises, sets, reps, RIR/RPE, progression, deloads, cardio, and substitutions.
 - Tracks each workout at exercise/set level, including hard sets, tonnage, RIR/RPE, pain, technique quality, and target-muscle stimulus.
-- Guides calorie and macro targets, meal timing, hydration, supplements, and adjustment rules.
-- Tracks body weight, measurements, photos, training performance, adherence, sleep, hunger, soreness, and fatigue.
+- Guides calories/macros, meal timing, hydration, supplements, and adjustment rules within conservative safety boundaries.
+- Covers posing practice, stage conditioning, show logistics, peak-week caution, and post-show recovery.
 - Uses safety screening and referral boundaries instead of pretending to be a doctor.
 
 ## Repository Structure
 
 ```text
-skills/precision-physique-coach/
+skills/pro-card-physique-coach/
   SKILL.md
   agents/openai.yaml
   references/
@@ -30,11 +33,13 @@ skills/precision-physique-coach/
     intake-assessment.md
     anatomy-and-movement.md
     goal-decision-system.md
+    pro-card-roadmap.md
     plan-optimization.md
     training-programming.md
     exercise-library.md
     phase-templates.md
     session-execution-and-volume.md
+    contest-prep-and-posing.md
     nutrition-body-composition.md
     recovery-injury-risk.md
     data-tracking-adjustment.md
@@ -57,13 +62,13 @@ skills/precision-physique-coach/
 Copy or symlink the skill folder into your Codex skills directory:
 
 ```bash
-cp -R skills/precision-physique-coach ~/.codex/skills/
+cp -R skills/pro-card-physique-coach ~/.codex/skills/
 ```
 
 Then invoke it with:
 
 ```text
-Use $precision-physique-coach to create a 12-week hypertrophy plan for me.
+Use $pro-card-physique-coach to create a long-term bodybuilding roadmap toward a pro card goal.
 ```
 
 ## Use With Other Models
@@ -74,47 +79,44 @@ Recommended runtime behavior:
 
 1. Load `SKILL.md` first.
 2. Load only the relevant reference files for the user's request.
-3. Keep the plan grounded in user data and safety boundaries.
+3. Keep the plan grounded in user data, official-rule verification, and safety boundaries.
 4. Iterate from tracked trends rather than one-off measurements.
 
 ## Example Prompts
 
 ```text
-Use $precision-physique-coach to run an intake and build a 12-week hypertrophy plan for a 4-day gym schedule.
+Use $pro-card-physique-coach to build a 2-year roadmap from intermediate lifter to regional bodybuilding competitor, with weak-point priorities and check-in metrics.
 ```
 
 ```text
-Use $precision-physique-coach to analyze this weekly check-in and decide whether to change calories, cardio, or training volume.
+Use $pro-card-physique-coach to audit my current push/pull/legs plan and tell me how to adjust weekly hard sets, exercise order, and progression for Classic Physique.
 ```
 
 ```text
-Use $precision-physique-coach to substitute exercises for shoulder discomfort while keeping the same muscle targets.
+Use $pro-card-physique-coach to analyze this session log and decide which exercises should add reps, hold, deload, or be swapped.
 ```
 
 ```text
-Use $precision-physique-coach to audit my current push/pull/legs plan and tell me how to adjust weekly hard sets, exercise order, and progression.
-```
-
-```text
-Use $precision-physique-coach to analyze this session log and decide which exercises should add reps, hold, deload, or be swapped.
+Use $pro-card-physique-coach to plan a conservative contest-prep outline, posing schedule, and safety checkpoints for a show I am considering.
 ```
 
 See [examples/pressure-scenarios.md](examples/pressure-scenarios.md) for behavior tests and realistic usage scenarios.
 
 ## Safety
 
-This skill is for coaching support and education. It is not medical care, physical therapy, or dietetic treatment. Users with symptoms, injuries, medical conditions, pregnancy/postpartum needs, eating-disorder risk, or extreme body-composition goals should work with qualified professionals.
+This skill is for coaching support and education. It is not medical care, physical therapy, dietetic treatment, drug guidance, or an official contest-rules source. Users with symptoms, injuries, medical conditions, pregnancy/postpartum needs, eating-disorder risk, extreme body-composition goals, or drug/diuretic questions should work with qualified professionals and official organizers.
 
 ## Evidence-Informed Sources
 
-The references are summarized from widely used public guidance and consensus positions, including:
+The references are summarized from widely used public guidance and official/public anchors, including:
 
 - WHO 2020 guidelines on physical activity and sedentary behavior.
 - ACSM 2026 position stand on resistance-training prescription for healthy adults.
 - ACSM exercise screening and sports nutrition position statements.
 - International Society of Sports Nutrition position stands on protein, diets/body composition, and creatine.
+- Official IFBB Pro League / NPC / NPC Worldwide public resources for rule-verification prompts and pathway awareness.
 
-See [references/sources.md](skills/precision-physique-coach/references/sources.md) for source links.
+See [references/sources.md](skills/pro-card-physique-coach/references/sources.md) for source links.
 
 ## License
 

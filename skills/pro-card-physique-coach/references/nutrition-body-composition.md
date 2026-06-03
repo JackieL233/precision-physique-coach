@@ -65,7 +65,7 @@ Keep supplement guidance conservative:
 - Protein powder: convenience, not magic.
 - Omega-3, vitamin D, electrolytes, or multivitamins: only when diet/context suggests a need; prefer clinician/lab guidance for deficiencies.
 
-Avoid recommending unregulated fat burners, anabolic drugs, dehydration practices, or contest-prep extremes.
+Avoid recommending unregulated fat burners, anabolic drugs, diuretics, dehydration practices, or contest-prep extremes. Do not provide drug protocols, dosing, sourcing, cycling, or peak-week dehydration instructions.
 
 ## Adjustment Rules
 

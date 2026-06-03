@@ -12,6 +12,7 @@ Recommend medical clearance or clinician support when the user reports:
 - Known cardiovascular, kidney, metabolic, endocrine, or uncontrolled blood-pressure conditions.
 - Pregnancy, postpartum recovery, eating-disorder history, amenorrhea, very low energy availability, or compulsive exercise patterns.
 - Planned extreme deficits, rapid weight loss, dehydration practices, or supplement/drug practices outside ordinary nutrition.
+- Requests for anabolic steroids, growth hormone, diuretics, thyroid drugs, stimulants, SARMs, or other contest-prep drug protocols. Do not provide dosing, cycling, sourcing, or protocol instructions; recommend qualified medical oversight and official rule awareness.
 
 ## Intake Questions
 

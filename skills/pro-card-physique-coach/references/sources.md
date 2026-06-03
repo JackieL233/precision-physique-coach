@@ -8,6 +8,9 @@ Use these sources as anchors when updating the skill. Prefer newer consensus sta
 - ACSM. `Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews` (2026): https://acsm.org/science-spotlight-acsm-releases-new-position-stand-on-resistance-training/
 - ACSM Position Stands index: https://acsm.org/education-resources/pronouncements-scientific-communications/position-stands/
 - ACSM. `Progression Models in Resistance Training for Healthy Adults` (2009): https://pubmed.ncbi.nlm.nih.gov/?term=19204579
+- IFBB Pro League official site: https://ifbbpro.com/
+- NPC News Online official site: https://npcnewsonline.com/
+- NPC Worldwide official site: https://npcworldwide.com/
 
 ## Nutrition and Body Composition
 

@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "precision-physique-coach"
+SKILL = ROOT / "skills" / "pro-card-physique-coach"
 
 
 def read(relative: str) -> str:
@@ -16,16 +16,18 @@ class SkillCompletenessTest(unittest.TestCase):
         self.assertTrue(path.exists(), "README.zh-CN.md")
         text = path.read_text(encoding="utf-8")
         expected_terms = [
-            "Precision Physique Coach",
-            "$precision-physique-coach",
-            "安装",
-            "训练计划",
-            "现有计划",
-            "训练日志",
-            "容量",
-            "安全",
-            "营养",
-            "恢复",
+            "Pro Card Physique Coach",
+            "$pro-card-physique-coach",
+            "??",
+            "????",
+            "????",
+            "????",
+            "??",
+            "??",
+            "??",
+            "??",
+            "IFBB Pro",
+            "???",
         ]
         for term in expected_terms:
             with self.subTest(term=term):
@@ -41,6 +43,8 @@ class SkillCompletenessTest(unittest.TestCase):
             "references/adaptation-playbook.md",
             "references/plan-optimization.md",
             "references/session-execution-and-volume.md",
+            "references/pro-card-roadmap.md",
+            "references/contest-prep-and-posing.md",
             "references/model-adaptation.md",
         ]
         for relative in required:
@@ -118,6 +122,33 @@ class SkillCompletenessTest(unittest.TestCase):
             "training quality",
             "progression decision",
             "exercise-level",
+        ]
+        for term in expected_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
+    def test_pro_card_references_cover_competitive_bodybuilding_goal(self) -> None:
+        combined = "\n".join(
+            (SKILL / "references" / name).read_text(encoding="utf-8").lower()
+            for name in [
+                "pro-card-roadmap.md",
+                "contest-prep-and-posing.md",
+                "safety-screening.md",
+                "nutrition-body-composition.md",
+            ]
+        )
+        expected_terms = [
+            "ifbb pro",
+            "pro card",
+            "npc",
+            "division",
+            "improvement season",
+            "contest prep",
+            "posing",
+            "stage conditioning",
+            "peak week",
+            "official rules",
+            "drug",
         ]
         for term in expected_terms:
             with self.subTest(term=term):
