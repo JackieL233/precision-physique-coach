@@ -75,3 +75,33 @@ Expected behavior:
 - Use `references/model-adaptation.md`.
 - Separate system instruction, retrieval files, templates, scripts, and app workflow.
 - Preserve safety screening before plan generation.
+
+## Scenario 6: Existing Plan Audit
+
+Prompt:
+
+```text
+Use $adaptive-bodybuilding-coach. Here is my current 5-day plan. Audit it for weekly hard sets, movement balance, weak point coverage, fatigue, progression rules, and what to change before my next mesocycle.
+```
+
+Expected behavior:
+
+- Use `references/plan-optimization.md`.
+- Keep useful parts of the plan instead of rewriting everything.
+- Show muscle-level volume, missing movement patterns, redundant exercises, and unclear progression.
+- Produce a revised weekly structure with exercise-level rationale.
+
+## Scenario 7: Session Log Analysis
+
+Prompt:
+
+```text
+Use $adaptive-bodybuilding-coach. Analyze my session log and tell me which exercises should progress, hold, reduce volume, or be swapped based on hard sets, tonnage, RIR, target stimulus, technique quality, and pain.
+```
+
+Expected behavior:
+
+- Use `references/session-execution-and-volume.md`.
+- Summarize exercise-level and muscle-level training quality.
+- Avoid chasing tonnage when technique, pain, or target stimulus worsens.
+- Make progression decisions from multiple data points, not one number.

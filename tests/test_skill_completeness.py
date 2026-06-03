@@ -19,6 +19,8 @@ class SkillCompletenessTest(unittest.TestCase):
             "references/goal-decision-system.md",
             "references/phase-templates.md",
             "references/adaptation-playbook.md",
+            "references/plan-optimization.md",
+            "references/session-execution-and-volume.md",
             "references/model-adaptation.md",
         ]
         for relative in required:
@@ -31,6 +33,7 @@ class SkillCompletenessTest(unittest.TestCase):
             "assets/templates/intake-form.md",
             "assets/templates/check-in-form.md",
             "assets/templates/plan-template.md",
+            "assets/templates/session-log.csv",
             "assets/templates/tracking-log.csv",
         ]
         for relative in required:
@@ -72,6 +75,33 @@ class SkillCompletenessTest(unittest.TestCase):
         scripts = SKILL / "scripts"
         self.assertTrue((scripts / "estimate_targets.py").exists())
         self.assertTrue((scripts / "analyze_checkin.py").exists())
+        self.assertTrue((scripts / "analyze_training_volume.py").exists())
+
+    def test_execution_and_volume_references_cover_plan_optimization(self) -> None:
+        combined = "\n".join(
+            (SKILL / "references" / name).read_text(encoding="utf-8").lower()
+            for name in [
+                "plan-optimization.md",
+                "session-execution-and-volume.md",
+                "data-tracking-adjustment.md",
+                "adaptation-playbook.md",
+            ]
+        )
+        expected_terms = [
+            "existing plan",
+            "audit",
+            "session log",
+            "hard sets",
+            "tonnage",
+            "effective reps",
+            "volume landmarks",
+            "training quality",
+            "progression decision",
+            "exercise-level",
+        ]
+        for term in expected_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
 
 
 if __name__ == "__main__":

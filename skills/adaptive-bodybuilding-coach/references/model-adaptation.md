@@ -31,8 +31,10 @@ You are using the adaptive-bodybuilding-coach skill. Follow SKILL.md as the cont
 
 - Safety, pain, medical, pregnancy, eating concerns -> `safety-screening.md`.
 - Missing profile or first consultation -> `intake-assessment.md`.
+- Existing plan review or optimization -> `plan-optimization.md`.
 - Exercise choice by muscle or joint -> `anatomy-and-movement.md`, `exercise-library.md`.
 - Split or mesocycle -> `training-programming.md`, `phase-templates.md`.
+- Session log, hard sets, tonnage, training quality -> `session-execution-and-volume.md`.
 - Calories/macros/supplements -> `nutrition-body-composition.md`.
 - Check-in or plateau -> `data-tracking-adjustment.md`, `adaptation-playbook.md`.
 

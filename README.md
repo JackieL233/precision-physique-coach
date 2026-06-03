@@ -9,8 +9,10 @@ The project is designed as a portable skill that can be adapted for Codex, ChatG
 ## What It Does
 
 - Builds individualized bodybuilding and fitness plans from goals, body data, equipment, schedule, training age, and constraints.
+- Audits and optimizes existing plans instead of blindly replacing them.
 - Supports hypertrophy, fat loss, lean gaining, recomposition, maintenance, deloads, and return-to-training.
 - Creates periodized training plans with exercises, sets, reps, RIR/RPE, progression, deloads, cardio, and substitutions.
+- Tracks each workout at exercise/set level, including hard sets, tonnage, RIR/RPE, pain, technique quality, and target-muscle stimulus.
 - Guides calorie and macro targets, meal timing, hydration, supplements, and adjustment rules.
 - Tracks body weight, measurements, photos, training performance, adherence, sleep, hunger, soreness, and fatigue.
 - Uses safety screening and referral boundaries instead of pretending to be a doctor.
@@ -26,9 +28,11 @@ skills/adaptive-bodybuilding-coach/
     intake-assessment.md
     anatomy-and-movement.md
     goal-decision-system.md
+    plan-optimization.md
     training-programming.md
     exercise-library.md
     phase-templates.md
+    session-execution-and-volume.md
     nutrition-body-composition.md
     recovery-injury-risk.md
     data-tracking-adjustment.md
@@ -39,9 +43,11 @@ skills/adaptive-bodybuilding-coach/
     intake-form.md
     check-in-form.md
     plan-template.md
+    session-log.csv
     tracking-log.csv
   scripts/estimate_targets.py
   scripts/analyze_checkin.py
+  scripts/analyze_training_volume.py
 ```
 
 ## Install for Codex
@@ -81,6 +87,14 @@ Use $adaptive-bodybuilding-coach to analyze this weekly check-in and decide whet
 
 ```text
 Use $adaptive-bodybuilding-coach to substitute exercises for shoulder discomfort while keeping the same muscle targets.
+```
+
+```text
+Use $adaptive-bodybuilding-coach to audit my current push/pull/legs plan and tell me how to adjust weekly hard sets, exercise order, and progression.
+```
+
+```text
+Use $adaptive-bodybuilding-coach to analyze this session log and decide which exercises should add reps, hold, deload, or be swapped.
 ```
 
 See [examples/pressure-scenarios.md](examples/pressure-scenarios.md) for behavior tests and realistic usage scenarios.

@@ -1,0 +1,8 @@
+date,goal,phase,session,exercise,movement_pattern,target_muscle,set_number,load,reps,rir,rpe,rest_seconds,technique_quality_1_5,target_stimulus_1_5,pain_0_10,tempo_or_rom_note,completed,notes
+2026-06-01,hypertrophy,accumulation,Upper A,Incline DB Press,horizontal push,chest,1,30,10,2,8,120,4,5,0,full controlled ROM,yes,good chest stimulus
+2026-06-01,hypertrophy,accumulation,Upper A,Incline DB Press,horizontal push,chest,2,30,9,2,8,120,4,5,0,full controlled ROM,yes,stable
+2026-06-01,hypertrophy,accumulation,Upper A,Incline DB Press,horizontal push,chest,3,30,8,1,9,120,4,5,1,full controlled ROM,yes,last reps hard
+2026-06-01,hypertrophy,accumulation,Upper A,Chest Supported Row,horizontal pull,back,1,55,11,2,8,120,5,4,0,pause at top,yes,strong
+2026-06-01,hypertrophy,accumulation,Upper A,Chest Supported Row,horizontal pull,back,2,55,10,2,8,120,5,4,0,pause at top,yes,strong
+2026-06-01,hypertrophy,accumulation,Upper A,Lateral Raise,vertical push,side delts,1,10,16,1,9,75,4,5,0,controlled,yes,burn
+2026-06-01,hypertrophy,accumulation,Upper A,Lateral Raise,vertical push,side delts,2,10,14,1,9,75,4,5,0,controlled,yes,burn

@@ -63,9 +63,11 @@ def main() -> None:
         "references/intake-assessment.md",
         "references/anatomy-and-movement.md",
         "references/goal-decision-system.md",
+        "references/plan-optimization.md",
         "references/training-programming.md",
         "references/exercise-library.md",
         "references/phase-templates.md",
+        "references/session-execution-and-volume.md",
         "references/nutrition-body-composition.md",
         "references/recovery-injury-risk.md",
         "references/data-tracking-adjustment.md",
@@ -75,9 +77,11 @@ def main() -> None:
         "assets/templates/intake-form.md",
         "assets/templates/check-in-form.md",
         "assets/templates/plan-template.md",
+        "assets/templates/session-log.csv",
         "assets/templates/tracking-log.csv",
         "scripts/estimate_targets.py",
         "scripts/analyze_checkin.py",
+        "scripts/analyze_training_volume.py",
         "agents/openai.yaml",
     ]
     for relative in required:

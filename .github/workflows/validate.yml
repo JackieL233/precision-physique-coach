@@ -22,3 +22,6 @@ jobs:
       - name: Run check-in analyzer smoke test
         run: |
           python skills/adaptive-bodybuilding-coach/scripts/analyze_checkin.py --goal fat-loss --weekly-change-pct -0.7 --adherence 0.9 --recovery good
+      - name: Run training-volume analyzer smoke test
+        run: |
+          python skills/adaptive-bodybuilding-coach/scripts/analyze_training_volume.py --session-csv examples/sample-session-log.csv

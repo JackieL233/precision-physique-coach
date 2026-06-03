@@ -63,6 +63,16 @@ class ScriptSmokeTest(unittest.TestCase):
         self.assertEqual(data["goal"], "fat-loss")
         self.assertEqual(data["trend"], "on-target")
 
+    def test_analyze_training_volume_summarizes_session_log(self) -> None:
+        data = self.run_json_script(
+            "skills/adaptive-bodybuilding-coach/scripts/analyze_training_volume.py",
+            "--session-csv",
+            "examples/sample-session-log.csv",
+        )
+        self.assertIn("muscle_summary", data)
+        self.assertIn("chest", data["muscle_summary"])
+        self.assertGreater(data["muscle_summary"]["chest"]["hard_sets"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
