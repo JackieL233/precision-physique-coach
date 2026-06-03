@@ -1,0 +1,19 @@
+name: Validate Skill
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check skill frontmatter
+        run: python scripts/validate_skill.py skills/adaptive-bodybuilding-coach
+      - name: Run macro estimator smoke test
+        run: |
+          python skills/adaptive-bodybuilding-coach/scripts/estimate_targets.py --sex male --age 30 --height-cm 178 --weight-kg 80 --activity moderate --goal fat-loss
