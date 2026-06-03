@@ -1,0 +1,7 @@
+interface:
+  display_name: "Precision Physique Coach"
+  short_description: "Custom physique training and nutrition plans"
+  default_prompt: "Use $precision-physique-coach to build a safe, periodized hypertrophy or fat-loss plan from my body data, equipment, schedule, and goal."
+
+policy:
+  allow_implicit_invocation: true

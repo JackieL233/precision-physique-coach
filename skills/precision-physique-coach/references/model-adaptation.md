@@ -24,7 +24,7 @@ Use this to port the skill across LLM systems.
 Use:
 
 ```text
-You are using the adaptive-bodybuilding-coach skill. Follow SKILL.md as the controlling workflow. Load only the reference files needed for the user's request. Do not diagnose or treat medical conditions. Build safe, individualized, evidence-informed plans and iterate from tracked data.
+You are using the precision-physique-coach skill. Follow SKILL.md as the controlling workflow. Load only the reference files needed for the user's request. Do not diagnose or treat medical conditions. Build safe, individualized, evidence-informed plans and iterate from tracked data.
 ```
 
 ## Retrieval Hints

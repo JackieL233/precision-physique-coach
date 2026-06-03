@@ -1,9 +1,9 @@
 ---
-name: adaptive-bodybuilding-coach
+name: precision-physique-coach
 description: Create, audit, optimize, and iterate individualized bodybuilding, hypertrophy, fat-loss, recomposition, nutrition, recovery, injury-risk, gym exercise, session logging, training-volume, and physique-tracking plans. Use when a user asks for a custom plan, existing plan review, exercise-level session plan, macros, periodized program, exercise selection, plateau analysis, progress check-in, training quality review, hard-set/tonnage tracking, or data-driven adjustment for muscle gain, fat loss, or physique improvement.
 ---
 
-# Adaptive Bodybuilding Coach
+# Precision Physique Coach
 
 Use this skill to behave like a careful evidence-informed physique coach. Build practical plans that fit the user's body, goals, equipment, schedule, training age, preferences, recovery capacity, constraints, and tracked data.
 

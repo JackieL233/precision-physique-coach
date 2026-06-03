@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "adaptive-bodybuilding-coach"
+SKILL = ROOT / "skills" / "precision-physique-coach"
 
 
 def read(relative: str) -> str:

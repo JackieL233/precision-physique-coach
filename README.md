@@ -1,10 +1,10 @@
-# Adaptive Bodybuilding Coach Skill
+# Precision Physique Coach Skill
 
 An open-source AI skill for personalized physique coaching: hypertrophy, fat loss, recomposition, nutrition targets, gym exercise selection, recovery, injury-risk controls, and data-driven check-ins.
 
 The project is designed as a portable skill that can be adapted for Codex, ChatGPT-style skill systems, Claude projects, Gemini Gems, custom agent prompts, or other LLM runtimes. The canonical skill lives in:
 
-`skills/adaptive-bodybuilding-coach/`
+`skills/precision-physique-coach/`
 
 ## What It Does
 
@@ -20,7 +20,7 @@ The project is designed as a portable skill that can be adapted for Codex, ChatG
 ## Repository Structure
 
 ```text
-skills/adaptive-bodybuilding-coach/
+skills/precision-physique-coach/
   SKILL.md
   agents/openai.yaml
   references/
@@ -55,13 +55,13 @@ skills/adaptive-bodybuilding-coach/
 Copy or symlink the skill folder into your Codex skills directory:
 
 ```bash
-cp -R skills/adaptive-bodybuilding-coach ~/.codex/skills/
+cp -R skills/precision-physique-coach ~/.codex/skills/
 ```
 
 Then invoke it with:
 
 ```text
-Use $adaptive-bodybuilding-coach to create a 12-week hypertrophy plan for me.
+Use $precision-physique-coach to create a 12-week hypertrophy plan for me.
 ```
 
 ## Use With Other Models
@@ -78,23 +78,23 @@ Recommended runtime behavior:
 ## Example Prompts
 
 ```text
-Use $adaptive-bodybuilding-coach to run an intake and build a 12-week hypertrophy plan for a 4-day gym schedule.
+Use $precision-physique-coach to run an intake and build a 12-week hypertrophy plan for a 4-day gym schedule.
 ```
 
 ```text
-Use $adaptive-bodybuilding-coach to analyze this weekly check-in and decide whether to change calories, cardio, or training volume.
+Use $precision-physique-coach to analyze this weekly check-in and decide whether to change calories, cardio, or training volume.
 ```
 
 ```text
-Use $adaptive-bodybuilding-coach to substitute exercises for shoulder discomfort while keeping the same muscle targets.
+Use $precision-physique-coach to substitute exercises for shoulder discomfort while keeping the same muscle targets.
 ```
 
 ```text
-Use $adaptive-bodybuilding-coach to audit my current push/pull/legs plan and tell me how to adjust weekly hard sets, exercise order, and progression.
+Use $precision-physique-coach to audit my current push/pull/legs plan and tell me how to adjust weekly hard sets, exercise order, and progression.
 ```
 
 ```text
-Use $adaptive-bodybuilding-coach to analyze this session log and decide which exercises should add reps, hold, deload, or be swapped.
+Use $precision-physique-coach to analyze this session log and decide which exercises should add reps, hold, deload, or be swapped.
 ```
 
 See [examples/pressure-scenarios.md](examples/pressure-scenarios.md) for behavior tests and realistic usage scenarios.
@@ -112,7 +112,7 @@ The references are summarized from widely used public guidance and consensus pos
 - ACSM exercise screening and sports nutrition position statements.
 - International Society of Sports Nutrition position stands on protein, diets/body composition, and creatine.
 
-See [references/sources.md](skills/adaptive-bodybuilding-coach/references/sources.md) for source links.
+See [references/sources.md](skills/precision-physique-coach/references/sources.md) for source links.
 
 ## License
 
