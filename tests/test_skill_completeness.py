@@ -11,6 +11,26 @@ def read(relative: str) -> str:
 
 
 class SkillCompletenessTest(unittest.TestCase):
+    def test_chinese_readme_covers_core_usage(self) -> None:
+        path = ROOT / "README.zh-CN.md"
+        self.assertTrue(path.exists(), "README.zh-CN.md")
+        text = path.read_text(encoding="utf-8")
+        expected_terms = [
+            "Precision Physique Coach",
+            "$precision-physique-coach",
+            "安装",
+            "训练计划",
+            "现有计划",
+            "训练日志",
+            "容量",
+            "安全",
+            "营养",
+            "恢复",
+        ]
+        for term in expected_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, text)
+
     def test_required_expert_references_exist_and_are_linked_from_skill(self) -> None:
         skill_text = read("SKILL.md")
         required = [

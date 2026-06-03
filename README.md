@@ -1,5 +1,7 @@
 # Precision Physique Coach Skill
 
+[中文说明](README.zh-CN.md)
+
 An open-source AI skill for personalized physique coaching: hypertrophy, fat loss, recomposition, nutrition targets, gym exercise selection, recovery, injury-risk controls, and data-driven check-ins.
 
 The project is designed as a portable skill that can be adapted for Codex, ChatGPT-style skill systems, Claude projects, Gemini Gems, custom agent prompts, or other LLM runtimes. The canonical skill lives in:
