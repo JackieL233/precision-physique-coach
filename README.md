@@ -86,6 +86,12 @@ Recommended runtime behavior:
 4. Iterate from tracked trends rather than one-off measurements.
 5. When images are available, link visual training evidence and food-photo nutrition estimates before changing the plan.
 
+## Android App
+
+A native Android companion app lives in [`android-app/`](android-app/). It packages the skill into Android assets and provides a configurable AI API client for text, photos, training visual analysis, food-photo nutrition estimates, and linked training/nutrition check-ins.
+
+The app keeps API credentials out of source code. Users enter an API key, base URL, and model in the app settings screen. See [`android-app/README.md`](android-app/README.md) for Android Studio, JDK 17, build, and API setup notes.
+
 ## Example Prompts
 
 ```text
