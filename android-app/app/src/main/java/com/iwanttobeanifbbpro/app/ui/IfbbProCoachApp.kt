@@ -4,11 +4,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,12 +24,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -70,115 +76,136 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
         viewModel.refreshHealthStatus()
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
-    ) {
-        item { Header() }
-        state.restTimer?.let { timer ->
-            item { RestTimerBanner(timer = timer, onSkip = viewModel::skipRestTimer) }
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            BottomNavigation(
+                selected = state.selectedTab,
+                onSelect = viewModel::selectTab
+            )
         }
-        item { TabPicker(selected = state.selectedTab, onSelect = viewModel::selectTab) }
-        when (state.selectedTab) {
-            AppTab.TODAY -> {
-                item {
-                    TodayDashboard(
-                        state = state,
-                        onDailyReview = viewModel::runDailyReview,
-                        onReset = viewModel::resetToday
-                    )
-                }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(padding),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            item { Header(state = state) }
+            state.restTimer?.let { timer ->
+                item { RestTimerBanner(timer = timer, onSkip = viewModel::skipRestTimer) }
             }
+            when (state.selectedTab) {
+                AppTab.TODAY -> {
+                    item {
+                        TodayDashboard(
+                            state = state,
+                            onDailyReview = viewModel::runDailyReview,
+                            onReset = viewModel::resetToday,
+                            onOpenPlan = { viewModel.selectTab(AppTab.PLAN) },
+                            onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
+                            onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
+                            onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) }
+                        )
+                    }
+                }
 
-            AppTab.PLAN -> {
-                item {
-                    PlanPage(
-                        state = state,
-                        onNameChange = viewModel::updateTrainingPlanName,
-                        onGoalChange = viewModel::updateTrainingPlanGoal,
-                        onSelectDay = viewModel::selectPlanDay,
-                        onUpdateDay = viewModel::updateTrainingDay,
-                        onAddPlannedExercise = viewModel::addPlannedExercise,
-                        onRemovePlannedExercise = viewModel::removePlannedExercise,
-                        onApplyDay = viewModel::applyPlanDayToToday,
-                        onResetPlan = viewModel::resetTrainingPlan
-                    )
+                AppTab.PLAN -> {
+                    item {
+                        PlanPage(
+                            state = state,
+                            onNameChange = viewModel::updateTrainingPlanName,
+                            onGoalChange = viewModel::updateTrainingPlanGoal,
+                            onSelectDay = viewModel::selectPlanDay,
+                            onUpdateDay = viewModel::updateTrainingDay,
+                            onAddPlannedExercise = viewModel::addPlannedExercise,
+                            onRemovePlannedExercise = viewModel::removePlannedExercise,
+                            onApplyDay = viewModel::applyPlanDayToToday,
+                            onResetPlan = viewModel::resetTrainingPlan
+                        )
+                    }
                 }
-            }
 
-            AppTab.TRAINING -> {
-                item {
-                    TrainingPage(
-                        state = state,
-                        onFocusChange = viewModel::updateTrainingFocus,
-                        onNotesChange = viewModel::updateSessionNotes,
-                        onCompletedChange = { viewModel.toggleTrainingCompleted() },
-                        onAddExercise = viewModel::addExercise,
-                        onRemoveExercise = viewModel::removeExercise,
-                        onUpdateSetEntry = viewModel::updateSetEntry,
-                        onCompleteSet = viewModel::completeSet
-                    )
+                AppTab.TRAINING -> {
+                    item {
+                        TrainingPage(
+                            state = state,
+                            onFocusChange = viewModel::updateTrainingFocus,
+                            onNotesChange = viewModel::updateSessionNotes,
+                            onCompletedChange = { viewModel.toggleTrainingCompleted() },
+                            onAddExercise = viewModel::addExercise,
+                            onRemoveExercise = viewModel::removeExercise,
+                            onUpdateSetEntry = viewModel::updateSetEntry,
+                            onCompleteSet = viewModel::completeSet
+                        )
+                    }
                 }
-            }
 
-            AppTab.NUTRITION -> {
-                item {
-                    NutritionPage(
-                        state = state,
-                        onTargetsChange = viewModel::updateTargets,
-                        onAddMeal = viewModel::addMeal,
-                        onRemoveMeal = viewModel::removeMeal,
-                        onPickMealPhoto = {
-                            imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                        }
-                    )
+                AppTab.NUTRITION -> {
+                    item {
+                        NutritionPage(
+                            state = state,
+                            onTargetsChange = viewModel::updateTargets,
+                            onAddMeal = viewModel::addMeal,
+                            onRemoveMeal = viewModel::removeMeal,
+                            onPickMealPhoto = {
+                                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            }
+                        )
+                    }
                 }
-            }
 
-            AppTab.METRICS -> {
-                item {
-                    MetricsPage(
-                        state = state,
-                        onMetricsChange = viewModel::updateMetrics,
-                        onReflectionChange = viewModel::updateReflection,
-                        onConnectHealthData = { healthPermissionLauncher.launch(viewModel.healthPermissions()) },
-                        onSyncHealthData = viewModel::syncHealthData
-                    )
+                AppTab.METRICS -> {
+                    item {
+                        MetricsPage(
+                            state = state,
+                            onMetricsChange = viewModel::updateMetrics,
+                            onReflectionChange = viewModel::updateReflection,
+                            onConnectHealthData = { healthPermissionLauncher.launch(viewModel.healthPermissions()) },
+                            onSyncHealthData = viewModel::syncHealthData
+                        )
+                    }
                 }
-            }
 
-            AppTab.AI_COACH -> {
-                item {
-                    AiCoachPage(
-                        state = state,
-                        onSettingsChange = viewModel::updateSettings,
-                        onModeChange = viewModel::updateMode,
-                        onPromptChange = viewModel::updateUserInput,
-                        onPickImages = {
-                            imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                        },
-                        onClearImages = viewModel::clearImages,
-                        onRunAnalysis = viewModel::runAnalysis,
-                        onDailyReview = viewModel::runDailyReview
-                    )
+                AppTab.AI_COACH -> {
+                    item {
+                        AiCoachPage(
+                            state = state,
+                            onSettingsChange = viewModel::updateSettings,
+                            onModeChange = viewModel::updateMode,
+                            onPromptChange = viewModel::updateUserInput,
+                            onPickImages = {
+                                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            },
+                            onClearImages = viewModel::clearImages,
+                            onRunAnalysis = viewModel::runAnalysis,
+                            onDailyReview = viewModel::runDailyReview
+                        )
+                    }
                 }
             }
-        }
-        item {
-            state.error?.let { MessageCard(title = "Error", body = it) }
-            if (state.result.isNotBlank()) {
-                MessageCard(title = "AI Coach result", body = state.result)
+            item {
+                state.error?.let { MessageCard(title = "Error", body = it) }
+                if (state.result.isNotBlank()) {
+                    MessageCard(title = "AI Coach result", body = state.result)
+                }
+                SafetyNote()
             }
-            SafetyNote()
         }
     }
 }
 
 @Composable
-private fun Header() {
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+private fun Header(state: CoachUiState) {
+    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        Text(
+            text = state.selectedTab.title,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
+        )
         Text(
             text = "I Want to be an IFBB PRO",
             style = MaterialTheme.typography.headlineSmall,
@@ -193,57 +220,120 @@ private fun Header() {
 }
 
 @Composable
-@OptIn(ExperimentalLayoutApi::class)
-private fun TabPicker(selected: AppTab, onSelect: (AppTab) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+private fun BottomNavigation(selected: AppTab, onSelect: (AppTab) -> Unit) {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
         AppTab.entries.forEach { tab ->
-            FilterChip(
+            NavigationBarItem(
                 selected = selected == tab,
                 onClick = { onSelect(tab) },
-                label = { Text(tab.title) }
+                icon = { Text(tab.navIcon()) },
+                label = { Text(tab.shortTitle()) }
             )
         }
     }
 }
 
+private fun AppTab.navIcon(): String {
+    return when (this) {
+        AppTab.TODAY -> "T"
+        AppTab.PLAN -> "P"
+        AppTab.TRAINING -> "+"
+        AppTab.NUTRITION -> "N"
+        AppTab.METRICS -> "M"
+        AppTab.AI_COACH -> "AI"
+    }
+}
+
+private fun AppTab.shortTitle(): String {
+    return when (this) {
+        AppTab.AI_COACH -> "Coach"
+        else -> title
+    }
+}
+
+private data class DailyReadiness(
+    val score: Int,
+    val label: String,
+    val nextAction: String
+)
+
+private fun CoachUiState.dailyReadiness(): DailyReadiness {
+    val metrics = dailyLog.metrics
+    val recoveryPenalty = listOf(metrics.fatigue, metrics.soreness, metrics.stress).sumOf { (it - 3).coerceAtLeast(0) } * 8
+    val sleepBonus = when {
+        (metrics.sleepHours ?: 0.0) >= 7.0 -> 8
+        metrics.sleepHours == null -> 0
+        metrics.sleepHours >= 6.0 -> 2
+        else -> -12
+    }
+    val completionBonus = if (dailyLog.plannedHardSets() > 0) {
+        (dailyLog.completedHardSets() * 18 / dailyLog.plannedHardSets()).coerceIn(0, 18)
+    } else {
+        0
+    }
+    val score = (72 + sleepBonus + completionBonus - recoveryPenalty).coerceIn(35, 98)
+    val nextAction = when {
+        dailyLog.trainingSession.exercises.isEmpty() -> "Apply a plan day or add today's first exercise."
+        dailyLog.completedHardSets() < dailyLog.plannedHardSets() -> "Finish the remaining working sets and keep RIR honest."
+        dailyLog.meals.isEmpty() -> "Log the first meal or add a food photo for AI estimation."
+        metrics.bodyWeightKg == null || metrics.sleepHours == null -> "Sync Health Connect or fill today's recovery metrics."
+        else -> "Run AI review and lock tomorrow's training and food targets."
+    }
+    val label = when {
+        score >= 82 -> "Ready to progress"
+        score >= 65 -> "Controlled push"
+        else -> "Hold or recover"
+    }
+    return DailyReadiness(score = score, label = label, nextAction = nextAction)
+}
+
 @Composable
-private fun TodayDashboard(
+private fun ActionCard(
+    title: String,
+    value: String,
+    detail: String,
+    actionLabel: String,
+    onAction: () -> Unit
+) {
+    ElevatedCard(
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(title, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(value, style = MaterialTheme.typography.titleMedium)
+            Text(detail, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick = onAction) {
+                Text(actionLabel)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CommandCenterCard(
+    readiness: DailyReadiness,
     state: CoachUiState,
     onDailyReview: () -> Unit,
-    onReset: () -> Unit
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit
 ) {
-    val log = state.dailyLog
-    val totals = log.nutritionTotals()
-    SectionCard(title = "Today", subtitle = log.date) {
+    SectionCard(title = "Command Center", subtitle = "Start here each day: execute, log, sync, then review.") {
         MetricGrid(
             metrics = listOf(
-                "Sets" to "${log.completedHardSets()}/${log.plannedHardSets()}",
-                "Volume" to "${formatDecimal(log.trainingVolumeKg())} kg",
-                "Calories" to "${totals.calories}/${log.targets.calories}",
-                "Protein" to "${totals.protein}/${log.targets.protein} g",
-                "Weight" to formatOptional(log.metrics.bodyWeightKg, "kg"),
-                "Body fat" to formatOptional(log.metrics.bodyFatPercent, "%"),
-                "Sleep" to formatOptional(log.metrics.sleepHours, "h")
+                "Readiness" to "${readiness.score}",
+                "State" to readiness.label,
+                "Sets" to "${state.dailyLog.completedHardSets()}/${state.dailyLog.plannedHardSets()}",
+                "Meals" to state.dailyLog.meals.size.toString()
             )
         )
         Text(
-            text = "Focus: ${log.trainingSession.plannedFocus}",
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Text(
-            text = "Nutrition: C ${totals.carbs}/${log.targets.carbs} g, F ${totals.fat}/${log.targets.fat} g, fiber ${totals.fiber}/${log.targets.fiber} g.",
+            text = readiness.nextAction,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            fontWeight = FontWeight.SemiBold
         )
-        Text(
-            text = "Recovery: waist ${formatOptional(log.metrics.waistCm, "cm")}, steps ${log.metrics.steps}, resting HR ${formatOptional(log.metrics.restingHeartRateBpm, "bpm")}, hunger ${log.metrics.hunger}/5, fatigue ${log.metrics.fatigue}/5, soreness ${log.metrics.soreness}/5.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
                 onClick = onDailyReview,
                 enabled = !state.isLoading,
@@ -251,13 +341,151 @@ private fun TodayDashboard(
             ) {
                 Text(if (state.isLoading) "Reviewing" else "AI review")
             }
-            TextButton(onClick = onReset) {
-                Text("Reset")
+            ElevatedButton(
+                onClick = when {
+                    state.dailyLog.trainingSession.exercises.isEmpty() -> onOpenTraining
+                    state.dailyLog.meals.isEmpty() -> onOpenNutrition
+                    else -> onOpenMetrics
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Next")
             }
         }
         if (state.isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
+    }
+}
+
+@Composable
+private fun TodayActionGrid(
+    state: CoachUiState,
+    onOpenPlan: () -> Unit,
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit
+) {
+    val log = state.dailyLog
+    val totals = log.nutritionTotals()
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        ActionCard(
+            title = "Training",
+            value = "${log.completedHardSets()}/${log.plannedHardSets()} sets",
+            detail = "${formatDecimal(log.trainingVolumeKg())} kg volume",
+            actionLabel = if (log.trainingSession.exercises.isEmpty()) "Build session" else "Log sets",
+            onAction = if (log.trainingSession.exercises.isEmpty()) onOpenPlan else onOpenTraining
+        )
+        ActionCard(
+            title = "Nutrition",
+            value = "${totals.calories}/${log.targets.calories}",
+            detail = "Protein ${totals.protein}/${log.targets.protein} g",
+            actionLabel = "Log meal",
+            onAction = onOpenNutrition
+        )
+        ActionCard(
+            title = "Recovery",
+            value = formatOptional(log.metrics.sleepHours, "h"),
+            detail = "Steps ${log.metrics.steps}, fatigue ${log.metrics.fatigue}/5",
+            actionLabel = "Sync metrics",
+            onAction = onOpenMetrics
+        )
+        ActionCard(
+            title = "Body",
+            value = formatOptional(log.metrics.bodyWeightKg, "kg"),
+            detail = "Body fat ${formatOptional(log.metrics.bodyFatPercent, "%")}",
+            actionLabel = "Update",
+            onAction = onOpenMetrics
+        )
+    }
+}
+
+@Composable
+private fun BeginnerGuideCard(onOpenPlan: () -> Unit, onOpenNutrition: () -> Unit, onOpenMetrics: () -> Unit) {
+    SectionCard(title = "Beginner Friendly Flow", subtitle = "A simple daily loop before the deeper pro-level details.") {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("1. Pick or apply today's plan.")
+            Text("2. Complete each working set and respect the rest timer.")
+            Text("3. Log meals or attach photos when portions are uncertain.")
+            Text("4. Sync health data, then run AI review.")
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(onClick = onOpenPlan, modifier = Modifier.weight(1f)) {
+                Text("Plan")
+            }
+            TextButton(onClick = onOpenNutrition, modifier = Modifier.weight(1f)) {
+                Text("Food")
+            }
+            TextButton(onClick = onOpenMetrics, modifier = Modifier.weight(1f)) {
+                Text("Metrics")
+            }
+        }
+    }
+}
+@Composable
+private fun TodayDashboard(
+    state: CoachUiState,
+    onDailyReview: () -> Unit,
+    onReset: () -> Unit,
+    onOpenPlan: () -> Unit,
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit
+) {
+    val log = state.dailyLog
+    val totals = log.nutritionTotals()
+    val readiness = state.dailyReadiness()
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        CommandCenterCard(
+            readiness = readiness,
+            state = state,
+            onDailyReview = onDailyReview,
+            onOpenTraining = onOpenTraining,
+            onOpenNutrition = onOpenNutrition,
+            onOpenMetrics = onOpenMetrics
+        )
+        TodayActionGrid(
+            state = state,
+            onOpenPlan = onOpenPlan,
+            onOpenTraining = onOpenTraining,
+            onOpenNutrition = onOpenNutrition,
+            onOpenMetrics = onOpenMetrics
+        )
+        SectionCard(title = "Today Snapshot", subtitle = log.date) {
+            MetricGrid(
+                metrics = listOf(
+                    "Volume" to "${formatDecimal(log.trainingVolumeKg())} kg",
+                    "Calories" to "${totals.calories}/${log.targets.calories}",
+                    "Protein" to "${totals.protein}/${log.targets.protein} g",
+                    "Body fat" to formatOptional(log.metrics.bodyFatPercent, "%"),
+                    "Sleep" to formatOptional(log.metrics.sleepHours, "h"),
+                    "Resting HR" to formatOptional(log.metrics.restingHeartRateBpm, "bpm")
+                )
+            )
+            Text(
+                text = "Focus: ${log.trainingSession.plannedFocus}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Nutrition: C ${totals.carbs}/${log.targets.carbs} g, F ${totals.fat}/${log.targets.fat} g, fiber ${totals.fiber}/${log.targets.fiber} g.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "Recovery: waist ${formatOptional(log.metrics.waistCm, "cm")}, steps ${log.metrics.steps}, hunger ${log.metrics.hunger}/5, fatigue ${log.metrics.fatigue}/5, soreness ${log.metrics.soreness}/5.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TextButton(onClick = onReset, modifier = Modifier.weight(1f)) {
+                    Text("Reset today")
+                }
+                TextButton(onClick = onOpenMetrics, modifier = Modifier.weight(1f)) {
+                    Text("Edit metrics")
+                }
+            }
+        }
+        BeginnerGuideCard(onOpenPlan = onOpenPlan, onOpenNutrition = onOpenNutrition, onOpenMetrics = onOpenMetrics)
     }
 }
 

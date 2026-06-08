@@ -26,6 +26,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/DailySummaryBuilder.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/health/HealthSnapshot.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/health/HealthConnectRepository.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/ui/AppTheme.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/ui/CoachViewModel.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/ui/IfbbProCoachApp.kt",
         ]
@@ -187,8 +188,20 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Resting HR",
             "healthPermissions",
             "syncHealthData",
+            "IfbbProTheme",
+            "AppleInspiredLightColors",
+            "Scaffold",
+            "NavigationBar",
+            "NavigationBarItem",
+            "Command Center",
+            "Beginner Friendly Flow",
+            "Readiness",
+            "Today Snapshot",
+            "dailyReadiness",
         ]
-        combined = f"{ui}\n{view_model}"
+        activity = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/MainActivity.kt").read_text(encoding="utf-8")
+        theme = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/AppTheme.kt").read_text(encoding="utf-8")
+        combined = f"{ui}\n{view_model}\n{activity}\n{theme}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
