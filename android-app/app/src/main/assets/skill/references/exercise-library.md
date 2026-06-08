@@ -21,7 +21,7 @@ When outputting exercises for a beginner or a user who may not recognize profess
 
 Pair the visual cue with the target muscle, one setup cue, an example movement, common movements, and one look-for cue, for example: `Exercise visual guide: VG-01 Smith machine (史密斯机) | unified instance diagram: fixed bar between two vertical rails | guided incline press path | action path cue: the bar travels up and down on rails | instance diagram cue: two vertical rails with a bar that moves on a fixed track | beginner recognition cue: 先找两根竖轨和一根固定杠 | upper chest | align bench under the fixed bar path | example movement: Incline Smith Press | common movements: Incline Smith Press, Smith Squat, Smith Row | look-for cue: Look for two rails and a fixed bar`.
 
-For app-linked plans, keep the visual guide wording consistent across the written plan, Android Exercise Visual Library, the Add Exercise live equipment/action preview, and AI review context. The goal is quick recognition, not anatomical artwork: simple unified instance diagrams plus equipment/action labels are enough for a non-pro user to understand which station or setup to find in the gym.
+For app-linked plans, keep the visual guide wording consistent across the written plan, Android Exercise Visual Library, Selected Day Visual Map, Today's Exercise Visual Map, exercise thumbnail headers, the Add Exercise live equipment/action preview, and AI review context. The goal is quick recognition, not anatomical artwork: simple unified instance diagrams plus equipment/action labels are enough for a non-pro user to understand which station or setup to find in the gym.
 
 ## Movement Patterns
 

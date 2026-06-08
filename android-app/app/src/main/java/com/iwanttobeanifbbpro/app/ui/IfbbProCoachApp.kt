@@ -1510,6 +1510,19 @@ private fun PlanPage(
             )
         }
 
+        ExerciseVisualMap(
+            title = "Selected Day Visual Map",
+            subtitle = "Scan the equipment/action thumbnails before applying this plan day.",
+            emptyText = "Add planned exercises to see the visual equipment map for this day.",
+            items = selectedDay.exercises.map { exercise ->
+                ExerciseVisualMapItem(
+                    name = exercise.name,
+                    targetMuscle = exercise.targetMuscle,
+                    detail = "${exercise.sets} x ${exercise.reps} | RIR ${exercise.rir?.let { formatDecimal(it) } ?: "--"} | rest ${exercise.restSeconds}s"
+                )
+            }
+        )
+
         ExerciseVisualGuideLibrary()
 
         SectionCard(title = "Add Planned Exercise", subtitle = "These planned movements become set-level rows when you apply the day.") {
@@ -1592,27 +1605,120 @@ private fun PlanPage(
 private fun PlannedExerciseCard(exercise: PlannedExercise, onRemove: () -> Unit) {
     Card(shape = RoundedCornerShape(8.dp)) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            ExerciseVisualGuide(name = exercise.name, targetMuscle = exercise.targetMuscle)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                    Text(exercise.name, fontWeight = FontWeight.SemiBold)
-                    Text(
-                        text = "${exercise.targetMuscle.ifBlank { "Target muscle not set" }} | ${exercise.sets} x ${exercise.reps} | RIR ${exercise.rir?.let { formatDecimal(it) } ?: "--"} | rest ${exercise.restSeconds}s",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    if (exercise.notes.isNotBlank()) {
-                        Text(
-                            text = exercise.notes,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+                ExerciseVisualHeader(
+                    name = exercise.name,
+                    targetMuscle = exercise.targetMuscle,
+                    detail = "${exercise.targetMuscle.ifBlank { "Target muscle not set" }} | ${exercise.sets} x ${exercise.reps} | RIR ${exercise.rir?.let { formatDecimal(it) } ?: "--"} | rest ${exercise.restSeconds}s",
+                    modifier = Modifier.weight(1f)
+                )
                 TextButton(onClick = onRemove) {
                     Text("Remove")
                 }
             }
+            if (exercise.notes.isNotBlank()) {
+                Text(
+                    text = exercise.notes,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            ExerciseVisualGuide(name = exercise.name, targetMuscle = exercise.targetMuscle)
+        }
+    }
+}
+
+private data class ExerciseVisualMapItem(
+    val name: String,
+    val targetMuscle: String,
+    val detail: String
+)
+
+@Composable
+private fun ExerciseVisualMap(
+    title: String,
+    subtitle: String,
+    emptyText: String,
+    items: List<ExerciseVisualMapItem>
+) {
+    SectionCard(title = title, subtitle = subtitle) {
+        if (items.isEmpty()) {
+            Text(
+                text = emptyText,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        } else {
+            val categoryChips = items
+                .map { exerciseVisualSpec(it.name, it.targetMuscle) }
+                .distinctBy { it.visualId }
+                .map { "${it.visualId} ${it.equipmentZh}" }
+            DataChipGrid(items = categoryChips)
+            items.forEachIndexed { index, item ->
+                ExerciseVisualMapRow(item = item)
+                if (index != items.lastIndex) {
+                    HorizontalDivider()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExerciseVisualMapRow(item: ExerciseVisualMapItem) {
+    val spec = remember(item.name, item.targetMuscle) { exerciseVisualSpec(item.name, item.targetMuscle) }
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Canvas(
+            modifier = Modifier
+                .weight(0.55f)
+                .height(58.dp)
+        ) {
+            drawExerciseVisual(type = spec.type)
+        }
+        Column(modifier = Modifier.weight(1.45f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(item.name, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = "${spec.visualId} ${spec.equipment} (${spec.equipmentZh}) | ${item.detail}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "动作识别: ${spec.lookFor}; ${spec.beginnerCue}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExerciseVisualHeader(
+    name: String,
+    targetMuscle: String,
+    detail: String,
+    modifier: Modifier = Modifier
+) {
+    val spec = remember(name, targetMuscle) { exerciseVisualSpec(name, targetMuscle) }
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Canvas(
+            modifier = Modifier
+                .weight(0.36f)
+                .height(54.dp)
+        ) {
+            drawExerciseVisual(type = spec.type)
+        }
+        Column(modifier = Modifier.weight(1.64f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            Text(name, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = "${spec.visualId} ${spec.equipmentZh} | $detail",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = spec.lookFor,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -2047,6 +2153,19 @@ private fun TrainingPage(
             )
         }
 
+        ExerciseVisualMap(
+            title = "Today's Exercise Visual Map",
+            subtitle = "A quick equipment/action index for the active workout, so exercise names map to real gym setup.",
+            emptyText = "Add or apply exercises to see today's equipment/action thumbnails.",
+            items = session.exercises.map { exercise ->
+                ExerciseVisualMapItem(
+                    name = exercise.name,
+                    targetMuscle = exercise.targetMuscle,
+                    detail = "${exercise.sets} x ${exercise.reps} | done ${exercise.completedSetCount()}/${exercise.trackedSets().size}"
+                )
+            }
+        )
+
         SectionCard(title = "Add Exercise", subtitle = "Create planned set rows first; the app adds a simple equipment/action visual so the movement is easier to recognize.") {
             OutlinedTextField(
                 value = name,
@@ -2315,27 +2434,25 @@ private fun ExerciseExecutionCard(
 ) {
     Card(shape = RoundedCornerShape(8.dp)) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            ExerciseVisualGuide(name = exercise.name, targetMuscle = exercise.targetMuscle)
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                    Text(exercise.name, fontWeight = FontWeight.SemiBold)
-                    Text(
-                        text = "${exercise.targetMuscle.ifBlank { "Target muscle not set" }} | ${exercise.sets} x ${exercise.reps} | rest ${exercise.restSeconds}s",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    if (exercise.notes.isNotBlank()) {
-                        Text(
-                            text = exercise.notes,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+                ExerciseVisualHeader(
+                    name = exercise.name,
+                    targetMuscle = exercise.targetMuscle,
+                    detail = "${exercise.targetMuscle.ifBlank { "Target muscle not set" }} | ${exercise.sets} x ${exercise.reps} | rest ${exercise.restSeconds}s",
+                    modifier = Modifier.weight(1f)
+                )
                 TextButton(onClick = onRemove) {
                     Text("Remove")
                 }
             }
+            if (exercise.notes.isNotBlank()) {
+                Text(
+                    text = exercise.notes,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            ExerciseVisualGuide(name = exercise.name, targetMuscle = exercise.targetMuscle)
             MetricGrid(
                 metrics = listOf(
                     "Done" to "${exercise.completedSetCount()}/${exercise.trackedSets().size}",

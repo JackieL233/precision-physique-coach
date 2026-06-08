@@ -15,6 +15,7 @@
 - 细化每次训练：动作、目标肌群、组数、次数、RIR/RPE、休息、技术要点、替代动作和记录字段。
 - 追踪训练质量：hard sets、tonnage、单组表现、目标肌肉刺激、疼痛标记、动作技术和进步决策。
 - 为动作名称提供新手友好的器械/动作上下文：例如 VG-01 Smith machine、VG-02 Cable station、VG-03 Dumbbells、VG-04 Barbell、VG-05 Machine、VG-10 Bodyweight/open station 等统一示意类别，并配套视觉图例编号、中文器械名、简洁统一实例图、动作路径提示、新手识别提示、器械标志点、常见动作、示例动作和 look-for 识别提示，帮助用户知道这个动作大概对应哪种器械和动作路径。
+- 在计划日和今日训练中提供器械/动作 Visual Map 和动作卡片缩略图标题，让用户不用先懂专业动作名，也能一眼知道今天要找哪类器械、训练站、自由重量或动作路径。
 - 支持器械识别和动作质量分析：通过器械照片、动作照片或视频帧判断可能的器械/动作、目标肌群、常见错误、替代动作和安全注意点。
 - 支持食物照片营养估算：通过餐盘、包装标签、菜单或食物照片估算食物类型、份量、热量、蛋白质、脂肪、碳水和纤维，并说明不确定性。
 - 支持训练和饮食联动 check-in：把动作质量、训练容量、食物照片、营养估算、当天目标和恢复数据放在一起判断，再决定训练或饮食怎么调整。
@@ -43,7 +44,7 @@
 - Training Readiness Builder：在 `Training` 页把 Recovery Guidance 转换成训练前执行闸门，包括热身策略、ramp-up 提示、第一组工作组选择、容量调整和停止规则，让用户进健身房时知道今天该怎么开始、什么时候不该硬推。
 - Next Set Coach：在 `Training` 页自动找到第一组还没完成的 working set，并把当前动作、下一组目标、建议重量、目标次数、RIR、休息秒数、停止规则、完成后记录提示和对应的器械/动作实例图放在同一张卡片里；用户不懂动作名时，也能通过 VG 图例编号、中文器械名、统一实例图和 look-for cue 知道该找哪台器械或哪个动作路径。
 - Session Quality Dashboard：在 `Training` 页汇总整节训练质量，包括 completion rate、logged set rate、average RIR、completed volume、muscle-volume distribution、pain flags、technique flags、quality cue、capacity cue 和 risk cue，让用户训练中途或结束后知道这节课是否足够可靠，可以不可以作为下一次加重量/加次数/调整容量的依据。
-- 统一动作示意：计划动作卡片和今日训练卡片都会显示简洁的器械/动作示意图；`Add Planned Exercise` 和 `Add Exercise` 会在输入动作名称时实时显示 live equipment/action preview，告诉用户这个动作大概率对应哪一个 VG 视觉图例编号、哪类器械、中文叫什么、常见动作有哪些；`Plan` 页还提供 Exercise Visual Library 图例库，集中展示 Smith 机、绳索、哑铃、杠铃、固定器械、可调训练凳、引体/双杠站、弹力带、腿举/哈克深蹲、自重/开放空间动作的统一实例图、实例图提示、动作路径提示、新手识别提示、器械标志点、示例动作、常见动作和识别提示，帮助不是 pro 的用户直观看懂动作名称对应哪类器械或动作路径。
+- 统一动作示意：计划动作卡片和今日训练卡片都会显示简洁的器械/动作示意图；动作卡片标题区直接带缩略图、VG 编号、中文器械名和 look-for cue；`Plan` 页有 Selected Day Visual Map，`Training` 页有 Today's Exercise Visual Map，可以把当天所有动作先汇总成器械/动作速览；`Add Planned Exercise` 和 `Add Exercise` 会在输入动作名称时实时显示 live equipment/action preview，告诉用户这个动作大概率对应哪一个 VG 视觉图例编号、哪类器械、中文叫什么、常见动作有哪些；`Plan` 页还提供 Exercise Visual Library 图例库，集中展示 Smith 机、绳索、哑铃、杠铃、固定器械、可调训练凳、引体/双杠站、弹力带、腿举/哈克深蹲、自重/开放空间动作的统一实例图、实例图提示、动作路径提示、新手识别提示、器械标志点、示例动作、常见动作和识别提示，帮助不是 pro 的用户直观看懂动作名称对应哪类器械或动作路径。
 - 单组记录：每一组都可以记录重量、次数、RIR、是否完成、休息时间和备注。
 - Exercise History：重复动作会对比上一次记录，显示上次/今天训练量、最佳重量、最佳次数、完成组数和平均 RIR，让用户知道这次是真进步、持平还是需要先稳住。
 - Progression Cue：每个训练动作会根据完成组数、实际次数、RIR 和疼痛/动作备注，提示下次应该加次数、加重量、保持、修改动作或先完成基础组数。

@@ -472,6 +472,38 @@
       background: var(--surface);
     }
 
+    .visual-map {
+      display: grid;
+      gap: 9px;
+    }
+
+    .visual-map-block {
+      display: grid;
+      gap: 9px;
+    }
+
+    .visual-map-row {
+      display: grid;
+      grid-template-columns: 70px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding-top: 9px;
+    }
+
+    .visual-map-row:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .exercise-head {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
     .mini-figure {
       width: 100%;
       height: 82px;
@@ -1183,7 +1215,9 @@
       }
 
       .visual-guide,
-      .visual-guide.compact {
+      .visual-guide.compact,
+      .visual-map-row,
+      .exercise-head {
         grid-template-columns: 1fr;
       }
 
@@ -1504,7 +1538,49 @@
                 </div>
               </div>
             </div>
+            <div class="visual-map-block">
+              <div class="section-head">
+                <h3>Selected Day Visual Map</h3>
+                <p class="subtle">Scan the equipment/action thumbnails before applying this plan day.</p>
+              </div>
+              <div class="chip-row">
+                <span class="chip active">VG-01 史密斯机</span>
+                <span class="chip active">VG-02 绳索龙门架/滑轮器械</span>
+              </div>
+              <div class="visual-map">
+                <div class="visual-map-row">
+                  <div class="mini-figure compact smith" aria-hidden="true">
+                    <span class="rail-left"></span><span class="rail-right"></span><span class="bar-line"></span><span class="bench"></span><span class="head"></span><span class="body"></span>
+                  </div>
+                  <div>
+                    <strong>Incline Smith Press</strong>
+                    <p class="subtle">VG-01 Smith machine (史密斯机) | 4 x 6-10 | RIR 2 | rest 150s</p>
+                    <p class="subtle">动作识别: Look for two rails and a fixed bar; 先找两根竖轨和一根固定杠。</p>
+                  </div>
+                </div>
+                <div class="visual-map-row">
+                  <div class="mini-figure compact cable" aria-hidden="true">
+                    <span class="tower"></span><span class="arm"></span><span class="pulley"></span><span class="line"></span><span class="head"></span><span class="body"></span>
+                  </div>
+                  <div>
+                    <strong>Cable Lateral Raise</strong>
+                    <p class="subtle">VG-02 Cable station (绳索龙门架/滑轮器械) | 4 x 12-20 | RIR 1 | rest 75s</p>
+                    <p class="subtle">动作识别: Look for a cable, pulley, and handle; 先找滑轮、钢索和把手/绳子。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="exercise">
+              <div class="exercise-head">
+                <div class="mini-figure compact smith" aria-hidden="true">
+                  <span class="rail-left"></span><span class="rail-right"></span><span class="bar-line"></span><span class="bench"></span><span class="head"></span><span class="body"></span>
+                </div>
+                <div>
+                  <strong>Incline Smith Press</strong>
+                  <p class="subtle">VG-01 史密斯机 | Upper chest | 4 x 6-10 | RIR 2 | rest 150s</p>
+                  <p class="subtle">Look for two rails and a fixed bar</p>
+                </div>
+              </div>
               <div class="visual-guide compact">
                 <div class="mini-figure compact smith" aria-hidden="true">
                   <span class="rail-left"></span><span class="rail-right"></span><span class="bar-line"></span><span class="bench"></span><span class="head"></span><span class="body"></span>
@@ -1520,10 +1596,18 @@
                   <div class="chip-row"><span class="chip">Upper chest</span><span class="chip">Common: Smith Squat, Smith Row</span><span class="chip">Equipment markers: rails, fixed bar, hooks</span></div>
                 </div>
               </div>
-              <strong>Incline Smith Press</strong>
-              <p class="subtle">Upper chest | 4 x 6-10 | RIR 2 | rest 150s</p>
             </div>
             <div class="exercise">
+              <div class="exercise-head">
+                <div class="mini-figure compact cable" aria-hidden="true">
+                  <span class="tower"></span><span class="arm"></span><span class="pulley"></span><span class="line"></span><span class="head"></span><span class="body"></span>
+                </div>
+                <div>
+                  <strong>Cable Lateral Raise</strong>
+                  <p class="subtle">VG-02 绳索龙门架/滑轮器械 | Side delt | 4 x 12-20 | RIR 1 | rest 75s</p>
+                  <p class="subtle">Look for a cable, pulley, and handle</p>
+                </div>
+              </div>
               <div class="visual-guide compact">
                 <div class="mini-figure compact cable" aria-hidden="true">
                   <span class="tower"></span><span class="arm"></span><span class="pulley"></span><span class="line"></span><span class="head"></span><span class="body"></span>
@@ -1539,8 +1623,6 @@
                   <div class="chip-row"><span class="chip">Side delt</span><span class="chip">Common: Lat Pulldown, Rope Pushdown</span><span class="chip">Equipment markers: pulley, cable, handle</span></div>
                 </div>
               </div>
-              <strong>Cable Lateral Raise</strong>
-              <p class="subtle">Side delt | 4 x 12-20 | RIR 1 | rest 75s</p>
             </div>
             <div class="action-row">
               <button class="button primary" type="button" data-tab-target="training">Apply today</button>
@@ -1577,6 +1659,50 @@
               <div class="metric"><span class="label">Done</span><span class="value">8/18</span></div>
               <div class="metric"><span class="label">Tonnage</span><span class="value">6,840 kg</span></div>
               <div class="metric"><span class="label">Focus</span><span class="value">Push A</span></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>Today's Exercise Visual Map</h2>
+              <p class="subtle">A quick equipment/action index for the active workout, so exercise names map to real gym setup.</p>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">VG-01 史密斯机</span>
+              <span class="chip active">VG-02 绳索龙门架/滑轮器械</span>
+              <span class="chip active">VG-03 哑铃</span>
+            </div>
+            <div class="visual-map">
+              <div class="visual-map-row">
+                <div class="mini-figure compact smith" aria-hidden="true">
+                  <span class="rail-left"></span><span class="rail-right"></span><span class="bar-line"></span><span class="bench"></span><span class="head"></span><span class="body"></span>
+                </div>
+                <div>
+                  <strong>Incline Smith Press</strong>
+                  <p class="subtle">VG-01 Smith machine (史密斯机) | 4 x 6-10 | done 2/4</p>
+                  <p class="subtle">动作识别: Look for two rails and a fixed bar; 先找两根竖轨和一根固定杠。</p>
+                </div>
+              </div>
+              <div class="visual-map-row">
+                <div class="mini-figure compact cable" aria-hidden="true">
+                  <span class="tower"></span><span class="arm"></span><span class="pulley"></span><span class="line"></span><span class="head"></span><span class="body"></span>
+                </div>
+                <div>
+                  <strong>Cable Lateral Raise</strong>
+                  <p class="subtle">VG-02 Cable station (绳索龙门架/滑轮器械) | 4 x 12-20 | done 4/4</p>
+                  <p class="subtle">动作识别: Look for a cable, pulley, and handle; 先找滑轮、钢索和把手/绳子。</p>
+                </div>
+              </div>
+              <div class="visual-map-row">
+                <div class="mini-figure compact dumbbell" aria-hidden="true">
+                  <span class="head"></span><span class="torso"></span><span class="arm-left"></span><span class="arm-right"></span><span class="db-left"></span><span class="db-right"></span><span class="leg-left"></span><span class="leg-right"></span>
+                </div>
+                <div>
+                  <strong>Dumbbell Incline Curl</strong>
+                  <p class="subtle">VG-03 Dumbbells (哑铃) | 3 x 10-15 | done 0/3</p>
+                  <p class="subtle">动作识别: Look for one or two handheld weights; 左右手独立控制重量路径。</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1648,6 +1774,16 @@
             <div class="section-head">
               <h2>Incline Smith Press</h2>
               <p class="subtle">Upper chest | 4 x 6-10 | rest 150s | keep scapula set.</p>
+            </div>
+            <div class="exercise-head">
+              <div class="mini-figure compact smith" aria-hidden="true">
+                <span class="rail-left"></span><span class="rail-right"></span><span class="bar-line"></span><span class="bench"></span><span class="head"></span><span class="body"></span>
+              </div>
+              <div>
+                <strong>Incline Smith Press</strong>
+                <p class="subtle">VG-01 史密斯机 | Upper chest | 4 x 6-10 | rest 150s</p>
+                <p class="subtle">Look for two rails and a fixed bar</p>
+              </div>
             </div>
             <div class="visual-guide">
               <div class="mini-figure smith" aria-hidden="true">
