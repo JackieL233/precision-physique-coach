@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>I Want to be an IFBB PRO App Preview</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --surface-2: #f2f2f7;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --line: #e5e5ea;
+      --line-strong: #d1d1d6;
+      --blue: #007aff;
+      --blue-soft: #e8f2ff;
+      --green: #34c759;
+      --green-soft: #e8f8ed;
+      --amber: #ff9f0a;
+      --amber-soft: #fff3df;
+      --red: #ff3b30;
+      --shadow: 0 22px 60px rgba(29, 29, 31, 0.14);
+      --radius: 8px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(360px, 460px) minmax(360px, 1fr);
+      gap: 28px;
+      padding: 28px;
+      align-items: start;
+    }
+
+    .phone {
+      width: min(100%, 430px);
+      min-height: 860px;
+      margin: 0 auto;
+      background: var(--bg);
+      border: 1px solid rgba(29, 29, 31, 0.12);
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 24px;
+    }
+
+    .app-scroll {
+      height: 860px;
+      overflow: auto;
+      padding: 18px 16px 92px;
+      scrollbar-width: thin;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 23px;
+      line-height: 1.14;
+      font-weight: 750;
+    }
+
+    h2 {
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 720;
+    }
+
+    h3 {
+      font-size: 15px;
+      line-height: 1.24;
+      font-weight: 700;
+    }
+
+    .date-pill,
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .badge.blue {
+      background: var(--blue-soft);
+      color: #00315f;
+    }
+
+    .badge.green {
+      background: var(--green-soft);
+      color: #063d17;
+    }
+
+    .badge.amber {
+      background: var(--amber-soft);
+      color: #4a2b00;
+    }
+
+    .tabs {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      padding: 8px 8px 14px;
+      background: rgba(255, 255, 255, 0.92);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .tab {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      min-height: 52px;
+      border-radius: var(--radius);
+      padding: 6px 3px;
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      cursor: pointer;
+    }
+
+    .tab span:first-child {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      border: 1px solid currentColor;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .tab span:last-child {
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 650;
+    }
+
+    .tab.active {
+      color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: grid;
+      gap: 12px;
+    }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      gap: 11px;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 3px;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      min-height: 64px;
+      padding: 9px 10px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .metric .value {
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 760;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .metric.small .value {
+      font-size: 14px;
+    }
+
+    .action-row,
+    .split-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .button {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      min-height: 42px;
+      padding: 0 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .button.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: white;
+    }
+
+    .button.ghost {
+      border-color: transparent;
+      color: var(--blue);
+      background: transparent;
+    }
+
+    .button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .task-list,
+    .rows {
+      display: grid;
+      gap: 8px;
+    }
+
+    .task,
+    .exercise,
+    .meal,
+    .review {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px;
+      background: var(--surface);
+      display: grid;
+      gap: 8px;
+    }
+
+    .task {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+
+    .task strong,
+    .exercise strong,
+    .meal strong,
+    .review strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .progress {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--surface-2);
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--blue);
+    }
+
+    .progress.green span {
+      background: var(--green);
+    }
+
+    .progress.amber span {
+      background: var(--amber);
+    }
+
+    .set-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+
+    .set-table th,
+    .set-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 5px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .set-table th {
+      color: var(--muted);
+      font-weight: 700;
+      background: var(--surface-2);
+    }
+
+    .set-table td {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mini-input {
+      width: 100%;
+      min-width: 46px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      padding: 6px 7px;
+      background: #fff;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 11px;
+      min-height: 40px;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .chip {
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .chip.active {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      color: #00315f;
+    }
+
+    .rest-banner {
+      display: none;
+      border: 1px solid #b8dcff;
+      border-radius: var(--radius);
+      background: var(--blue-soft);
+      padding: 12px;
+      gap: 8px;
+      align-items: center;
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .rest-banner.visible {
+      display: grid;
+    }
+
+    .rest-time {
+      color: #00315f;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      font-size: 20px;
+    }
+
+    .side {
+      display: grid;
+      gap: 14px;
+      max-width: 980px;
+    }
+
+    .side-header {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .side-title {
+      font-size: 28px;
+      line-height: 1.08;
+      font-weight: 780;
+      max-width: 820px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .board .section {
+      min-height: 210px;
+    }
+
+    .flow {
+      display: grid;
+      gap: 9px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .number {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-weight: 760;
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+    }
+
+    .desktop-preview {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .chart {
+      height: 130px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      align-items: end;
+      gap: 7px;
+      background: linear-gradient(#fff, #fbfbfd);
+    }
+
+    .bar {
+      flex: 1;
+      min-width: 12px;
+      border-radius: 7px 7px 3px 3px;
+      background: var(--blue);
+      opacity: 0.9;
+    }
+
+    .bar:nth-child(2n) {
+      background: var(--green);
+    }
+
+    .bar:nth-child(3n) {
+      background: var(--amber);
+    }
+
+    .note {
+      border-left: 3px solid var(--blue);
+      padding: 9px 10px;
+      background: var(--blue-soft);
+      color: #00315f;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    @media (max-width: 980px) {
+      .shell {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+
+      .phone {
+        position: relative;
+        top: 0;
+      }
+
+      .side-title {
+        font-size: 23px;
+      }
+
+      .board,
+      .desktop-preview {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .shell {
+        padding: 0;
+      }
+
+      .phone {
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .app-scroll {
+        height: 100vh;
+      }
+
+      .metric-grid,
+      .action-row,
+      .split-row {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="phone" aria-label="Mobile app preview">
+      <div class="app-scroll">
+        <header class="header">
+          <div>
+            <p class="eyebrow">I Want to be an IFBB PRO</p>
+            <h1 id="page-title">Today</h1>
+          </div>
+          <span class="date-pill">Jun 8</span>
+        </header>
+
+        <div id="rest-banner" class="rest-banner" aria-live="polite">
+          <div>
+            <strong>Rest timer</strong>
+            <p class="subtle">Incline press set 2 finished. Next set in</p>
+          </div>
+          <div class="rest-time" id="rest-time">02:00</div>
+        </div>
+
+        <section class="panel active" data-panel="today" aria-label="Today">
+          <div class="section">
+            <div class="section-head">
+              <h2>Command Center</h2>
+              <p class="subtle">Execute, log, sync, then review.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Readiness</span><span class="value">82</span></div>
+              <div class="metric"><span class="label">State</span><span class="value">Push</span></div>
+              <div class="metric"><span class="label">Phase</span><span class="value">Hypertrophy</span></div>
+              <div class="metric"><span class="label">Sets</span><span class="value">8/18</span></div>
+            </div>
+            <p class="subtle">Goal: Build an IFBB PRO-inspired physique with better upper chest, delts, and tighter waist control.</p>
+            <h3>Next action: finish today's push session, then log post-workout carbs and run AI review.</h3>
+            <div class="action-row">
+              <button class="button primary" type="button" data-tab-target="ai">AI review</button>
+              <button class="button" type="button" data-tab-target="training">Next</button>
+            </div>
+            <div class="note">Latest AI guidance: hold pressing volume today, add one rep before load, keep calories unchanged unless weekly weight trend stalls.</div>
+          </div>
+
+          <div class="task-list">
+            <div class="task">
+              <div>
+                <strong>Training</strong>
+                <p class="subtle">8/18 sets, 6,840 kg completed</p>
+              </div>
+              <button class="button ghost" type="button" data-tab-target="training">Log sets</button>
+            </div>
+            <div class="task">
+              <div>
+                <strong>Nutrition</strong>
+                <p class="subtle">1,780/2,650 kcal, protein 128/185 g</p>
+              </div>
+              <button class="button ghost" type="button" data-tab-target="nutrition">Log meal</button>
+            </div>
+            <div class="task">
+              <div>
+                <strong>Recovery</strong>
+                <p class="subtle">Sleep 7.2 h, steps 8,420, fatigue 2/5</p>
+              </div>
+              <button class="button ghost" type="button" data-tab-target="metrics">Sync</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>7-Day Trend</h2>
+              <p class="subtle">Used by AI review to avoid overreacting to one day.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Weight</span><span class="value">+0.3 kg</span></div>
+              <div class="metric"><span class="label">Avg kcal</span><span class="value">2,640</span></div>
+              <div class="metric"><span class="label">Avg sleep</span><span class="value">7.1 h</span></div>
+              <div class="metric"><span class="label">Hard sets</span><span class="value">82/92</span></div>
+            </div>
+            <div class="progress"><span style="width:82%"></span></div>
+            <p class="subtle">Trend verdict: training compliance is strong; protein is close; recovery is good enough for cautious progression.</p>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="plan" aria-label="Plan">
+          <div class="section">
+            <div class="section-head">
+              <h2>Athlete Profile</h2>
+              <p class="subtle">Personal context included in every AI review.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Phase</span><span class="value">Hypertrophy</span></div>
+              <div class="metric"><span class="label">Experience</span><span class="value">Intermediate</span></div>
+              <div class="metric"><span class="label">Days/wk</span><span class="value">5</span></div>
+              <div class="metric"><span class="label">Target BF</span><span class="value">10%</span></div>
+            </div>
+            <div class="field">
+              <label for="goal">Primary physique goal</label>
+              <textarea id="goal">Upper chest and delt priority while keeping waist tight and progressing legs twice weekly.</textarea>
+            </div>
+            <div class="split-row">
+              <div class="field"><label for="equip">Equipment</label><input id="equip" value="Full gym"></div>
+              <div class="field"><label for="weak">Weak points</label><input id="weak" value="Upper chest, side delts"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>Weekly Plan</h2>
+              <p class="subtle">Apply a planned day into today's executable workout log.</p>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">Push A</span>
+              <span class="chip">Pull A</span>
+              <span class="chip">Legs</span>
+              <span class="chip">Upper</span>
+              <span class="chip">Arms</span>
+            </div>
+            <div class="exercise">
+              <strong>Incline Smith Press</strong>
+              <p class="subtle">Upper chest | 4 x 6-10 | RIR 2 | rest 150s</p>
+            </div>
+            <div class="exercise">
+              <strong>Cable Lateral Raise</strong>
+              <p class="subtle">Side delt | 4 x 12-20 | RIR 1 | rest 75s</p>
+            </div>
+            <div class="action-row">
+              <button class="button primary" type="button" data-tab-target="training">Apply today</button>
+              <button class="button" type="button">Reset plan</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="training" aria-label="Training">
+          <div class="section">
+            <div class="section-head">
+              <h2>Training Execution</h2>
+              <p class="subtle">Log every working set, rest time, effort, and technique signal.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Exercises</span><span class="value">5</span></div>
+              <div class="metric"><span class="label">Done</span><span class="value">8/18</span></div>
+              <div class="metric"><span class="label">Tonnage</span><span class="value">6,840 kg</span></div>
+              <div class="metric"><span class="label">Focus</span><span class="value">Push A</span></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>Incline Smith Press</h2>
+              <p class="subtle">Upper chest | 4 x 6-10 | rest 150s | keep scapula set.</p>
+            </div>
+            <table class="set-table">
+              <thead>
+                <tr>
+                  <th>Set</th>
+                  <th>Kg</th>
+                  <th>Reps</th>
+                  <th>RIR</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><input class="mini-input" value="82.5" aria-label="Set 1 kilograms"></td>
+                  <td><input class="mini-input" value="9" aria-label="Set 1 reps"></td>
+                  <td><input class="mini-input" value="2" aria-label="Set 1 RIR"></td>
+                  <td><button class="button" type="button" disabled>Done</button></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><input class="mini-input" value="82.5" aria-label="Set 2 kilograms"></td>
+                  <td><input class="mini-input" value="8" aria-label="Set 2 reps"></td>
+                  <td><input class="mini-input" value="2" aria-label="Set 2 RIR"></td>
+                  <td><button id="complete-set" class="button primary" type="button">Complete</button></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><input class="mini-input" value="80" aria-label="Set 3 kilograms"></td>
+                  <td><input class="mini-input" value="" aria-label="Set 3 reps"></td>
+                  <td><input class="mini-input" value="" aria-label="Set 3 RIR"></td>
+                  <td><button class="button" type="button">Save</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="field">
+              <label for="set-note">Form and stimulus notes</label>
+              <textarea id="set-note">Good upper chest stimulus. No shoulder pain. Hold load until set 4 reaches 8+ reps.</textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="nutrition" aria-label="Nutrition">
+          <div class="section">
+            <div class="section-head">
+              <h2>Nutrition</h2>
+              <p class="subtle">Daily calories, macros, and food-photo follow-up.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Calories</span><span class="value">1,780/2,650</span></div>
+              <div class="metric"><span class="label">Protein</span><span class="value">128/185 g</span></div>
+              <div class="metric"><span class="label">Carbs</span><span class="value">205/310 g</span></div>
+              <div class="metric"><span class="label">Fat</span><span class="value">46/70 g</span></div>
+            </div>
+            <div class="progress green"><span style="width:69%"></span></div>
+            <div class="action-row">
+              <button class="button primary" type="button">Add meal</button>
+              <button class="button" type="button">Attach photo</button>
+            </div>
+          </div>
+
+          <div class="rows">
+            <div class="meal">
+              <strong>Meal 1: oats, whey, berries</strong>
+              <p class="subtle">620 kcal | P 48 g | C 82 g | F 12 g | fiber 11 g</p>
+            </div>
+            <div class="meal">
+              <strong>Meal photo estimate</strong>
+              <p class="subtle">Chicken rice bowl, likely 720-860 kcal. AI should ask for bowl size and visible oil before finalizing.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="metrics" aria-label="Metrics">
+          <div class="section">
+            <div class="section-head">
+              <h2>Health Connect</h2>
+              <p class="subtle">User-authorized body and recovery records enter daily AI review.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Status</span><span class="value">Authorized</span></div>
+              <div class="metric"><span class="label">Weight</span><span class="value">82.4 kg</span></div>
+              <div class="metric"><span class="label">Body fat</span><span class="value">14.2%</span></div>
+              <div class="metric"><span class="label">Sleep</span><span class="value">7.2 h</span></div>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">Xiaomi/Mi Fitness -> Health Connect</span>
+              <span class="chip">Huawei Health -> Health Connect or Health Kit</span>
+              <span class="chip">Manual fallback</span>
+            </div>
+            <div class="action-row">
+              <button class="button primary" type="button">Connect health data</button>
+              <button class="button" type="button">Sync today</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>Recovery Inputs</h2>
+              <p class="subtle">Subjective signals keep recommendations conservative.</p>
+            </div>
+            <div class="split-row">
+              <div class="field"><label for="hunger">Hunger 1-5</label><input id="hunger" value="3"></div>
+              <div class="field"><label for="fatigue">Fatigue 1-5</label><input id="fatigue" value="2"></div>
+              <div class="field"><label for="soreness">Soreness 1-5</label><input id="soreness" value="3"></div>
+              <div class="field"><label for="stress">Stress 1-5</label><input id="stress" value="2"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="ai" aria-label="AI Coach">
+          <div class="section">
+            <div class="section-head">
+              <h2>AI Coach</h2>
+              <p class="subtle">Runs the bundled skill with logs, profile, health data, and optional photos.</p>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">Linked training + nutrition</span>
+              <span class="chip">Check-in</span>
+              <span class="chip">Form photo</span>
+              <span class="chip">Food photo</span>
+            </div>
+            <div class="field">
+              <label for="ai-prompt">Question or review request</label>
+              <textarea id="ai-prompt">Review today's push session, food log, body metrics, and recent trend. Tell me what to adjust tomorrow.</textarea>
+            </div>
+            <div class="action-row">
+              <button class="button" type="button">Attach photos</button>
+              <button class="button primary" type="button">Run AI review</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>AI Data Map</h2>
+              <p class="subtle">Signals bundled into the review context.</p>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">Athlete profile</span>
+              <span class="chip active">Weekly plan</span>
+              <span class="chip active">Set load/reps/RIR</span>
+              <span class="chip active">Food photos/macros</span>
+              <span class="chip active">Health Connect</span>
+              <span class="chip active">7-day trend</span>
+            </div>
+            <div class="review">
+              <strong>Saved AI Reviews</strong>
+              <p class="subtle">Latest: progress incline press by reps only; keep calories stable; add 15 minutes low-intensity cardio if steps fall below 7,000 twice this week.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <nav class="tabs" aria-label="App tabs">
+        <button class="tab active" type="button" data-tab="today"><span>T</span><span>Today</span></button>
+        <button class="tab" type="button" data-tab="plan"><span>P</span><span>Plan</span></button>
+        <button class="tab" type="button" data-tab="training"><span>W</span><span>Train</span></button>
+        <button class="tab" type="button" data-tab="nutrition"><span>N</span><span>Food</span></button>
+        <button class="tab" type="button" data-tab="metrics"><span>M</span><span>Metrics</span></button>
+        <button class="tab" type="button" data-tab="ai"><span>A</span><span>AI</span></button>
+      </nav>
+    </section>
+
+    <aside class="side" aria-label="Preview notes">
+      <div class="side-header">
+        <span class="badge blue">Live design preview</span>
+        <h2 class="side-title">A daily bodybuilding cockpit: beginner-friendly first steps, professional data depth underneath.</h2>
+        <p class="subtle">This local preview mirrors the Android app structure so you can review the product feel immediately, even without an Android emulator or JDK installed.</p>
+      </div>
+
+      <div class="board">
+        <div class="section">
+          <div class="section-head">
+            <h2>Primary Daily Loop</h2>
+            <p class="subtle">The first screen tells the user exactly what to do next.</p>
+          </div>
+          <div class="flow">
+            <div class="flow-step"><span class="number">1</span><p class="subtle"><strong>Apply plan.</strong> Convert a weekly day into an executable set log.</p></div>
+            <div class="flow-step"><span class="number">2</span><p class="subtle"><strong>Train.</strong> Record load, reps, RIR, completion, notes, and rest countdown.</p></div>
+            <div class="flow-step"><span class="number">3</span><p class="subtle"><strong>Eat.</strong> Track calories/macros and attach food photos when portions are uncertain.</p></div>
+            <div class="flow-step"><span class="number">4</span><p class="subtle"><strong>Review.</strong> Sync health data and run an AI check-in using recent trends.</p></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h2>AI Analysis Inputs</h2>
+            <p class="subtle">The app should not make isolated one-day decisions.</p>
+          </div>
+          <div class="chip-row">
+            <span class="chip active">Athlete profile</span>
+            <span class="chip active">Weekly plan</span>
+            <span class="chip active">Set quality</span>
+            <span class="chip active">Nutrition totals</span>
+            <span class="chip active">Food photos</span>
+            <span class="chip active">Form photos</span>
+            <span class="chip active">Health Connect</span>
+            <span class="chip active">Trend window</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="desktop-preview">
+        <div class="section">
+          <div class="section-head">
+            <h2>Weekly Training Density</h2>
+            <p class="subtle">Hard sets, volume, and recovery should be scannable without feeling like a spreadsheet.</p>
+          </div>
+          <div class="chart" aria-label="Weekly chart">
+            <span class="bar" style="height: 64%"></span>
+            <span class="bar" style="height: 72%"></span>
+            <span class="bar" style="height: 51%"></span>
+            <span class="bar" style="height: 82%"></span>
+            <span class="bar" style="height: 58%"></span>
+            <span class="bar" style="height: 35%"></span>
+            <span class="bar" style="height: 44%"></span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric small"><span class="label">Weekly sets</span><span class="value">82/92</span></div>
+            <div class="metric small"><span class="label">Volume</span><span class="value">41,280 kg</span></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h2>Health Sync Boundary</h2>
+            <p class="subtle">Readable when the source app writes compatible records into Health Connect and the user approves permissions.</p>
+          </div>
+          <div class="rows">
+            <span class="badge green">Implemented: Health Connect</span>
+            <span class="badge amber">Future: Huawei Health Kit provider</span>
+            <span class="badge">Fallback: manual entry</span>
+          </div>
+          <p class="subtle">This keeps Xiaomi, Huawei, scale, watch, and phone data paths honest while still making the app useful every day.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const titles = {
+      today: "Today",
+      plan: "Plan",
+      training: "Training",
+      nutrition: "Nutrition",
+      metrics: "Metrics",
+      ai: "AI Coach"
+    };
+
+    function activateTab(tabName) {
+      document.querySelectorAll(".tab").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === tabName);
+      });
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === tabName);
+      });
+      document.getElementById("page-title").textContent = titles[tabName] || "Today";
+      document.querySelector(".app-scroll").scrollTop = 0;
+    }
+
+    document.querySelectorAll("[data-tab]").forEach((button) => {
+      button.addEventListener("click", () => activateTab(button.dataset.tab));
+    });
+
+    document.querySelectorAll("[data-tab-target]").forEach((button) => {
+      button.addEventListener("click", () => activateTab(button.dataset.tabTarget));
+    });
+
+    const restBanner = document.getElementById("rest-banner");
+    const restTime = document.getElementById("rest-time");
+    const completeSet = document.getElementById("complete-set");
+    let timerId = 0;
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60).toString().padStart(2, "0");
+      const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+      return `${mins}:${secs}`;
+    }
+
+    completeSet.addEventListener("click", () => {
+      completeSet.textContent = "Done";
+      completeSet.disabled = true;
+      restBanner.classList.add("visible");
+      let remaining = 120;
+      restTime.textContent = formatTime(remaining);
+      clearInterval(timerId);
+      timerId = setInterval(() => {
+        remaining -= 1;
+        restTime.textContent = formatTime(Math.max(remaining, 0));
+        if (remaining <= 0) {
+          clearInterval(timerId);
+          restBanner.classList.remove("visible");
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

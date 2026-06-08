@@ -332,6 +332,39 @@ class AndroidAppStructureTest(unittest.TestCase):
             with self.subTest(term=term):
                 self.assertIn(term, readme)
 
+    def test_static_ui_preview_covers_core_app_workflows(self) -> None:
+        html_path = APP / "preview/index.html"
+        readme_path = APP / "preview/README.md"
+        self.assertTrue(html_path.exists(), "preview/index.html")
+        self.assertTrue(readme_path.exists(), "preview/README.md")
+        html = html_path.read_text(encoding="utf-8")
+        readme = readme_path.read_text(encoding="utf-8")
+        expected_terms = [
+            "Live design preview",
+            "Apple",
+            "Today",
+            "Command Center",
+            "Athlete Profile",
+            "Weekly Plan",
+            "Training Execution",
+            "Rest timer",
+            "Nutrition",
+            "Health Connect",
+            "Xiaomi/Mi Fitness -> Health Connect",
+            "Huawei Health -> Health Connect or Health Kit",
+            "AI Coach",
+            "AI Data Map",
+            "Saved AI Reviews",
+            "data-tab",
+            "complete-set",
+            "setInterval",
+            "Open `index.html`",
+        ]
+        combined = f"{html}\n{readme}"
+        for term in expected_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
 
 if __name__ == "__main__":
     unittest.main()
