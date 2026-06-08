@@ -63,6 +63,7 @@ class SkillPromptBuilder(private val repository: SkillAssetRepository) {
             - Briefly list assumptions and missing safety-critical data.
             - Give practical recommendations tied to this mode.
             - If photos are attached, separate visual observations from uncertain inferences.
+            - Use Photo Evidence metadata first: identify whether each image is a food/label photo, exercise form frame, equipment photo, physique progress photo, menu/nutrition label, or other check-in photo before interpreting it.
             - For exercise names or equipment photos, map the likely setup to the unified exercise visual guide ID, category, Chinese equipment label, unified instance diagram, quick visual cue, find-equipment cue, movement path cue, action path cue, beginner recognition cue, equipment markers, example movement, and look-for cue.
             - When equipment is unavailable, crowded, painful, or technically unstable, use Exercise Substitution Coach rules: preserve same target muscle, same movement pattern, planned rep range, planned RIR, fatigue cost, and visual guide ID continuity before changing the plan.
             - For linked training/nutrition analysis, compare training execution, session quality, food-photo nutrition estimate, recovery, and current goal before changing variables.

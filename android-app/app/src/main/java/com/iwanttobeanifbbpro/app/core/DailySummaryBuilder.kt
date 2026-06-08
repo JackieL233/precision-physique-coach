@@ -75,6 +75,9 @@ class DailySummaryBuilder {
         val meals = log.meals.joinToString("\n") { meal ->
             "- ${meal.name}: ${meal.calories} kcal, P ${meal.protein}g, C ${meal.carbs}g, F ${meal.fat}g, fiber ${meal.fiber}g, notes: ${meal.notes}"
         }.ifBlank { "- No meals logged yet." }
+        val photoEvidence = log.photoEvidence.joinToString("\n") { photo ->
+            "- ${photo.type.label}: ${photo.name}, mime ${photo.mimeType}, note: ${photo.note.ifBlank { "none" }}, createdAt: ${photo.createdAt.ifBlank { "not logged" }}"
+        }.ifBlank { "- No photo evidence logged yet." }
 
         return """
             AI review context for daily training and daily nutrition.
@@ -130,6 +133,9 @@ class DailySummaryBuilder {
             - ${tomorrowBrief.promptLine()}
             Meals:
             $meals
+
+            Daily photo evidence:
+            $photoEvidence
 
             Daily training:
             - Planned focus: ${log.trainingSession.plannedFocus}

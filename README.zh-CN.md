@@ -18,6 +18,7 @@
 - 为动作名称提供新手友好的器械/动作上下文：例如 VG-01 Smith machine、VG-02 Cable station、VG-03 Dumbbells、VG-04 Barbell、VG-05 Machine、VG-10 Bodyweight/open station 等统一示意类别，并通过 Unified Exercise Visual Atlas 配套视觉图例编号、中文器械名、简洁统一实例图、三步识别、quick visual cue、find-equipment cue、movement path cue、动作路径提示、新手识别提示、器械标志点、常见动作、示例动作和 look-for 识别提示，帮助用户知道这个动作大概对应哪种器械和动作路径。
 - 在计划日和今日训练中提供器械/动作 Visual Map 和动作卡片缩略图标题，让用户不用先懂专业动作名，也能一眼知道今天要找哪类器械、训练站、自由重量或动作路径。
 - 支持器械识别和动作质量分析：通过器械照片、动作照片或视频帧判断可能的器械/动作、目标肌群、常见错误、替代动作和安全注意点。
+- 支持 Photo Evidence 照片证据分类：食物/标签照片、动作帧、器械照片、体型进度照片、菜单/营养标签和其他 check-in 照片会记录用途、文件名、备注、MIME 类型和时间；AI 复盘收到图片时也会知道这张图应该用于饮食估算、动作质量、器械识别还是体型对比。
 - 支持食物照片营养估算：通过餐盘、包装标签、菜单或食物照片估算食物类型、份量、热量、蛋白质、脂肪、碳水和纤维，并说明不确定性。
 - 支持训练和饮食联动 check-in：把动作质量、训练容量、食物照片、营养估算、当天目标和恢复数据放在一起判断，再决定训练或饮食怎么调整。
 - 指导饮食：热量、蛋白质、脂肪、碳水、纤维、水分、餐次安排、补剂边界和调整规则。
@@ -44,6 +45,7 @@
 - Plan Templates 训练模板：内置 Beginner Full Body、4-Day Hypertrophy 和 5-Day Physique Priority，用户可以一键生成可直接训练的周计划，再按器械、弱项、恢复和个人偏好微调。
 - 每周训练计划：在 `Plan` 中设置阶段目标、训练日、计划动作、组数、次数、RIR、休息时间和备注。
 - 今日训练执行：点击 `Apply today` 将某一天计划转换成今天的 set-level 训练日志。
+- 训练照片入口：`Training` 页可以直接添加 form photo 和 equipment photo，用于动作质量、目标肌群刺激、疼痛标记、器械识别和 visual guide ID 对照。
 - Training Readiness Builder：在 `Training` 页把 Recovery Guidance 转换成训练前执行闸门，包括热身策略、ramp-up 提示、第一组工作组选择、容量调整和停止规则，让用户进健身房时知道今天该怎么开始、什么时候不该硬推。
 - Next Set Coach：在 `Training` 页自动找到第一组还没完成的 working set，并把当前动作、下一组目标、建议重量、目标次数、RIR、休息秒数、停止规则、完成后记录提示和对应的器械/动作实例图放在同一张卡片里；用户不懂动作名时，也能通过 VG 图例编号、中文器械名、统一实例图、quick visual cue、find-equipment cue、movement path cue 和 look-for cue 知道该找哪台器械或哪个动作路径。
 - Session Quality Dashboard：在 `Training` 页汇总整节训练质量，包括 completion rate、logged set rate、average RIR、completed volume、muscle-volume distribution、pain flags、technique flags、quality cue、capacity cue 和 risk cue，让用户训练中途或结束后知道这节课是否足够可靠，可以不可以作为下一次加重量/加次数/调整容量的依据。
@@ -60,7 +62,9 @@
 - Body Composition Guidance：根据当前阶段、体重趋势、平均热量、平均蛋白质和训练输出，判断热量目标应该保持、小幅上调还是小幅下调，避免只凭一天体重或一天饮食做过度调整。
 - Recovery Guidance：根据睡眠、疲劳、酸痛、压力、静息心率、计划/完成组数和近期趋势，判断今天训练应该继续推进、保持训练压力、减少容量，还是进入 deload 检查。
 - 饮食记录：设置热量和宏量营养目标，记录每餐热量、蛋白质、碳水、脂肪、纤维，并可上传食物照片让 AI 估算。
+- 食物照片证据：`Nutrition` 页上传的 meal photo 会作为 Photo Evidence 保存，连同餐名、份量不确定性、油、酱料、标签、菜单和备注一起进入 AI 饮食分析。
 - 身体与恢复指标：体重、体脂、瘦体重、腰围、胸围、肩围、臀围、左右手臂、左右大腿、颈围、睡眠、步数、静息心率、总消耗热量、饥饿感、疲劳、酸痛、压力和每日反思。
+- 体型进度照片：`Metrics` 页可以上传 progress photo，并提示尽量保持相同光线、距离、姿势和 pump 状态；AI 会把照片和围度、体重、体脂、训练量一起看，而不是只看单张照片。
 - Physique Measurement Summary：把围度数据转换成体型比例与对称性提示，包括 shoulder-to-waist ratio、waist change、chest change、shoulder change、hip change、left/right arm、left/right thigh、arm symmetry、thigh symmetry、V-taper direction 和 weekly tape-measure check-in，帮助 AI 判断体重变化是更接近有效增肌、腰围失控，还是需要调整弱项训练。
 - Health Connect 同步：用户授权后读取体重、体脂、瘦体重、步数、睡眠、静息心率和总消耗热量。
 - AI 复盘：把周计划、今日实际训练、Daily Execution Plan、priority focus、primary action、data quality gate、AI review gate、plan adjustment signal、Training Readiness Builder、Next Set Coach、current exercise、next set target、load cue、reps cue、RIR cue、rest cue、stop cue、after-set logging cue、Tomorrow Coach Brief、Weekly Check-in、training completion、average calories/protein、weight trend、recovery average、weak-point focus、next-week action、tomorrow training focus、tomorrow nutrition target、tomorrow recovery gate、tomorrow tracking action、readiness gate、Session Quality Dashboard、completion rate、logged set rate、average RIR、muscle-volume distribution、pain/technique flags、热身策略、第一组工作组、容量调整、停止规则、每组表现、Exercise History、Progression Cue、Exercise Substitution Coach、equipment unavailable、trigger reason、primaryOption、secondaryOptions、same target muscle、same movement pattern、preserve rep range、fatigue cost、keepIntentCue、loadAdjustmentCue、Exercise visual guide、Unified Exercise Visual Atlas、视觉图例编号、中文器械名、统一实例图、三步识别、quick visual cue、find-equipment cue、movement path cue、动作路径提示、新手识别提示、器械标志点、实例图提示、常见动作、Nutrition Pacing、Next Meal Builder、Meal Assembly Guide、plate structure、protein anchor、carb anchor、fat control、shopping/prep cue、Body Composition Guidance、Physique Measurement Summary、waistCm、chestCm、shoulderCm、hipCm、leftArmCm、rightArmCm、leftThighCm、rightThighCm、neckCm、shoulder-to-waist ratio、arm symmetry、thigh symmetry、Recovery Guidance、饮食、照片、健康数据和反思一起发送给模型，判断下一次训练是否加重量、加次数、保持、减少容量、替换动作、deload，或者调整热量、碳水、蛋白质、脂肪、纤维、水分和餐次安排。

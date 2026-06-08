@@ -26,6 +26,8 @@ import com.iwanttobeanifbbpro.app.data.DailyTargets
 import com.iwanttobeanifbbpro.app.data.ExerciseEntry
 import com.iwanttobeanifbbpro.app.data.MealEntry
 import com.iwanttobeanifbbpro.app.data.PlannedExercise
+import com.iwanttobeanifbbpro.app.data.PhotoEvidenceEntry
+import com.iwanttobeanifbbpro.app.data.PhotoEvidenceType
 import com.iwanttobeanifbbpro.app.data.SetEntry
 import com.iwanttobeanifbbpro.app.data.TrainingPlanStore
 import com.iwanttobeanifbbpro.app.data.WeeklyTrainingPlan
@@ -39,6 +41,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
 import kotlin.math.min
 
 enum class AppTab(val title: String) {
@@ -59,8 +62,14 @@ data class AiSettings(
 data class ImageAttachment(
     val name: String,
     val mimeType: String,
-    val base64: String
-)
+    val base64: String,
+    val evidenceType: PhotoEvidenceType = PhotoEvidenceType.OTHER,
+    val note: String = ""
+) {
+    fun promptLine(index: Int): String {
+        return "Photo $index: ${evidenceType.label} | file $name | mime $mimeType | note ${note.ifBlank { "none" }}"
+    }
+}
 
 data class RestTimerState(
     val exerciseName: String,
@@ -84,6 +93,8 @@ data class CoachUiState(
     val isHealthSyncing: Boolean = false,
     val reviewHistory: List<AiReviewEntry> = emptyList(),
     val images: List<ImageAttachment> = emptyList(),
+    val pendingPhotoType: PhotoEvidenceType = PhotoEvidenceType.OTHER,
+    val pendingPhotoNote: String = "",
     val result: String = "",
     val isLoading: Boolean = false,
     val error: String? = null
@@ -421,18 +432,53 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    fun addImages(uris: List<Uri>) {
+    fun addImages(
+        uris: List<Uri>,
+        evidenceType: PhotoEvidenceType = PhotoEvidenceType.OTHER,
+        note: String = ""
+    ) {
         viewModelScope.launch {
             val resolver = getApplication<Application>().contentResolver
             val attachments = withContext(Dispatchers.IO) {
-                uris.mapNotNull { uri -> resolver.toImageAttachment(uri) }
+                uris.mapNotNull { uri -> resolver.toImageAttachment(uri, evidenceType, note) }
             }
-            uiState = uiState.copy(images = (uiState.images + attachments).takeLast(6))
+            if (attachments.isNotEmpty()) {
+                val evidence = attachments.map { attachment ->
+                    PhotoEvidenceEntry(
+                        type = attachment.evidenceType,
+                        name = attachment.name,
+                        mimeType = attachment.mimeType,
+                        note = attachment.note,
+                        createdAt = LocalDateTime.now().toString()
+                    )
+                }
+                val log = uiState.dailyLog.copy(
+                    photoEvidence = (uiState.dailyLog.photoEvidence + evidence).takeLast(24)
+                )
+                dailyLogStore.saveLog(log)
+                uiState = uiState.copy(
+                    dailyLog = log,
+                    recentLogs = dailyLogStore.readRecentLogs(),
+                    images = (uiState.images + attachments).takeLast(6)
+                )
+            }
         }
+    }
+
+    fun addPreparedImages(uris: List<Uri>) {
+        addImages(
+            uris = uris,
+            evidenceType = uiState.pendingPhotoType,
+            note = uiState.pendingPhotoNote
+        )
     }
 
     fun clearImages() {
         uiState = uiState.copy(images = emptyList())
+    }
+
+    fun preparePhotoEvidence(type: PhotoEvidenceType, note: String) {
+        uiState = uiState.copy(pendingPhotoType = type, pendingPhotoNote = note.trim())
     }
 
     fun runAnalysis() {
@@ -554,7 +600,11 @@ private class SettingsStore(context: Context) {
     }
 }
 
-private fun ContentResolver.toImageAttachment(uri: Uri): ImageAttachment? {
+private fun ContentResolver.toImageAttachment(
+    uri: Uri,
+    evidenceType: PhotoEvidenceType,
+    note: String
+): ImageAttachment? {
     val mimeType = getType(uri) ?: "image/jpeg"
     val name = query(uri, null, null, null, null)?.use { cursor ->
         val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -565,6 +615,8 @@ private fun ContentResolver.toImageAttachment(uri: Uri): ImageAttachment? {
     return ImageAttachment(
         name = name,
         mimeType = mimeType,
-        base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+        base64 = Base64.encodeToString(bytes, Base64.NO_WRAP),
+        evidenceType = evidenceType,
+        note = note
     )
 }

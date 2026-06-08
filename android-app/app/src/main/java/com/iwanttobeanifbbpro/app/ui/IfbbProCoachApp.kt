@@ -96,6 +96,8 @@ import com.iwanttobeanifbbpro.app.data.DailyTargets
 import com.iwanttobeanifbbpro.app.data.ExerciseEntry
 import com.iwanttobeanifbbpro.app.data.MealTemplate
 import com.iwanttobeanifbbpro.app.data.PlannedExercise
+import com.iwanttobeanifbbpro.app.data.PhotoEvidenceEntry
+import com.iwanttobeanifbbpro.app.data.PhotoEvidenceType
 import com.iwanttobeanifbbpro.app.data.SetEntry
 import com.iwanttobeanifbbpro.app.data.TrainingPlanTemplate
 import com.iwanttobeanifbbpro.app.data.TrainingDay
@@ -109,7 +111,7 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
     val state = viewModel.uiState
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(6),
-        onResult = viewModel::addImages
+        onResult = viewModel::addPreparedImages
     )
     val healthPermissionLauncher = rememberLauncherForActivityResult(
         contract = HealthConnectRepository.permissionContract(),
@@ -185,7 +187,11 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                             onAddExercise = viewModel::addExercise,
                             onRemoveExercise = viewModel::removeExercise,
                             onUpdateSetEntry = viewModel::updateSetEntry,
-                            onCompleteSet = viewModel::completeSet
+                            onCompleteSet = viewModel::completeSet,
+                            onPickTrainingPhoto = { type, note ->
+                                viewModel.preparePhotoEvidence(type, note)
+                                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            }
                         )
                     }
                 }
@@ -198,7 +204,8 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                             onAddMeal = viewModel::addMeal,
                             onAddMealTemplate = viewModel::addMealTemplate,
                             onRemoveMeal = viewModel::removeMeal,
-                            onPickMealPhoto = {
+                            onPickMealPhoto = { note ->
+                                viewModel.preparePhotoEvidence(PhotoEvidenceType.MEAL, note)
                                 imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                             }
                         )
@@ -211,6 +218,10 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                             state = state,
                             onMetricsChange = viewModel::updateMetrics,
                             onReflectionChange = viewModel::updateReflection,
+                            onPickPhysiquePhoto = {
+                                viewModel.preparePhotoEvidence(PhotoEvidenceType.PHYSIQUE, "Progress photo for physique, symmetry, posture, and waist-control comparison.")
+                                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            },
                             onConnectHealthData = { healthPermissionLauncher.launch(viewModel.healthPermissions()) },
                             onSyncHealthData = viewModel::syncHealthData
                         )
@@ -224,6 +235,7 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                             onSettingsChange = viewModel::updateSettings,
                             onModeChange = viewModel::updateMode,
                             onPromptChange = viewModel::updateUserInput,
+                            onPreparePhoto = viewModel::preparePhotoEvidence,
                             onPickImages = {
                                 imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                             },
@@ -1090,6 +1102,7 @@ private fun TodayDashboard(
                 }
             }
         }
+        PhotoEvidenceCard(photoEvidence = log.photoEvidence, compact = true)
         BodyCompositionCard(
             guidance = bodyCompositionGuidance(log, state.recentLogs, state.athleteProfile),
             subtitle = "Trend-based target check before changing calories."
@@ -2280,7 +2293,8 @@ private fun TrainingPage(
     onAddExercise: (String, String, Int, String, Double?, Double?, String, Int) -> Unit,
     onRemoveExercise: (Int) -> Unit,
     onUpdateSetEntry: (Int, Int, Int?, Double?, Double?, String) -> Unit,
-    onCompleteSet: (Int, Int) -> Unit
+    onCompleteSet: (Int, Int) -> Unit,
+    onPickTrainingPhoto: (PhotoEvidenceType, String) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var muscle by remember { mutableStateOf("") }
@@ -2325,6 +2339,30 @@ private fun TrainingPage(
                 label = { Text("Session notes: pump, stimulus, pain, technique, energy") },
                 minLines = 2
             )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                ElevatedButton(
+                    onClick = {
+                        onPickTrainingPhoto(
+                            PhotoEvidenceType.TRAINING_FORM,
+                            "Exercise form frame for technique, target-muscle stimulus, pain flags, and set-log context."
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Form photo")
+                }
+                ElevatedButton(
+                    onClick = {
+                        onPickTrainingPhoto(
+                            PhotoEvidenceType.EQUIPMENT,
+                            "Equipment photo for visual guide ID mapping and safe setup recognition."
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Equipment photo")
+                }
+            }
         }
 
         ExerciseVisualMap(
@@ -2948,7 +2986,7 @@ private fun NutritionPage(
     onAddMeal: (String, Int, Double, Double, Double, Double, String) -> Unit,
     onAddMealTemplate: (String) -> Unit,
     onRemoveMeal: (Int) -> Unit,
-    onPickMealPhoto: () -> Unit
+    onPickMealPhoto: (String) -> Unit
 ) {
     val targets = state.dailyLog.targets
     var mealName by remember { mutableStateOf("") }
@@ -3023,7 +3061,14 @@ private fun NutritionPage(
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 DecimalField(value = fiber, onChange = { fiber = it }, label = "Fiber", modifier = Modifier.weight(1f))
-                ElevatedButton(onClick = onPickMealPhoto, modifier = Modifier.weight(1f)) {
+                ElevatedButton(
+                    onClick = {
+                        onPickMealPhoto(
+                            "Meal photo for portion estimate. Meal field: ${mealName.ifBlank { "not named" }}. Notes: ${notes.ifBlank { "none" }}"
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text("meal photo")
                 }
             }
@@ -3083,6 +3128,8 @@ private fun NutritionPage(
                 }
             }
         }
+
+        PhotoEvidenceCard(photoEvidence = state.dailyLog.photoEvidence, compact = true)
     }
 }
 
@@ -3091,6 +3138,7 @@ private fun MetricsPage(
     state: CoachUiState,
     onMetricsChange: (DailyMetrics) -> Unit,
     onReflectionChange: (String) -> Unit,
+    onPickPhysiquePhoto: () -> Unit,
     onConnectHealthData: () -> Unit,
     onSyncHealthData: () -> Unit
 ) {
@@ -3106,6 +3154,24 @@ private fun MetricsPage(
             subtitle = "Conservative training-pressure guidance from logged recovery and health signals."
         )
         PhysiqueMeasurementSummaryCard(summary = physiqueMeasurementSummary(state.dailyLog, state.recentLogs))
+        SectionCard(
+            title = "Physique Photo Check-in",
+            subtitle = "Attach progress photos under consistent lighting, posture, distance, and pump state."
+        ) {
+            DataChipGrid(
+                items = listOf(
+                    "Front/side/back",
+                    "Same lighting",
+                    "Same distance",
+                    "Same pump state",
+                    "Compare with measurements"
+                )
+            )
+            ElevatedButton(onClick = onPickPhysiquePhoto, modifier = Modifier.fillMaxWidth()) {
+                Text("Progress photo")
+            }
+        }
+        PhotoEvidenceCard(photoEvidence = state.dailyLog.photoEvidence, compact = true)
         TrendOverviewCard(logs = state.recentLogs)
         SectionCard(title = "Metrics", subtitle = "These recovery and physique signals help AI decide whether to push, hold, deload, or adjust food.") {
             Text("Body composition", fontWeight = FontWeight.SemiBold)
@@ -3396,17 +3462,57 @@ private fun PhysiqueMeasurementSummaryCard(summary: PhysiqueMeasurementSummary) 
 }
 
 @Composable
+private fun PhotoEvidenceCard(photoEvidence: List<PhotoEvidenceEntry>, compact: Boolean = false) {
+    SectionCard(
+        title = "Photo Evidence",
+        subtitle = "Classified photos tell AI whether an image is food, form, equipment, label, or physique progress."
+    ) {
+        if (photoEvidence.isEmpty()) {
+            EmptyState("No photo evidence saved today. Add meal, form, equipment, label, or progress photos when the data is uncertain.")
+        } else {
+            val counts = PhotoEvidenceType.entries.map { type ->
+                "${type.label}: ${photoEvidence.count { it.type == type }}"
+            }.filterNot { it.endsWith(": 0") }
+            DataChipGrid(items = counts)
+            if (!compact) {
+                photoEvidence.takeLast(8).asReversed().forEach { photo ->
+                    Text(
+                        text = "${photo.type.label} | ${photo.name} | ${photo.createdAt.ifBlank { "time not logged" }}",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = photo.note.ifBlank { "No note." },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                Text(
+                    text = "${photoEvidence.size} photo evidence item(s) logged today. Latest: ${photoEvidence.last().type.label} (${photoEvidence.last().name}).",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
 @OptIn(ExperimentalLayoutApi::class)
 private fun AiCoachPage(
     state: CoachUiState,
     onSettingsChange: (AiSettings) -> Unit,
     onModeChange: (CoachMode) -> Unit,
     onPromptChange: (String) -> Unit,
+    onPreparePhoto: (PhotoEvidenceType, String) -> Unit,
     onPickImages: () -> Unit,
     onClearImages: () -> Unit,
     onRunAnalysis: () -> Unit,
     onDailyReview: () -> Unit
 ) {
+    var photoType by remember { mutableStateOf(state.pendingPhotoType) }
+    var photoNote by remember { mutableStateOf(state.pendingPhotoNote) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SettingsCard(settings = state.settings, onChange = onSettingsChange)
         SectionCard(title = "AI Coach", subtitle = "Use the bundled skill, daily logs, and optional photos together.") {
@@ -3428,6 +3534,29 @@ private fun AiCoachPage(
                 label = { Text("Question, goal, or extra AI review instruction") },
                 minLines = 5
             )
+            Text("Photo purpose", fontWeight = FontWeight.SemiBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                PhotoEvidenceType.entries.forEach { type ->
+                    FilterChip(
+                        selected = photoType == type,
+                        onClick = {
+                            photoType = type
+                            onPreparePhoto(type, photoNote)
+                        },
+                        label = { Text(type.label) }
+                    )
+                }
+            }
+            OutlinedTextField(
+                value = photoNote,
+                onValueChange = {
+                    photoNote = it
+                    onPreparePhoto(photoType, it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Photo note: meal, set, angle, lighting, label, uncertainty") },
+                minLines = 2
+            )
             ImageCard(images = state.images, onPick = onPickImages, onClear = onClearImages)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = onDailyReview, enabled = !state.isLoading, modifier = Modifier.weight(1f)) {
@@ -3441,6 +3570,7 @@ private fun AiCoachPage(
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
         }
+        PhotoEvidenceCard(photoEvidence = state.dailyLog.photoEvidence)
         ReviewHistoryCard(reviews = state.reviewHistory)
         SectionCard(title = "AI Data Map", subtitle = "These app records are designed to be linked in the same analysis request.") {
             DataChipGrid(
@@ -3648,7 +3778,18 @@ private fun ImageCard(images: List<ImageAttachment>, onPick: () -> Unit, onClear
                 )
             } else {
                 images.forEach { image ->
-                    Text("${image.name} (${image.mimeType})", style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        "${image.evidenceType.label}: ${image.name} (${image.mimeType})",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    if (image.note.isNotBlank()) {
+                        Text(
+                            image.note,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }

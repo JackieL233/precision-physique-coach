@@ -2056,6 +2056,21 @@
             </div>
           </div>
 
+          <div class="section">
+            <div class="section-head">
+              <h2>Photo Evidence</h2>
+              <p class="subtle">Classified photos tell AI whether an image is food, form, equipment, label, or physique progress.</p>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">Food or label photo: 1</span>
+              <span class="chip">Exercise form frame: 0</span>
+              <span class="chip">Equipment photo: 0</span>
+              <span class="chip">Physique progress photo: 0</span>
+              <span class="chip">Menu or nutrition label: 1</span>
+            </div>
+            <p class="subtle"><strong>Latest:</strong> Food or label photo | chicken-bowl.jpg | portion estimate, visible oil, sauce, and bowl depth.</p>
+          </div>
+
           <div class="rows">
             <div class="meal">
               <strong>Meal 1: oats, whey, berries</strong>
@@ -2127,6 +2142,21 @@
 
           <div class="section">
             <div class="section-head">
+              <h2>Physique Photo Check-in</h2>
+              <p class="subtle">Attach progress photos under consistent lighting, posture, distance, and pump state.</p>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">Front/side/back</span>
+              <span class="chip active">Same lighting</span>
+              <span class="chip active">Same distance</span>
+              <span class="chip active">Same pump state</span>
+              <span class="chip active">Compare with measurements</span>
+            </div>
+            <button class="button primary" type="button">Progress photo</button>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
               <h2>Physique Measurements</h2>
               <p class="subtle">Weekly tape-measure check-in for waist control, shoulder/chest growth, arm/thigh symmetry, and physique proportion trends.</p>
             </div>
@@ -2175,6 +2205,17 @@
               <span class="chip">Form photo</span>
               <span class="chip">Food photo</span>
             </div>
+            <div class="section-head">
+              <h3>Photo purpose</h3>
+              <p class="subtle">Set the purpose before attaching photos so the model reads each image through the right lens.</p>
+            </div>
+            <div class="chip-row">
+              <span class="chip active">Food or label photo</span>
+              <span class="chip">Exercise form frame</span>
+              <span class="chip">Equipment photo</span>
+              <span class="chip">Physique progress photo</span>
+              <span class="chip">Menu or nutrition label</span>
+            </div>
             <div class="field">
               <label for="ai-prompt">Question or review request</label>
               <textarea id="ai-prompt">Review today's push session, food log, body metrics, and recent trend. Tell me what to adjust tomorrow.</textarea>
@@ -2182,6 +2223,23 @@
             <div class="action-row">
               <button class="button" type="button">Attach photos</button>
               <button class="button primary" type="button">Run AI review</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>Photo Evidence</h2>
+              <p class="subtle">Classified photos stay linked to the daily log and are sent to AI with their purpose, note, file name, and MIME type.</p>
+            </div>
+            <div class="rows">
+              <div class="review">
+                <strong>Food or label photo | chicken-bowl.jpg</strong>
+                <p class="subtle">Meal photo for portion estimate; visible oil and sauce uncertainty.</p>
+              </div>
+              <div class="review">
+                <strong>Exercise form frame | incline-smith-set2.jpg</strong>
+                <p class="subtle">Exercise form frame for technique, target-muscle stimulus, pain flags, and set-log context.</p>
+              </div>
             </div>
           </div>
 
@@ -2259,6 +2317,13 @@
               <span class="chip active">Common movement examples</span>
               <span class="chip active">Look-for cue</span>
               <span class="chip active">Equipment photo recognition</span>
+              <span class="chip active">Photo Evidence</span>
+              <span class="chip active">classified photos</span>
+              <span class="chip active">Food or label photo</span>
+              <span class="chip active">Exercise form frame</span>
+              <span class="chip active">Equipment photo</span>
+              <span class="chip active">Physique progress photo</span>
+              <span class="chip active">Menu or nutrition label</span>
               <span class="chip active">Exercise name -> visual category</span>
               <span class="chip active">Food photos/macros</span>
               <span class="chip active">Meal Templates</span>

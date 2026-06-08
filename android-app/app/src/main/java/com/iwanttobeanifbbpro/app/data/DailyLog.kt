@@ -85,6 +85,31 @@ data class MealEntry(
     companion object
 }
 
+enum class PhotoEvidenceType(val label: String) {
+    MEAL("Food or label photo"),
+    TRAINING_FORM("Exercise form frame"),
+    EQUIPMENT("Equipment photo"),
+    PHYSIQUE("Physique progress photo"),
+    MENU_LABEL("Menu or nutrition label"),
+    OTHER("Other check-in photo");
+
+    companion object {
+        fun fromRaw(value: String): PhotoEvidenceType {
+            return entries.firstOrNull { it.name == value } ?: OTHER
+        }
+    }
+}
+
+data class PhotoEvidenceEntry(
+    val type: PhotoEvidenceType,
+    val name: String,
+    val mimeType: String,
+    val note: String = "",
+    val createdAt: String = ""
+) {
+    companion object
+}
+
 data class MealTemplate(
     val id: String,
     val title: String,
@@ -201,6 +226,7 @@ data class DailyLog(
     val targets: DailyTargets = DailyTargets(),
     val trainingSession: TrainingSession = TrainingSession(),
     val meals: List<MealEntry> = emptyList(),
+    val photoEvidence: List<PhotoEvidenceEntry> = emptyList(),
     val metrics: DailyMetrics = DailyMetrics(),
     val reflection: String = ""
 ) {
@@ -226,6 +252,7 @@ data class DailyLog(
             .put("targets", targets.toJson())
             .put("trainingSession", trainingSession.toJson())
             .put("meals", JSONArray().also { array -> meals.forEach { array.put(it.toJson()) } })
+            .put("photoEvidence", JSONArray().also { array -> photoEvidence.forEach { array.put(it.toJson()) } })
             .put("metrics", metrics.toJson())
             .put("reflection", reflection)
     }
@@ -233,12 +260,16 @@ data class DailyLog(
     companion object {
         fun fromJson(json: JSONObject): DailyLog {
             val meals = json.optJSONArray("meals") ?: JSONArray()
+            val photoEvidence = json.optJSONArray("photoEvidence") ?: JSONArray()
             return DailyLog(
                 date = json.optString("date", LocalDate.now().toString()),
                 targets = DailyTargets.fromJson(json.optJSONObject("targets") ?: JSONObject()),
                 trainingSession = TrainingSession.fromJson(json.optJSONObject("trainingSession") ?: JSONObject()),
                 meals = (0 until meals.length()).mapNotNull { index ->
                     meals.optJSONObject(index)?.let { MealEntry.fromJson(it) }
+                },
+                photoEvidence = (0 until photoEvidence.length()).mapNotNull { index ->
+                    photoEvidence.optJSONObject(index)?.let { PhotoEvidenceEntry.fromJson(it) }
                 },
                 metrics = DailyMetrics.fromJson(json.optJSONObject("metrics") ?: JSONObject()),
                 reflection = json.optString("reflection", "")
@@ -298,6 +329,15 @@ private fun MealEntry.toJson(): JSONObject {
         .put("fat", fat)
         .put("fiber", fiber)
         .put("notes", notes)
+}
+
+private fun PhotoEvidenceEntry.toJson(): JSONObject {
+    return JSONObject()
+        .put("type", type.name)
+        .put("name", name)
+        .put("mimeType", mimeType)
+        .put("note", note)
+        .put("createdAt", createdAt)
 }
 
 private fun DailyMetrics.toJson(): JSONObject {
@@ -407,6 +447,16 @@ fun MealEntry.Companion.fromJson(json: JSONObject): MealEntry {
         fat = json.safeDouble("fat", 0.0),
         fiber = json.safeDouble("fiber", 0.0),
         notes = json.optString("notes", "")
+    )
+}
+
+fun PhotoEvidenceEntry.Companion.fromJson(json: JSONObject): PhotoEvidenceEntry {
+    return PhotoEvidenceEntry(
+        type = PhotoEvidenceType.fromRaw(json.safeString("type", PhotoEvidenceType.OTHER.name)),
+        name = json.safeString("name", "photo"),
+        mimeType = json.safeString("mimeType", "image/jpeg"),
+        note = json.optString("note", ""),
+        createdAt = json.optString("createdAt", "")
     )
 }
 

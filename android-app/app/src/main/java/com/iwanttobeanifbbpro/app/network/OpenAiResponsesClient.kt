@@ -56,8 +56,13 @@ class OpenAiResponsesClient {
         val content = JSONArray()
             .put(JSONObject().put("type", "input_text").put("text", prompt))
 
-        images.forEach { image ->
+        images.forEachIndexed { index, image ->
             val dataUrl = "data:${image.mimeType};base64,${image.base64}"
+            content.put(
+                JSONObject()
+                    .put("type", "input_text")
+                    .put("text", image.promptLine(index + 1))
+            )
             content.put(
                 JSONObject()
                     .put("type", "input_image")
