@@ -20,18 +20,19 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - A daily training workflow for planned focus, completed sessions, exercises, set-level load, reps, RIR, rest time, hard sets, target muscle, form/pain notes, and Exercise History comparison against previous logged sessions.
 - Exercise History on active exercise cards for previous date, previous/current volume, best load, best reps, completed sets, average RIR, and a short history-based guidance cue.
 - Progression Cue on active exercise cards so the user can see whether to add reps, add load, hold, modify, or finish baseline work before waiting for the AI review.
-- A unified exercise visual guide on planned and active workout cards, using simple equipment/action diagrams, example movements, and look-for cues for Smith machine, cable station, dumbbells, barbell, machine, and bodyweight/open-station movements so non-pro users can recognize what the exercise name refers to.
-- An `Exercise Visual Library` on the plan screen that shows the six visual categories together before the user adds a movement.
+- A unified exercise visual guide on planned and active workout cards, using simple equipment/action diagrams, example movements, and look-for cues for Smith machine, cable station, dumbbells, barbell, machine, adjustable bench, pull-up/dip station, resistance band, leg press or hack squat, and bodyweight/open-station movements so non-pro users can recognize what the exercise name refers to.
+- An `Exercise Visual Library` on the plan screen that shows these visual categories together before the user adds a movement.
 - A workout execution flow where tapping a set as complete starts a rest countdown for the next set.
 - A daily nutrition workflow for calorie and macro targets, Nutrition Pacing, meal logging, meal photo support, and food-photo estimate follow-up.
 - Nutrition Pacing shows calorie/protein/carb/fat/fiber remaining or over target, a macro adherence score, and a next-meal focus so the user knows what to eat next instead of only seeing a retrospective food log.
 - Body Composition Guidance compares phase goal, body-weight trend, average calories, average protein, and training output before suggesting whether to hold targets or make a small calorie adjustment.
+- Recovery Guidance compares sleep, fatigue, soreness, stress, resting heart rate, and planned/completed set pressure before suggesting whether to keep the plan, hold training stress, reduce volume, or run a deload check.
 - A daily metrics workflow for body weight, waist, sleep, steps, hunger, fatigue, soreness, stress, and reflection.
 - Health Connect sync for user-authorized body weight, body fat, lean body mass, steps, sleep, resting heart rate, and total calories burned. Xiaomi, Huawei, scale, watch, and phone data can be imported when the source app writes those records into Health Connect.
 - An AI review workflow that summarizes the day and asks the model what to adjust tomorrow.
 - AI review includes recent trend rows so recommendations can compare today's execution against recent training, nutrition, recovery, and body-composition direction.
 - AI review output is saved locally and shown in `Today` as the latest guidance, with recent reviews available in `AI Coach`.
-- An AI Data Map that makes the connected analysis surface explicit: exercise selection, set load, actual reps, RIR, rest time, hard sets, tonnage, Exercise History, Progression Cue, technique notes, pain flags, meal macros, Nutrition Pacing, Body Composition Guidance, food photos, equipment/form photos, body weight, body fat, lean mass, waist, sleep, steps, resting heart rate, calorie burn, hunger, fatigue, soreness, and stress.
+- An AI Data Map that makes the connected analysis surface explicit: exercise selection, set load, actual reps, RIR, rest time, hard sets, tonnage, Exercise History, Progression Cue, exercise visual guide, equipment/action diagrams, look-for cue, technique notes, pain flags, meal macros, Nutrition Pacing, Body Composition Guidance, Recovery Guidance, food photos, equipment/form photos, body weight, body fat, lean mass, waist, sleep, steps, resting heart rate, calorie burn, hunger, fatigue, soreness, and stress.
 
 ## Daily workflow
 
@@ -44,7 +45,7 @@ Use the app as a daily training and daily nutrition cockpit:
 3. Use `Plan` to build the weekly training plan, select a day, add planned exercises, and tap `Apply today`.
 4. Use `Training` to log the applied session, set-by-set weight, reps, RIR, rest time, hard sets, target muscle, and pain/form notes. Exercise History compares repeated movements against the previous logged session, the exercise visual guide and Exercise Visual Library help identify the equipment/action through unified instance diagrams, example movements, and look-for cues, while Progression Cue tells whether to add reps, add load, hold, modify, or finish baseline work. Tap `Complete` after a set to start the rest timer.
 5. Use `Nutrition` to set calorie/macronutrient targets, follow Nutrition Pacing for remaining calories/macros and next-meal focus, check Body Composition Guidance before changing targets, log meals, and attach a meal photo when you want food-photo analysis.
-6. Use `Metrics` for body weight, body fat, lean mass, waist, sleep, steps, resting heart rate, calorie burn, hunger, fatigue, soreness, stress, and daily reflection. Tap `Connect health data` and `Sync today` to import supported Health Connect records.
+6. Use `Metrics` for body weight, body fat, lean mass, waist, sleep, steps, resting heart rate, calorie burn, hunger, fatigue, soreness, stress, and daily reflection. Recovery Guidance turns those signals into conservative training-pressure guidance. Tap `Connect health data` and `Sync today` to import supported Health Connect records.
 7. Use `AI Coach` or the `Run AI review` button to send the athlete profile, weekly training plan, day's log, set-level performance, photos, and your extra question to the model for adjustment guidance.
 
 ## Health data sync

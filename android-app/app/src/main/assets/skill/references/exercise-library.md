@@ -13,9 +13,15 @@ When outputting exercises for a beginner or a user who may not recognize profess
 - Dumbbells: free-weight unilateral or bilateral control with matched sides. Example movement: Dumbbell Row. Look-for cue: Look for one or two handheld weights.
 - Barbell: free-weight compound lift with rack, plates, safety pins when relevant. Example movement: Barbell Squat. Look-for cue: Look for a straight bar, plates, and rack.
 - Machine: guided resistance with adjustable seat, pads, handles, or lever arms. Example movement: Machine Chest Press. Look-for cue: Look for a seat, pads, handles, or lever arms.
+- Adjustable bench: bench-supported pressing, rowing, split squat, hip thrust, or step-up setup. Example movement: Incline Dumbbell Press. Look-for cue: Look for a flat or adjustable bench.
+- Pull-up/Dip station: overhead bar, dip handles, or assisted platform for bodyweight vertical work. Example movement: Pull-up. Look-for cue: Look for an overhead bar, dip handles, or assist platform.
+- Resistance band: elastic resistance anchored to a rack, door, post, or held under the feet. Example movement: Band Face Pull. Look-for cue: Look for a band anchored to a rack, door, or post.
+- Leg press or hack squat: guided lower-body sled path. Example movement: Leg Press. Look-for cue: Look for a sled platform, seat, and safety handles.
 - Bodyweight or open station: floor, bench, pull-up bar, dip station, bands, or open movement space. Example movement: Push-up. Look-for cue: Look for floor, bench, bar, bands, or open space.
 
 Pair the visual cue with the target muscle, one setup cue, an example movement, and one look-for cue, for example: `Exercise visual guide: Smith machine | guided incline press path | upper chest | align bench under the fixed bar path | example movement: Incline Smith Press | look-for cue: Look for two rails and a fixed bar`.
+
+For app-linked plans, keep the visual guide wording consistent across the written plan, Android Exercise Visual Library, and AI review context. The goal is quick recognition, not anatomical artwork: simple instance diagrams plus equipment/action labels are enough for a non-pro user to understand which station or setup to find in the gym.
 
 ## Movement Patterns
 

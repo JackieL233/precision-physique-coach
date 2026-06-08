@@ -21,6 +21,8 @@ class AndroidAppStructureTest(unittest.TestCase):
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/ProgressionAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseHistoryAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/BodyCompositionAdvisor.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/network/OpenAiResponsesClient.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLog.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLogStore.kt",
@@ -188,6 +190,29 @@ class AndroidAppStructureTest(unittest.TestCase):
             "calorie adjustment",
             "target calories",
             "phaseGoal",
+            "Recovery guidance",
+            "RecoveryGuidance",
+            "recoveryGuidance",
+            "recommended training action",
+            "recommendedTrainingAction",
+            "readiness score",
+            "readinessScore",
+            "training pressure",
+            "trainingPressure",
+            "Controlled push",
+            "Hold training stress",
+            "Reduce volume",
+            "Deload check",
+            "Exercise visual guide",
+            "visualPromptLine",
+            "equipment/action categories",
+            "ExerciseVisualSpec",
+            "ExerciseVisualType",
+            "exerciseVisualLibrarySpecs",
+            "Adjustable bench",
+            "Pull-up/Dip station",
+            "Resistance band",
+            "Leg press or hack squat",
             "Progression cue",
             "Use each Progression Cue",
             "progressionCue",
@@ -209,7 +234,13 @@ class AndroidAppStructureTest(unittest.TestCase):
         body_composition = (
             APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/BodyCompositionAdvisor.kt"
         ).read_text(encoding="utf-8")
-        combined = f"{model}\n{store}\n{ai_review_store}\n{athlete_profile}\n{plan_model}\n{plan_store}\n{summary}\n{progression}\n{history}\n{body_composition}"
+        recovery = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt").read_text(
+            encoding="utf-8"
+        )
+        visual = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt").read_text(
+            encoding="utf-8"
+        )
+        combined = f"{model}\n{store}\n{ai_review_store}\n{athlete_profile}\n{plan_model}\n{plan_store}\n{summary}\n{progression}\n{history}\n{body_composition}\n{recovery}\n{visual}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -290,12 +321,24 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Barbell",
             "Machine",
             "Bodyweight or open station",
+            "Adjustable bench",
+            "Pull-up/Dip station",
+            "Resistance band",
+            "Leg press or hack squat",
             "Example: ${spec.example}",
             "Look for two rails and a fixed bar",
             "Look for a cable, pulley, and handle",
+            "Look for a flat or adjustable bench",
+            "Look for an overhead bar, dip handles, or assist platform",
+            "Look for a band anchored to a rack, door, or post",
+            "Look for a sled platform, seat, and safety handles",
+            "equipment/action instance diagrams",
             "Dumbbell Row",
             "Barbell Squat",
             "Machine Chest Press",
+            "Incline Dumbbell Press",
+            "Band Face Pull",
+            "Leg Press",
             "NutritionPacing",
             "Nutrition Pacing",
             "BodyCompositionGuidance",
@@ -308,6 +351,17 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Need trend data",
             "Kcal adjust",
             "Weight trend",
+            "RecoveryGuidance",
+            "Recovery Guidance",
+            "RecoveryGuidanceCard",
+            "recoveryGuidance",
+            "Training action",
+            "Sleep signal",
+            "HR signal",
+            "Controlled push",
+            "Hold training stress",
+            "Reduce volume",
+            "Deload check",
             "nextMealFocus",
             "Next meal focus",
             "formatRemaining",
@@ -350,7 +404,13 @@ class AndroidAppStructureTest(unittest.TestCase):
         body_composition = (
             APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/BodyCompositionAdvisor.kt"
         ).read_text(encoding="utf-8")
-        combined = f"{ui}\n{view_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}"
+        recovery = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt").read_text(
+            encoding="utf-8"
+        )
+        visual = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt").read_text(
+            encoding="utf-8"
+        )
+        combined = f"{ui}\n{view_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}\n{recovery}\n{visual}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -436,6 +496,10 @@ class AndroidAppStructureTest(unittest.TestCase):
             "dumbbells",
             "barbell",
             "machine",
+            "adjustable bench",
+            "pull-up/dip station",
+            "resistance band",
+            "leg press or hack squat",
             "bodyweight/open-station",
             "example movement",
             "look-for cue",
@@ -445,6 +509,10 @@ class AndroidAppStructureTest(unittest.TestCase):
             "next-meal focus",
             "Body Composition Guidance",
             "small calorie adjustment",
+            "Recovery Guidance",
+            "training-pressure guidance",
+            "reduce volume",
+            "deload check",
             "Progression Cue",
             "Exercise History",
             "previous/current volume",
@@ -490,14 +558,23 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Dumbbells",
             "Barbell",
             "Machine",
+            "Adjustable bench",
+            "Pull-up/Dip station",
+            "Resistance band",
+            "Leg press or hack squat",
             "Bodyweight or open station",
             "Guided press path",
             "Pulley resistance",
             "Example: Incline Smith Press",
             "Look for two rails and a fixed bar",
             "Unified exercise visual guide",
+            "equipment/action instance diagrams",
             "Nutrition Pacing",
             "Body Composition Guidance",
+            "Recovery Guidance",
+            "Training action",
+            "Sleep signal",
+            "HR signal",
             "Hold targets",
             "Kcal adjust",
             "Weight trend",
@@ -544,6 +621,14 @@ class AndroidAppStructureTest(unittest.TestCase):
             "example movement",
             "look-for cue",
             "Look for two rails and a fixed bar",
+            "Adjustable bench",
+            "Pull-up/Dip station",
+            "Resistance band",
+            "Leg press or hack squat",
+            "Look for a flat or adjustable bench",
+            "Look for an overhead bar, dip handles, or assist platform",
+            "Look for a band anchored to a rack, door, or post",
+            "Look for a sled platform, seat, and safety handles",
         ]
         combined = f"{skill_library}\n{app_library}"
         for term in expected_terms:

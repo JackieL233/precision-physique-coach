@@ -59,10 +59,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.iwanttobeanifbbpro.app.core.BodyCompositionGuidance
 import com.iwanttobeanifbbpro.app.core.CoachMode
 import com.iwanttobeanifbbpro.app.core.ExerciseHistorySummary
+import com.iwanttobeanifbbpro.app.core.ExerciseVisualSpec
+import com.iwanttobeanifbbpro.app.core.ExerciseVisualType
 import com.iwanttobeanifbbpro.app.core.ProgressionCue
+import com.iwanttobeanifbbpro.app.core.RecoveryGuidance
 import com.iwanttobeanifbbpro.app.core.bodyCompositionGuidance
+import com.iwanttobeanifbbpro.app.core.exerciseVisualLibrarySpecs
+import com.iwanttobeanifbbpro.app.core.exerciseVisualSpec
 import com.iwanttobeanifbbpro.app.core.exerciseHistorySummary
 import com.iwanttobeanifbbpro.app.core.progressionCue
+import com.iwanttobeanifbbpro.app.core.recoveryGuidance
 import com.iwanttobeanifbbpro.app.data.AiReviewEntry
 import com.iwanttobeanifbbpro.app.data.AthleteProfile
 import com.iwanttobeanifbbpro.app.data.DailyLog
@@ -633,6 +639,10 @@ private fun TodayDashboard(
             guidance = bodyCompositionGuidance(log, state.recentLogs, state.athleteProfile),
             subtitle = "Trend-based target check before changing calories."
         )
+        RecoveryGuidanceCard(
+            guidance = recoveryGuidance(log, state.recentLogs),
+            subtitle = "Sleep, soreness, stress, resting HR, and set pressure before pushing harder."
+        )
         TrendOverviewCard(logs = state.recentLogs)
         BeginnerGuideCard(onOpenPlan = onOpenPlan, onOpenNutrition = onOpenNutrition, onOpenMetrics = onOpenMetrics)
     }
@@ -683,6 +693,34 @@ private fun BodyCompositionCard(guidance: BodyCompositionGuidance, subtitle: Str
                 "Set avg" to guidance.averageCompletedSets.formatHistoryValue("sets"),
                 "Kcal adjust" to guidance.calorieAdjustmentKcal.formatSignedInt("kcal"),
                 "Target" to "${guidance.targetCalories} kcal"
+            )
+        )
+        Text(
+            text = guidance.rationale,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            text = "Next action: ${guidance.nextAction}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun RecoveryGuidanceCard(guidance: RecoveryGuidance, subtitle: String) {
+    SectionCard(title = "Recovery Guidance", subtitle = subtitle) {
+        MetricGrid(
+            metrics = listOf(
+                "Status" to guidance.statusLabel,
+                "Score" to guidance.readinessScore.toString(),
+                "Pressure" to guidance.trainingPressure,
+                "Sleep signal" to guidance.sleepSignal,
+                "Stress signal" to guidance.stressSignal,
+                "Soreness" to guidance.sorenessSignal,
+                "HR signal" to guidance.heartRateSignal,
+                "Training action" to guidance.recommendedTrainingAction
             )
         )
         Text(
@@ -1047,25 +1085,6 @@ private fun PlannedExerciseCard(exercise: PlannedExercise, onRemove: () -> Unit)
     }
 }
 
-private enum class ExerciseVisualType {
-    SMITH_MACHINE,
-    CABLE,
-    DUMBBELL,
-    BARBELL,
-    MACHINE,
-    BODYWEIGHT
-}
-
-private data class ExerciseVisualSpec(
-    val type: ExerciseVisualType,
-    val equipment: String,
-    val pattern: String,
-    val primaryMuscle: String,
-    val setupCue: String,
-    val example: String,
-    val lookFor: String
-)
-
 @Composable
 private fun ExerciseVisualGuide(name: String, targetMuscle: String) {
     val spec = remember(name, targetMuscle) { exerciseVisualSpec(name, targetMuscle) }
@@ -1109,16 +1128,9 @@ private fun ExerciseVisualGuide(name: String, targetMuscle: String) {
 private fun ExerciseVisualGuideLibrary() {
     SectionCard(
         title = "Exercise Visual Library",
-        subtitle = "Use these unified instance diagrams to recognize the equipment or action before adding a movement."
+        subtitle = "Unified equipment/action instance diagrams help non-pro users recognize what an exercise name refers to before adding it."
     ) {
-        val examples = listOf(
-            exerciseVisualSpec("Smith incline press", "Upper chest"),
-            exerciseVisualSpec("Cable lateral raise", "Side delt"),
-            exerciseVisualSpec("Dumbbell row", "Back"),
-            exerciseVisualSpec("Barbell squat", "Quads"),
-            exerciseVisualSpec("Machine chest press", "Chest"),
-            exerciseVisualSpec("Push-up", "Chest")
-        )
+        val examples = exerciseVisualLibrarySpecs()
         examples.forEachIndexed { index, spec ->
             ExerciseVisualGuideSample(spec = spec)
             if (index != examples.lastIndex) {
@@ -1270,6 +1282,65 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawExerciseVisual(
             )
         }
 
+        ExerciseVisualType.BENCH -> {
+            drawLine(secondary, Offset(w * 0.22f, h * 0.74f), Offset(w * 0.76f, h * 0.62f), strokeWidth = stroke, cap = StrokeCap.Round)
+            drawLine(secondary, Offset(w * 0.34f, h * 0.74f), Offset(w * 0.28f, h * 0.82f), strokeWidth = thin, cap = StrokeCap.Round)
+            drawLine(secondary, Offset(w * 0.68f, h * 0.64f), Offset(w * 0.74f, h * 0.82f), strokeWidth = thin, cap = StrokeCap.Round)
+            drawPerson(
+                head = Offset(w * 0.48f, h * 0.38f),
+                hip = Offset(w * 0.58f, h * 0.58f),
+                leftHand = Offset(w * 0.35f, h * 0.32f),
+                rightHand = Offset(w * 0.66f, h * 0.32f),
+                leftFoot = Offset(w * 0.42f, h * 0.78f),
+                rightFoot = Offset(w * 0.68f, h * 0.76f)
+            )
+            drawLine(primary, Offset(w * 0.31f, h * 0.32f), Offset(w * 0.40f, h * 0.32f), strokeWidth = stroke, cap = StrokeCap.Round)
+            drawLine(primary, Offset(w * 0.62f, h * 0.32f), Offset(w * 0.71f, h * 0.32f), strokeWidth = stroke, cap = StrokeCap.Round)
+        }
+
+        ExerciseVisualType.PULL_UP_STATION -> {
+            drawLine(secondary, Offset(w * 0.24f, h * 0.18f), Offset(w * 0.24f, h * 0.82f), strokeWidth = stroke)
+            drawLine(secondary, Offset(w * 0.76f, h * 0.18f), Offset(w * 0.76f, h * 0.82f), strokeWidth = stroke)
+            drawLine(primary, Offset(w * 0.20f, h * 0.20f), Offset(w * 0.80f, h * 0.20f), strokeWidth = stroke, cap = StrokeCap.Round)
+            drawPerson(
+                head = Offset(w * 0.50f, h * 0.38f),
+                hip = Offset(w * 0.50f, h * 0.62f),
+                leftHand = Offset(w * 0.38f, h * 0.22f),
+                rightHand = Offset(w * 0.62f, h * 0.22f),
+                leftFoot = Offset(w * 0.44f, h * 0.78f),
+                rightFoot = Offset(w * 0.56f, h * 0.78f)
+            )
+        }
+
+        ExerciseVisualType.BAND -> {
+            drawLine(secondary, Offset(w * 0.18f, h * 0.16f), Offset(w * 0.18f, h * 0.82f), strokeWidth = stroke)
+            drawLine(primary, Offset(w * 0.20f, h * 0.42f), Offset(w * 0.58f, h * 0.52f), strokeWidth = thin, cap = StrokeCap.Round)
+            drawLine(primary, Offset(w * 0.20f, h * 0.42f), Offset(w * 0.60f, h * 0.42f), strokeWidth = thin, cap = StrokeCap.Round)
+            drawPerson(
+                head = Offset(w * 0.72f, h * 0.34f),
+                hip = Offset(w * 0.64f, h * 0.62f),
+                leftHand = Offset(w * 0.58f, h * 0.52f),
+                rightHand = Offset(w * 0.60f, h * 0.42f),
+                leftFoot = Offset(w * 0.58f, h * 0.80f),
+                rightFoot = Offset(w * 0.74f, h * 0.80f)
+            )
+        }
+
+        ExerciseVisualType.LEG_PRESS -> {
+            drawLine(secondary, Offset(w * 0.18f, h * 0.78f), Offset(w * 0.74f, h * 0.78f), strokeWidth = stroke, cap = StrokeCap.Round)
+            drawLine(secondary, Offset(w * 0.30f, h * 0.72f), Offset(w * 0.62f, h * 0.52f), strokeWidth = stroke, cap = StrokeCap.Round)
+            drawLine(primary, Offset(w * 0.62f, h * 0.30f), Offset(w * 0.84f, h * 0.58f), strokeWidth = stroke, cap = StrokeCap.Round)
+            drawLine(primary, Offset(w * 0.72f, h * 0.28f), Offset(w * 0.90f, h * 0.52f), strokeWidth = thin, cap = StrokeCap.Round)
+            drawPerson(
+                head = Offset(w * 0.38f, h * 0.42f),
+                hip = Offset(w * 0.48f, h * 0.62f),
+                leftHand = Offset(w * 0.36f, h * 0.60f),
+                rightHand = Offset(w * 0.50f, h * 0.56f),
+                leftFoot = Offset(w * 0.67f, h * 0.45f),
+                rightFoot = Offset(w * 0.70f, h * 0.52f)
+            )
+        }
+
         ExerciseVisualType.BODYWEIGHT -> {
             drawLine(primary, Offset(w * 0.26f, h * 0.70f), Offset(w * 0.84f, h * 0.70f), strokeWidth = stroke, cap = StrokeCap.Round)
             drawPerson(
@@ -1281,86 +1352,6 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawExerciseVisual(
                 rightFoot = Offset(w * 0.72f, h * 0.58f)
             )
         }
-    }
-}
-
-private fun exerciseVisualSpec(name: String, targetMuscle: String): ExerciseVisualSpec {
-    val text = "$name $targetMuscle".lowercase(Locale.US)
-    val primaryMuscle = targetMuscle.ifBlank { inferPrimaryMuscle(text) }
-    return when {
-        text.contains("smith") -> ExerciseVisualSpec(
-            type = ExerciseVisualType.SMITH_MACHINE,
-            equipment = "Smith machine",
-            pattern = "Guided press or squat path",
-            primaryMuscle = primaryMuscle,
-            setupCue = "Align bench or stance under the fixed bar path",
-            example = "Incline Smith Press",
-            lookFor = "Look for two rails and a fixed bar"
-        )
-
-        text.contains("cable") || text.contains("pulley") || text.contains("rope") || text.contains("pushdown") || text.contains("face pull") -> ExerciseVisualSpec(
-            type = ExerciseVisualType.CABLE,
-            equipment = "Cable station",
-            pattern = "Pulley resistance",
-            primaryMuscle = primaryMuscle,
-            setupCue = "Set pulley height before choosing handle",
-            example = "Cable Lateral Raise",
-            lookFor = "Look for a cable, pulley, and handle"
-        )
-
-        text.contains("dumbbell") || text.contains("db ") || text.endsWith(" db") -> ExerciseVisualSpec(
-            type = ExerciseVisualType.DUMBBELL,
-            equipment = "Dumbbells",
-            pattern = "Free-weight unilateral control",
-            primaryMuscle = primaryMuscle,
-            setupCue = "Match both sides and control the path",
-            example = "Dumbbell Row",
-            lookFor = "Look for one or two handheld weights"
-        )
-
-        text.contains("barbell") || text.contains("bench press") || text.contains("deadlift") || text.contains("squat") -> ExerciseVisualSpec(
-            type = ExerciseVisualType.BARBELL,
-            equipment = "Barbell",
-            pattern = "Free-weight compound lift",
-            primaryMuscle = primaryMuscle,
-            setupCue = "Set rack height, grip, stance, and safety pins",
-            example = "Barbell Squat",
-            lookFor = "Look for a straight bar, plates, and rack"
-        )
-
-        text.contains("machine") || text.contains("press") || text.contains("extension") || text.contains("curl") || text.contains("pec deck") || text.contains("leg") -> ExerciseVisualSpec(
-            type = ExerciseVisualType.MACHINE,
-            equipment = "Machine",
-            pattern = "Guided resistance",
-            primaryMuscle = primaryMuscle,
-            setupCue = "Adjust seat and pads to match joint axis",
-            example = "Machine Chest Press",
-            lookFor = "Look for a seat, pads, handles, or lever arms"
-        )
-
-        else -> ExerciseVisualSpec(
-            type = ExerciseVisualType.BODYWEIGHT,
-            equipment = "Bodyweight or open station",
-            pattern = "Movement pattern demo",
-            primaryMuscle = primaryMuscle,
-            setupCue = "Use notes or photos when the exact setup is unclear",
-            example = "Push-up",
-            lookFor = "Look for floor, bench, bar, bands, or open space"
-        )
-    }
-}
-
-private fun inferPrimaryMuscle(text: String): String {
-    return when {
-        text.contains("lateral") || text.contains("delt") || text.contains("shoulder") -> "Delts"
-        text.contains("incline") || text.contains("chest") || text.contains("press") || text.contains("pec") -> "Chest"
-        text.contains("row") || text.contains("pulldown") || text.contains("lat") || text.contains("back") -> "Back"
-        text.contains("squat") || text.contains("leg press") || text.contains("quad") -> "Quads"
-        text.contains("deadlift") || text.contains("rdl") || text.contains("hamstring") || text.contains("glute") -> "Posterior chain"
-        text.contains("curl") || text.contains("biceps") -> "Biceps"
-        text.contains("extension") || text.contains("pushdown") || text.contains("triceps") -> "Triceps"
-        text.contains("calf") -> "Calves"
-        else -> "Target muscle"
     }
 }
 
@@ -1871,6 +1862,10 @@ private fun MetricsPage(
             onConnectHealthData = onConnectHealthData,
             onSyncHealthData = onSyncHealthData
         )
+        RecoveryGuidanceCard(
+            guidance = recoveryGuidance(state.dailyLog, state.recentLogs),
+            subtitle = "Conservative training-pressure guidance from logged recovery and health signals."
+        )
         TrendOverviewCard(logs = state.recentLogs)
         SectionCard(title = "Metrics", subtitle = "These recovery and physique signals help AI decide whether to push, hold, deload, or adjust food.") {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -2098,16 +2093,28 @@ private fun AiCoachPage(
                     "Rest time",
                     "Hard sets",
                     "Tonnage",
+                    "Progression Cue",
+                    "Exercise History",
+                    "Exercise visual guide",
+                    "Equipment/action diagrams",
+                    "Look-for cue",
                     "Technique notes",
                     "Pain flags",
                     "Meal macros",
+                    "Nutrition Pacing",
+                    "Body Composition Guidance",
+                    "Recovery Guidance",
                     "Food photos",
                     "Equipment photos",
                     "Form photos",
                     "Body weight",
+                    "Body fat",
+                    "Lean mass",
                     "Waist",
                     "Sleep",
                     "Steps",
+                    "Resting HR",
+                    "Calorie burn",
                     "Hunger",
                     "Fatigue",
                     "Soreness",

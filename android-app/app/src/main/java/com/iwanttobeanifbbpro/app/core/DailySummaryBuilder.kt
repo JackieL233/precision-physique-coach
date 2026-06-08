@@ -15,21 +15,25 @@ class DailySummaryBuilder {
         val totals = log.nutritionTotals()
         val nutritionPacing = log.nutritionPacingSummary()
         val bodyCompositionGuidance = bodyCompositionGuidance(log, recentLogs, profile)
+        val recoveryGuidance = recoveryGuidance(log, recentLogs)
         val trend = buildTrendSummary(recentLogs.ifEmpty { listOf(log) })
         val weeklyPlan = plan?.days?.joinToString("\n") { day ->
             val plannedExercises = day.exercises.joinToString("\n") { exercise ->
-                "  - ${exercise.name}: ${exercise.sets} x ${exercise.reps}, load ${exercise.loadKg ?: "not specified"} kg, RIR ${exercise.rir ?: "not specified"}, rest ${exercise.restSeconds}s, target ${exercise.targetMuscle.ifBlank { "not specified" }}, notes: ${exercise.notes.ifBlank { "none" }}"
+                val visual = exerciseVisualSpec(exercise.name, exercise.targetMuscle)
+                "  - ${exercise.name}: ${exercise.sets} x ${exercise.reps}, load ${exercise.loadKg ?: "not specified"} kg, RIR ${exercise.rir ?: "not specified"}, rest ${exercise.restSeconds}s, target ${exercise.targetMuscle.ifBlank { "not specified" }}, notes: ${exercise.notes.ifBlank { "none" }}. ${visual.visualPromptLine()}"
             }.ifBlank { "  - No planned exercises." }
             "- ${day.dayName}: focus ${day.focus.ifBlank { "not specified" }}, notes: ${day.notes.ifBlank { "none" }}\n$plannedExercises"
         } ?: "- No weekly plan loaded."
         val exercises = log.trainingSession.exercises.joinToString("\n") { exercise ->
             val cue = exercise.progressionCue()
             val history = exercise.exerciseHistorySummary(log, recentLogs)
+            val visual = exerciseVisualSpec(exercise.name, exercise.targetMuscle)
             val setLog = exercise.trackedSets().joinToString("\n") { set ->
                 "  - Set ${set.setNumber}: target ${set.targetReps}, actual reps ${set.actualReps ?: "not logged"}, load ${set.loadKg ?: "not logged"} kg, RIR ${set.rir ?: "not logged"}, completed ${set.completed}, rest ${set.restSeconds}s, notes: ${set.notes.ifBlank { "none" }}"
             }
             """
             - ${exercise.name}: target ${exercise.targetMuscle.ifBlank { "not logged" }}, plan ${exercise.sets} sets x ${exercise.reps}, default load ${exercise.loadKg ?: "bodyweight"} kg, default RIR ${exercise.rir ?: "unknown"}, completed sets ${exercise.completedSetCount()}/${exercise.trackedSets().size}, volume ${exercise.volumeKg()} kg, default rest ${exercise.restSeconds}s, notes: ${exercise.notes.ifBlank { "none" }}
+              ${visual.visualPromptLine()}
               Progression cue: ${cue.label}. ${cue.reason} ${cue.nextAction}
               Exercise history: ${history.statusLabel}. Previous date ${history.previousDate ?: "none"}, previous volume ${history.previousVolumeKg ?: "not available"} kg, current volume ${history.currentVolumeKg} kg, previous best load ${history.previousBestLoadKg ?: "not available"} kg, current best load ${history.currentBestLoadKg ?: "not logged"} kg, previous best reps ${history.previousBestReps ?: "not available"}, current best reps ${history.currentBestReps ?: "not logged"}, previous average RIR ${history.previousAverageRir ?: "not available"}, current average RIR ${history.currentAverageRir ?: "not logged"}. ${history.guidance}
             $setLog
@@ -81,6 +85,7 @@ class DailySummaryBuilder {
             - Nutrition pacing: ${nutritionPacing.statusLabel}, adherence ${nutritionPacing.adherenceScore}%, calories ${nutritionPacing.caloriesRemaining} kcal remaining, protein ${nutritionPacing.proteinRemaining}g remaining, carbs ${nutritionPacing.carbsRemaining}g remaining, fat ${nutritionPacing.fatRemaining}g remaining, fiber ${nutritionPacing.fiberRemaining}g remaining.
             - Next meal focus: ${nutritionPacing.nextMealFocus}
             - Body composition guidance: ${bodyCompositionGuidance.statusLabel}, phase ${bodyCompositionGuidance.phaseGoal}, weight change ${bodyCompositionGuidance.weightChangeKg ?: "not enough data"} kg, average calories ${bodyCompositionGuidance.averageCalories?.roundForPrompt() ?: "not enough data"}, average protein ${bodyCompositionGuidance.averageProtein?.roundForPrompt() ?: "not enough data"} g, average completed sets ${bodyCompositionGuidance.averageCompletedSets?.roundForPrompt() ?: "not enough data"}, calorie adjustment ${bodyCompositionGuidance.calorieAdjustmentKcal} kcal, target calories ${bodyCompositionGuidance.targetCalories}, target protein ${bodyCompositionGuidance.targetProtein} g. ${bodyCompositionGuidance.rationale} ${bodyCompositionGuidance.nextAction}
+            - Recovery guidance: ${recoveryGuidance.statusLabel}, readiness score ${recoveryGuidance.readinessScore}, training pressure ${recoveryGuidance.trainingPressure}, sleep signal ${recoveryGuidance.sleepSignal}, stress signal ${recoveryGuidance.stressSignal}, soreness signal ${recoveryGuidance.sorenessSignal}, HR signal ${recoveryGuidance.heartRateSignal}, recommended training action ${recoveryGuidance.recommendedTrainingAction}. ${recoveryGuidance.rationale} ${recoveryGuidance.nextAction}
             Meals:
             $meals
 
@@ -123,10 +128,12 @@ class DailySummaryBuilder {
             4. Review set-level performance: load, reps, RIR, rest time, completed sets, technique notes, pain flags, target-muscle stimulus, and whether progression is justified.
             5. Compare Exercise History for repeated movements: previous date, previous volume, current volume, best load, best reps, completed sets, and average RIR.
             6. Use each Progression Cue as a deterministic starting point, then decide which exercises should add reps, add load, hold, reduce volume, swap, or deload next time.
-            7. Use Health Connect-derived data, if present, as approximate user-authorized signals from phone, scale, watch, Xiaomi, Huawei, or other source apps; do not overreact to one-day body-fat or calorie-burn estimates.
-            8. Compare food intake, Nutrition Pacing, and Body Composition Guidance with training demand; recommend the smallest useful calorie, protein, carb, fat, fiber, hydration, or meal-timing adjustment.
-            9. Use attached photos, if provided, as approximate evidence for exercise form, equipment identification, food portions, nutrition labels, menus, and progress comparison.
-            10. Specify tomorrow's training, nutrition, recovery, and tracking priorities.
+            7. Use Exercise visual guide lines to translate exercise names into equipment/action categories, setup cues, example movements, and look-for cues for non-pro users.
+            8. Compare Recovery Guidance before recommending push, hold, reduce volume, swap, rest, or deload choices.
+            9. Use Health Connect-derived data, if present, as approximate user-authorized signals from phone, scale, watch, Xiaomi, Huawei, or other source apps; do not overreact to one-day body-fat or calorie-burn estimates.
+            10. Compare food intake, Nutrition Pacing, Body Composition Guidance, and Recovery Guidance with training demand; recommend the smallest useful calorie, protein, carb, fat, fiber, hydration, or meal-timing adjustment.
+            11. Use attached photos, if provided, as approximate evidence for exercise form, equipment identification, food portions, nutrition labels, menus, and progress comparison.
+            12. Specify tomorrow's training, nutrition, recovery, and tracking priorities.
         """.trimIndent()
     }
 

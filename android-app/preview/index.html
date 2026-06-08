@@ -822,6 +822,191 @@
       background: var(--green);
     }
 
+    .bench .seat {
+      left: 22%;
+      right: 22%;
+      top: 66%;
+      height: 5px;
+      transform: rotate(-12deg);
+      background: var(--muted);
+    }
+
+    .bench .leg-left,
+    .bench .leg-right {
+      top: 72%;
+      width: 3px;
+      height: 18%;
+      background: var(--muted);
+    }
+
+    .bench .leg-left {
+      left: 32%;
+      transform: rotate(12deg);
+    }
+
+    .bench .leg-right {
+      right: 30%;
+      transform: rotate(-12deg);
+    }
+
+    .bench .head,
+    .pullup .head,
+    .band .head,
+    .legpress .head {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .bench .head {
+      left: 46%;
+      top: 38%;
+    }
+
+    .bench .body {
+      left: 48%;
+      top: 48%;
+      width: 30px;
+      height: 3px;
+      transform: rotate(34deg);
+      background: var(--green);
+    }
+
+    .bench .db-left,
+    .bench .db-right {
+      top: 34%;
+      width: 12%;
+      height: 5px;
+      background: var(--blue);
+    }
+
+    .bench .db-left {
+      left: 31%;
+    }
+
+    .bench .db-right {
+      right: 24%;
+    }
+
+    .pullup .post-left,
+    .pullup .post-right {
+      top: 16%;
+      bottom: 16%;
+      width: 5px;
+      background: var(--muted);
+    }
+
+    .pullup .post-left {
+      left: 24%;
+    }
+
+    .pullup .post-right {
+      right: 24%;
+    }
+
+    .pullup .bar-line {
+      left: 20%;
+      right: 20%;
+      top: 20%;
+      height: 5px;
+      background: var(--blue);
+    }
+
+    .pullup .head {
+      left: 47%;
+      top: 36%;
+    }
+
+    .pullup .body {
+      left: 49%;
+      top: 48%;
+      width: 3px;
+      height: 22%;
+      background: var(--green);
+    }
+
+    .band .post {
+      left: 18%;
+      top: 16%;
+      bottom: 16%;
+      width: 5px;
+      background: var(--muted);
+    }
+
+    .band .line-one,
+    .band .line-two {
+      left: 21%;
+      width: 43%;
+      height: 2px;
+      background: var(--blue);
+      transform-origin: left center;
+    }
+
+    .band .line-one {
+      top: 42%;
+      transform: rotate(14deg);
+    }
+
+    .band .line-two {
+      top: 50%;
+      transform: rotate(-9deg);
+    }
+
+    .band .head {
+      right: 18%;
+      top: 34%;
+    }
+
+    .band .body {
+      right: 21%;
+      top: 47%;
+      width: 28px;
+      height: 3px;
+      transform: rotate(102deg);
+      background: var(--green);
+    }
+
+    .legpress .rail {
+      left: 27%;
+      top: 68%;
+      width: 46%;
+      height: 5px;
+      transform: rotate(-28deg);
+      background: var(--muted);
+    }
+
+    .legpress .platform {
+      right: 14%;
+      top: 42%;
+      width: 25%;
+      height: 5px;
+      transform: rotate(52deg);
+      background: var(--blue);
+    }
+
+    .legpress .seat {
+      left: 24%;
+      top: 72%;
+      width: 28%;
+      height: 5px;
+      background: var(--muted);
+    }
+
+    .legpress .head {
+      left: 34%;
+      top: 42%;
+    }
+
+    .legpress .body {
+      left: 42%;
+      top: 54%;
+      width: 27%;
+      height: 3px;
+      transform: rotate(-25deg);
+      background: var(--green);
+    }
+
     .rest-banner {
       display: none;
       border: 1px solid #b8dcff;
@@ -1079,6 +1264,22 @@
               <div class="metric"><span class="label">Kcal adjust</span><span class="value">0 kcal</span></div>
             </div>
             <p class="subtle"><strong>Next action:</strong> hold calories for another check-in and reassess with the next trend window.</p>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>Recovery Guidance</h2>
+              <p class="subtle">Training-pressure guidance before pushing harder.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Status</span><span class="value">Controlled push</span></div>
+              <div class="metric"><span class="label">Score</span><span class="value">84</span></div>
+              <div class="metric"><span class="label">Pressure</span><span class="value">Moderate</span></div>
+              <div class="metric"><span class="label">Sleep signal</span><span class="value">Good sleep</span></div>
+              <div class="metric"><span class="label">HR signal</span><span class="value">Near baseline</span></div>
+              <div class="metric"><span class="label">Training action</span><span class="value">Keep plan</span></div>
+            </div>
+            <p class="subtle"><strong>Next action:</strong> progress only clean exercises with supportive history and honest RIR.</p>
           </div>
 
           <div class="section">
@@ -1345,6 +1546,22 @@
 
           <div class="section">
             <div class="section-head">
+              <h2>Recovery Guidance</h2>
+              <p class="subtle">Sleep, soreness, stress, resting HR, and set pressure decide whether to push, hold, reduce, or deload.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label">Status</span><span class="value">Hold training stress</span></div>
+              <div class="metric"><span class="label">Score</span><span class="value">71</span></div>
+              <div class="metric"><span class="label">Sleep signal</span><span class="value">Below target</span></div>
+              <div class="metric"><span class="label">Stress signal</span><span class="value">Moderate</span></div>
+              <div class="metric"><span class="label">Soreness</span><span class="value">Elevated</span></div>
+              <div class="metric"><span class="label">HR signal</span><span class="value">Baseline building</span></div>
+            </div>
+            <p class="subtle"><strong>Training action:</strong> keep load and sets stable; avoid adding extra sets or failure work today.</p>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
               <h2>Recovery Inputs</h2>
               <p class="subtle">Subjective signals keep recommendations conservative.</p>
             </div>
@@ -1390,9 +1607,13 @@
               <span class="chip active">Set load/reps/RIR</span>
               <span class="chip active">Progression Cue</span>
               <span class="chip active">Exercise History</span>
+              <span class="chip active">Exercise visual guide</span>
+              <span class="chip active">Equipment/action diagrams</span>
+              <span class="chip active">Look-for cue</span>
               <span class="chip active">Food photos/macros</span>
               <span class="chip active">Nutrition Pacing</span>
               <span class="chip active">Body Composition Guidance</span>
+              <span class="chip active">Recovery Guidance</span>
               <span class="chip active">Health Connect</span>
               <span class="chip active">7-day trend</span>
             </div>
@@ -1445,6 +1666,8 @@
             <span class="chip active">Weekly plan</span>
             <span class="chip active">Set quality</span>
             <span class="chip active">Nutrition totals + pacing</span>
+            <span class="chip active">Exercise visual guide</span>
+            <span class="chip active">Recovery Guidance</span>
             <span class="chip active">Food photos</span>
             <span class="chip active">Form photos</span>
             <span class="chip active">Health Connect</span>
@@ -1455,7 +1678,7 @@
         <div class="section">
           <div class="section-head">
             <h2>Exercise Visual Library</h2>
-            <p class="subtle">Unified instance diagrams make exercise names easier to recognize before the user becomes fluent in gym language.</p>
+            <p class="subtle">Unified equipment/action instance diagrams make exercise names easier to recognize before the user becomes fluent in gym language.</p>
           </div>
           <div class="visual-guide compact">
             <div class="mini-figure compact smith" aria-hidden="true">
@@ -1505,6 +1728,46 @@
               <strong>Machine</strong>
               <p class="subtle">Guided resistance | Example: Machine Chest Press</p>
               <div class="chip-row"><span class="chip">Look for a seat, pads, handles, or lever arms</span></div>
+            </div>
+          </div>
+          <div class="visual-guide compact">
+            <div class="mini-figure compact bench" aria-hidden="true">
+              <span class="seat"></span><span class="leg-left"></span><span class="leg-right"></span><span class="head"></span><span class="body"></span><span class="db-left"></span><span class="db-right"></span>
+            </div>
+            <div>
+              <strong>Adjustable bench</strong>
+              <p class="subtle">Bench-supported setup | Example: Incline Dumbbell Press</p>
+              <div class="chip-row"><span class="chip">Look for a flat or adjustable bench</span></div>
+            </div>
+          </div>
+          <div class="visual-guide compact">
+            <div class="mini-figure compact pullup" aria-hidden="true">
+              <span class="post-left"></span><span class="post-right"></span><span class="bar-line"></span><span class="head"></span><span class="body"></span>
+            </div>
+            <div>
+              <strong>Pull-up/Dip station</strong>
+              <p class="subtle">Bodyweight vertical support | Example: Pull-up</p>
+              <div class="chip-row"><span class="chip">Look for an overhead bar, dip handles, or assist platform</span></div>
+            </div>
+          </div>
+          <div class="visual-guide compact">
+            <div class="mini-figure compact band" aria-hidden="true">
+              <span class="post"></span><span class="line-one"></span><span class="line-two"></span><span class="head"></span><span class="body"></span>
+            </div>
+            <div>
+              <strong>Resistance band</strong>
+              <p class="subtle">Elastic resistance | Example: Band Face Pull</p>
+              <div class="chip-row"><span class="chip">Look for a band anchored to a rack, door, or post</span></div>
+            </div>
+          </div>
+          <div class="visual-guide compact">
+            <div class="mini-figure compact legpress" aria-hidden="true">
+              <span class="rail"></span><span class="platform"></span><span class="seat"></span><span class="head"></span><span class="body"></span>
+            </div>
+            <div>
+              <strong>Leg press or hack squat</strong>
+              <p class="subtle">Guided lower-body sled path | Example: Leg Press</p>
+              <div class="chip-row"><span class="chip">Look for a sled platform, seat, and safety handles</span></div>
             </div>
           </div>
           <div class="visual-guide compact">

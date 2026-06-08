@@ -9,12 +9,13 @@ The preview mirrors the current Android app structure:
 - Today command center
 - Athlete profile and weekly plan
 - Unified exercise visual guide for equipment/action recognition
-- Exercise Visual Library with simple instance diagrams, example movements, and look-for cues
+- Exercise Visual Library with simple instance diagrams, example movements, and look-for cues for Smith machine, cable station, dumbbells, barbell, machine, adjustable bench, pull-up/dip station, resistance band, leg press or hack squat, and bodyweight/open-station work
 - Set-level training execution
 - Exercise History comparison for previous/current volume, best load, best reps, sets, and average RIR
 - Rest countdown after completing a set
 - Daily nutrition tracking
 - Body Composition Guidance for trend-based calorie target checks
+- Recovery Guidance for sleep, soreness, stress, resting HR, and training-pressure decisions
 - Health Connect and vendor-data boundary
 - AI Coach and AI Data Map
 
