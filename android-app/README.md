@@ -8,6 +8,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - Bundled skill assets in `app/src/main/assets/skill/`.
 - Apple-inspired light UI theme with a quiet neutral background, blue action color, rounded grouped surfaces, and bottom navigation for the main daily tabs.
 - A `Today` Command Center with readiness, next action, training, nutrition, recovery, and body-composition cards so beginners know what to do first while advanced users can scan the key numbers.
+- A `Daily Coach Checklist` on `Today` that tracks whether the plan is prepared, training is executed, food is logged, metrics are synced, and the AI review is locked for the day.
 - Local daily log history with a 7-day trend summary for body weight, calories, protein, sleep, steps, hard sets, and training volume.
 - Saved AI review history so the latest coaching guidance remains visible after the app closes.
 - Athlete Profile setup for long-term goal, current phase, training experience, target weight/body fat, weekly training days, equipment, weak points, diet preference, and constraints. This profile is included in every daily AI review.
@@ -44,6 +45,7 @@ Use the app as a daily training and daily nutrition cockpit:
 1. Set `Athlete Profile` in `Plan` so the app knows your phase, target, training schedule, equipment, weak points, and constraints.
 2. Open `Today` to see the current training, nutrition, metrics, and readiness summary.
    The Command Center shows the next best action and a beginner-friendly daily loop: plan, train, log food, sync health data, then run AI review.
+   The Daily Coach Checklist turns that loop into tappable steps: `Plan prepared`, `Training executed`, `Food logged`, `Metrics synced`, and `AI review locked`.
    The 7-day trend card shows whether body weight, food intake, hard sets, sleep, and activity are moving in the right direction.
 3. Use `Plan` to pick a Plan Template or build the weekly training plan manually, select a day, add planned exercises, and tap `Apply today`.
 4. Use `Training` to log the applied session, set-by-set weight, reps, RIR, rest time, hard sets, target muscle, and pain/form notes. Exercise History compares repeated movements against the previous logged session, the exercise visual guide, live equipment/action preview, and Exercise Visual Library help identify the equipment/action through unified instance diagrams, Chinese labels, common movements, example movements, and look-for cues, while Progression Cue tells whether to add reps, add load, hold, modify, or finish baseline work. Tap `Complete` after a set to start the rest timer.

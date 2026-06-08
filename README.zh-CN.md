@@ -31,6 +31,7 @@
 
 - 简洁 Apple-inspired 浅色界面：安静背景、蓝色主操作、底部导航、分组卡片和清晰层级。
 - `Today` Command Center：首页显示 readiness、下一步行动、训练、饮食、恢复和体成分卡片，让新手知道先做什么，也让进阶用户快速扫关键数据。
+- Daily Coach Checklist：在 `Today` 中把每天必须完成的闭环变成可点击清单，包括 `Plan prepared`、`Training executed`、`Food logged`、`Metrics synced` 和 `AI review locked`，让用户可以照着 app 完成训练、饮食、健康数据和 AI 复盘。
 - 本地每日历史记录和 7 天趋势卡片：追踪体重、热量、蛋白质、睡眠、步数、hard sets 和训练量，并把趋势行加入 AI 复盘，避免只根据某一天数据做过度调整。
 - AI 复盘结果本地保存：最新建议会显示在 `Today`，最近几次复盘可在 `AI Coach` 回看，让 app 更像持续跟进的每日教练，而不是一次性的聊天回答。
 - Athlete Profile 个人档案：在 `Plan` 中记录长期体型目标、当前阶段、训练经验、目标体重/体脂、每周训练天数、器械条件、弱项、饮食偏好和限制条件；这些信息会进入每日 AI 复盘，让训练计划和饮食建议更贴合个人目标。

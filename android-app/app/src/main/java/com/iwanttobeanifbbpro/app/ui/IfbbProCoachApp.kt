@@ -132,7 +132,8 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                             onOpenPlan = { viewModel.selectTab(AppTab.PLAN) },
                             onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
                             onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
-                            onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) }
+                            onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
+                            onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
                         )
                     }
                 }
@@ -296,6 +297,15 @@ private data class NutritionPacing(
     val nextMealFocus: String
 )
 
+private data class DailyCoachTask(
+    val title: String,
+    val detail: String,
+    val done: Boolean,
+    val actionLabel: String,
+    val actionEnabled: Boolean = true,
+    val onAction: () -> Unit
+)
+
 private fun DailyLog.nutritionPacing(): NutritionPacing {
     val totals = nutritionTotals()
     val caloriesRemaining = targets.calories - totals.calories
@@ -368,6 +378,89 @@ private fun CoachUiState.dailyReadiness(): DailyReadiness {
         else -> "Hold or recover"
     }
     return DailyReadiness(score = score, label = label, nextAction = nextAction)
+}
+
+private fun CoachUiState.dailyCoachTasks(
+    onOpenPlan: () -> Unit,
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit,
+    onRunAiReview: () -> Unit,
+    onOpenAi: () -> Unit
+): List<DailyCoachTask> {
+    val log = dailyLog
+    val planReady = trainingPlan.days.any { day -> day.exercises.isNotEmpty() }
+    val sessionReady = log.trainingSession.exercises.isNotEmpty()
+    val plannedSets = log.plannedHardSets()
+    val completedSets = log.completedHardSets()
+    val trainingDone = plannedSets > 0 && completedSets >= plannedSets
+    val nutritionLogged = log.meals.isNotEmpty()
+    val pacing = log.nutritionPacing()
+    val metricsReady = log.metrics.bodyWeightKg != null ||
+        log.metrics.sleepHours != null ||
+        log.metrics.steps > 0 ||
+        log.metrics.healthSyncedAt.isNotBlank()
+    val aiReviewedToday = reviewHistory.any { it.logDate == log.date }
+
+    return listOf(
+        DailyCoachTask(
+            title = "Plan prepared",
+            detail = when {
+                sessionReady -> "${log.trainingSession.plannedFocus}: $plannedSets planned sets loaded."
+                planReady -> "Weekly plan exists; apply the right day before training."
+                else -> "Choose a Plan Template or build today's first training day."
+            },
+            done = sessionReady,
+            actionLabel = if (sessionReady) "View workout" else if (planReady) "Apply day" else "Pick plan",
+            onAction = if (sessionReady) onOpenTraining else onOpenPlan
+        ),
+        DailyCoachTask(
+            title = "Training executed",
+            detail = when {
+                !sessionReady -> "No workout loaded yet."
+                trainingDone -> "$completedSets/$plannedSets sets completed; add notes before review."
+                else -> "$completedSets/$plannedSets sets completed; finish working sets and rest timers."
+            },
+            done = trainingDone,
+            actionLabel = "Log sets",
+            actionEnabled = sessionReady,
+            onAction = onOpenTraining
+        ),
+        DailyCoachTask(
+            title = "Food logged",
+            detail = if (nutritionLogged) {
+                "${log.meals.size} meals logged; ${formatRemaining(pacing.caloriesRemaining, "kcal")} and protein ${formatRemaining(pacing.proteinRemaining, "g")}."
+            } else {
+                "Add a meal template or food photo so nutrition can be compared with training demand."
+            },
+            done = nutritionLogged,
+            actionLabel = if (nutritionLogged) "Review food" else "Add meal",
+            onAction = onOpenNutrition
+        ),
+        DailyCoachTask(
+            title = "Metrics synced",
+            detail = when {
+                log.metrics.healthSyncedAt.isNotBlank() -> "Health data synced; source ${log.metrics.healthDataSource.ifBlank { "Health Connect" }}."
+                metricsReady -> "Manual metrics available; sync Health Connect when possible."
+                else -> "Add body weight, sleep, steps, HR, soreness, fatigue, and stress."
+            },
+            done = metricsReady,
+            actionLabel = if (metricsReady) "Check metrics" else "Sync metrics",
+            onAction = onOpenMetrics
+        ),
+        DailyCoachTask(
+            title = "AI review locked",
+            detail = if (aiReviewedToday) {
+                "Today's review is saved; use it to set tomorrow's training and food targets."
+            } else {
+                "Run after training, food, and metrics are logged for the cleanest adjustment."
+            },
+            done = aiReviewedToday,
+            actionLabel = if (aiReviewedToday) "View review" else "Run review",
+            actionEnabled = !isLoading,
+            onAction = if (aiReviewedToday) onOpenAi else onRunAiReview
+        )
+    )
 }
 
 @Composable
@@ -455,6 +548,50 @@ private fun CommandCenterCard(
                 text = review.preview(),
                 style = MaterialTheme.typography.bodySmall
             )
+        }
+    }
+}
+
+@Composable
+private fun DailyCoachChecklistCard(tasks: List<DailyCoachTask>) {
+    val completed = tasks.count { it.done }
+    SectionCard(
+        title = "Daily Coach Checklist",
+        subtitle = "$completed/${tasks.size} complete. Follow this loop before trusting today's AI adjustment."
+    ) {
+        tasks.forEachIndexed { index, task ->
+            if (index > 0) {
+                HorizontalDivider()
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = if (task.done) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                ) {
+                    Text(
+                        text = if (task.done) "Done" else "Next",
+                        modifier = Modifier.padding(horizontal = 9.dp, vertical = 6.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Text(task.title, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = task.detail,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                TextButton(onClick = task.onAction, enabled = task.actionEnabled) {
+                    Text(task.actionLabel)
+                }
+            }
         }
     }
 }
@@ -579,7 +716,8 @@ private fun TodayDashboard(
     onOpenPlan: () -> Unit,
     onOpenTraining: () -> Unit,
     onOpenNutrition: () -> Unit,
-    onOpenMetrics: () -> Unit
+    onOpenMetrics: () -> Unit,
+    onOpenAi: () -> Unit
 ) {
     val log = state.dailyLog
     val totals = log.nutritionTotals()
@@ -593,6 +731,16 @@ private fun TodayDashboard(
             onOpenTraining = onOpenTraining,
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
+        )
+        DailyCoachChecklistCard(
+            tasks = state.dailyCoachTasks(
+                onOpenPlan = onOpenPlan,
+                onOpenTraining = onOpenTraining,
+                onOpenNutrition = onOpenNutrition,
+                onOpenMetrics = onOpenMetrics,
+                onRunAiReview = onDailyReview,
+                onOpenAi = onOpenAi
+            )
         )
         TodayActionGrid(
             state = state,

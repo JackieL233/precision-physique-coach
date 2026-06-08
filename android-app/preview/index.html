@@ -311,8 +311,16 @@
     }
 
     .task {
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: auto minmax(0, 1fr) auto;
       align-items: center;
+    }
+
+    .task > div:first-child {
+      grid-column: span 2;
+    }
+
+    .task > .badge + div {
+      grid-column: auto;
     }
 
     .task strong,
@@ -1224,6 +1232,55 @@
               <button class="button" type="button" data-tab-target="training">Next</button>
             </div>
             <div class="note">Latest AI guidance: hold pressing volume today, add one rep before load, keep calories unchanged unless weekly weight trend stalls.</div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <h2>Daily Coach Checklist</h2>
+              <p class="subtle">3/5 complete. Follow this loop before trusting today's AI adjustment.</p>
+            </div>
+            <div class="task-list">
+              <div class="task">
+                <span class="badge green">Done</span>
+                <div>
+                  <strong>Plan prepared</strong>
+                  <p class="subtle">Push A: 18 planned sets loaded.</p>
+                </div>
+                <button class="button ghost" type="button" data-tab-target="training">View workout</button>
+              </div>
+              <div class="task">
+                <span class="badge amber">Next</span>
+                <div>
+                  <strong>Training executed</strong>
+                  <p class="subtle">8/18 sets completed; finish working sets and rest timers.</p>
+                </div>
+                <button class="button ghost" type="button" data-tab-target="training">Log sets</button>
+              </div>
+              <div class="task">
+                <span class="badge green">Done</span>
+                <div>
+                  <strong>Food logged</strong>
+                  <p class="subtle">2 meals logged; 870 kcal left and protein 57 g left.</p>
+                </div>
+                <button class="button ghost" type="button" data-tab-target="nutrition">Review food</button>
+              </div>
+              <div class="task">
+                <span class="badge green">Done</span>
+                <div>
+                  <strong>Metrics synced</strong>
+                  <p class="subtle">Health data synced; source Health Connect.</p>
+                </div>
+                <button class="button ghost" type="button" data-tab-target="metrics">Check metrics</button>
+              </div>
+              <div class="task">
+                <span class="badge amber">Next</span>
+                <div>
+                  <strong>AI review locked</strong>
+                  <p class="subtle">Run after training, food, and metrics are logged for the cleanest adjustment.</p>
+                </div>
+                <button class="button ghost" type="button" data-tab-target="ai">Run review</button>
+              </div>
+            </div>
           </div>
 
           <div class="task-list">
