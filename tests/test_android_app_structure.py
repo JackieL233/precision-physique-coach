@@ -21,6 +21,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "app/src/main/java/com/iwanttobeanifbbpro/app/network/OpenAiResponsesClient.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLog.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLogStore.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/data/AiReviewStore.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/data/TrainingPlan.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/data/TrainingPlanStore.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/DailySummaryBuilder.kt",
@@ -104,6 +105,9 @@ class AndroidAppStructureTest(unittest.TestCase):
         summary = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/DailySummaryBuilder.kt").read_text(
             encoding="utf-8"
         )
+        ai_review_store = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/AiReviewStore.kt").read_text(
+            encoding="utf-8"
+        )
         expected_terms = [
             "TrainingSession",
             "ExerciseEntry",
@@ -118,6 +122,11 @@ class AndroidAppStructureTest(unittest.TestCase):
             "MealEntry",
             "DailyMetrics",
             "DailyTargets",
+            "AiReviewEntry",
+            "AiReviewStore",
+            "readReviews",
+            "saveReview",
+            "ai_review_history",
             "setEntries",
             "completedHardSets",
             "trainingVolumeKg",
@@ -152,7 +161,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Weight change in window",
             "Daily trend rows",
         ]
-        combined = f"{model}\n{store}\n{plan_model}\n{plan_store}\n{summary}"
+        combined = f"{model}\n{store}\n{ai_review_store}\n{plan_model}\n{plan_store}\n{summary}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -207,6 +216,10 @@ class AndroidAppStructureTest(unittest.TestCase):
             "recentLogs",
             "7-Day Trend",
             "TrendOverviewCard",
+            "reviewHistory",
+            "Saved AI Reviews",
+            "Latest AI guidance",
+            "ReviewHistoryCard",
         ]
         activity = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/MainActivity.kt").read_text(encoding="utf-8")
         theme = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/AppTheme.kt").read_text(encoding="utf-8")

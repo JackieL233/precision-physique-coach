@@ -9,6 +9,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - Apple-inspired light UI theme with a quiet neutral background, blue action color, rounded grouped surfaces, and bottom navigation for the main daily tabs.
 - A `Today` Command Center with readiness, next action, training, nutrition, recovery, and body-composition cards so beginners know what to do first while advanced users can scan the key numbers.
 - Local daily log history with a 7-day trend summary for body weight, calories, protein, sleep, steps, hard sets, and training volume.
+- Saved AI review history so the latest coaching guidance remains visible after the app closes.
 - Coach modes for new plans, check-ins, training visual analysis, food visual analysis, linked training + nutrition analysis, existing plan audit, and evidence explanations.
 - Configurable API key, base URL, and model from the app UI.
 - OpenAI Responses API request shape with text and photos.
@@ -22,6 +23,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - Health Connect sync for user-authorized body weight, body fat, lean body mass, steps, sleep, resting heart rate, and total calories burned. Xiaomi, Huawei, scale, watch, and phone data can be imported when the source app writes those records into Health Connect.
 - An AI review workflow that summarizes the day and asks the model what to adjust tomorrow.
 - AI review includes recent trend rows so recommendations can compare today's execution against recent training, nutrition, recovery, and body-composition direction.
+- AI review output is saved locally and shown in `Today` as the latest guidance, with recent reviews available in `AI Coach`.
 - An AI Data Map that makes the connected analysis surface explicit: exercise selection, set load, actual reps, RIR, rest time, hard sets, tonnage, technique notes, pain flags, meal macros, food photos, equipment/form photos, body weight, body fat, lean mass, waist, sleep, steps, resting heart rate, calorie burn, hunger, fatigue, soreness, and stress.
 
 ## Daily workflow

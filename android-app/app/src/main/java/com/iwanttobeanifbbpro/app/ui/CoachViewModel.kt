@@ -15,6 +15,8 @@ import com.iwanttobeanifbbpro.app.core.CoachMode
 import com.iwanttobeanifbbpro.app.core.DailySummaryBuilder
 import com.iwanttobeanifbbpro.app.core.SkillAssetRepository
 import com.iwanttobeanifbbpro.app.core.SkillPromptBuilder
+import com.iwanttobeanifbbpro.app.data.AiReviewEntry
+import com.iwanttobeanifbbpro.app.data.AiReviewStore
 import com.iwanttobeanifbbpro.app.data.DailyLog
 import com.iwanttobeanifbbpro.app.data.DailyLogStore
 import com.iwanttobeanifbbpro.app.data.DailyMetrics
@@ -75,6 +77,7 @@ data class CoachUiState(
     val restTimer: RestTimerState? = null,
     val healthSnapshot: HealthSnapshot = HealthSnapshot(message = "Health Connect not checked yet."),
     val isHealthSyncing: Boolean = false,
+    val reviewHistory: List<AiReviewEntry> = emptyList(),
     val images: List<ImageAttachment> = emptyList(),
     val result: String = "",
     val isLoading: Boolean = false,
@@ -85,6 +88,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     private val settingsStore = SettingsStore(application)
     private val dailyLogStore = DailyLogStore(application)
     private val trainingPlanStore = TrainingPlanStore(application)
+    private val aiReviewStore = AiReviewStore(application)
     private val dailySummaryBuilder = DailySummaryBuilder()
     private val promptBuilder = SkillPromptBuilder(SkillAssetRepository(application))
     private val apiClient = OpenAiResponsesClient()
@@ -96,7 +100,8 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
             settings = settingsStore.load(),
             dailyLog = dailyLogStore.readLog(),
             recentLogs = dailyLogStore.readRecentLogs(),
-            trainingPlan = trainingPlanStore.readPlan()
+            trainingPlan = trainingPlanStore.readPlan(),
+            reviewHistory = aiReviewStore.readReviews()
         )
     )
         private set
@@ -434,7 +439,20 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
                 images = current.images
             )
             uiState = result.fold(
-                onSuccess = { uiState.copy(isLoading = false, result = it, error = null) },
+                onSuccess = { body ->
+                    val entry = AiReviewEntry(
+                        logDate = current.dailyLog.date,
+                        modeTitle = mode.title,
+                        body = body
+                    )
+                    aiReviewStore.saveReview(entry)
+                    uiState.copy(
+                        isLoading = false,
+                        result = body,
+                        reviewHistory = aiReviewStore.readReviews(),
+                        error = null
+                    )
+                },
                 onFailure = { uiState.copy(isLoading = false, result = "", error = it.message) }
             )
         }

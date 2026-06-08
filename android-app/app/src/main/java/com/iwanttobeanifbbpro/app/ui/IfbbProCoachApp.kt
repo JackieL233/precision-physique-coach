@@ -51,6 +51,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.iwanttobeanifbbpro.app.core.CoachMode
+import com.iwanttobeanifbbpro.app.data.AiReviewEntry
 import com.iwanttobeanifbbpro.app.data.DailyLog
 import com.iwanttobeanifbbpro.app.data.DailyMetrics
 import com.iwanttobeanifbbpro.app.data.DailyTargets
@@ -355,6 +356,18 @@ private fun CommandCenterCard(
         }
         if (state.isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        }
+        state.reviewHistory.firstOrNull()?.let { review ->
+            HorizontalDivider()
+            Text(
+                text = "Latest AI guidance",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = review.preview(),
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
@@ -1370,6 +1383,7 @@ private fun AiCoachPage(
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
         }
+        ReviewHistoryCard(reviews = state.reviewHistory)
         SectionCard(title = "AI Data Map", subtitle = "These app records are designed to be linked in the same analysis request.") {
             DataChipGrid(
                 items = listOf(
@@ -1396,6 +1410,30 @@ private fun AiCoachPage(
                     "Stress"
                 )
             )
+        }
+    }
+}
+
+@Composable
+private fun ReviewHistoryCard(reviews: List<AiReviewEntry>) {
+    SectionCard(title = "Saved AI Reviews", subtitle = "Recent guidance stays available after you close the app.") {
+        if (reviews.isEmpty()) {
+            EmptyState("Run a daily review to save the first AI coaching note.")
+        } else {
+            reviews.take(5).forEach { review ->
+                Text(
+                    text = "${review.logDate} | ${review.modeTitle} | ${review.createdAt}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = review.preview(),
+                    style = MaterialTheme.typography.bodySmall
+                )
+                if (review != reviews.take(5).last()) {
+                    HorizontalDivider()
+                }
+            }
         }
     }
 }
