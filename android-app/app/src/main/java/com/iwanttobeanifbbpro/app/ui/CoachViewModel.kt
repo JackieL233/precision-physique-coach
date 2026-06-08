@@ -29,6 +29,7 @@ import com.iwanttobeanifbbpro.app.data.PlannedExercise
 import com.iwanttobeanifbbpro.app.data.SetEntry
 import com.iwanttobeanifbbpro.app.data.TrainingPlanStore
 import com.iwanttobeanifbbpro.app.data.WeeklyTrainingPlan
+import com.iwanttobeanifbbpro.app.data.mealTemplates
 import com.iwanttobeanifbbpro.app.data.trainingPlanTemplates
 import com.iwanttobeanifbbpro.app.health.HealthConnectRepository
 import com.iwanttobeanifbbpro.app.health.HealthSnapshot
@@ -398,6 +399,11 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeMeal(index: Int) {
         updateLog(uiState.dailyLog.copy(meals = uiState.dailyLog.meals.filterIndexed { itemIndex, _ -> itemIndex != index }))
+    }
+
+    fun addMealTemplate(templateId: String) {
+        val template = mealTemplates().firstOrNull { it.id == templateId } ?: return
+        updateLog(uiState.dailyLog.copy(meals = uiState.dailyLog.meals + template.toMealEntry()))
     }
 
     fun updateReflection(reflection: String) {

@@ -105,6 +105,9 @@ class AndroidAppStructureTest(unittest.TestCase):
         plan_model = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/TrainingPlan.kt").read_text(
             encoding="utf-8"
         )
+        log_model = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLog.kt").read_text(
+            encoding="utf-8"
+        )
         plan_store = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/TrainingPlanStore.kt").read_text(
             encoding="utf-8"
         )
@@ -149,6 +152,14 @@ class AndroidAppStructureTest(unittest.TestCase):
             "savePlan",
             "toExerciseEntry",
             "MealEntry",
+            "MealTemplate",
+            "mealTemplates",
+            "toMealEntry",
+            "Lean Protein Bowl",
+            "Pre-Workout Carbs",
+            "Low-Fat Protein Fix",
+            "Salmon Potato Plate",
+            "Fiber + Micronutrient Add",
             "DailyMetrics",
             "DailyTargets",
             "AiReviewEntry",
@@ -193,6 +204,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Weight change in window",
             "Daily trend rows",
             "Nutrition pacing",
+            "Meal template context",
             "adherence",
             "Next meal focus",
             "Body composition guidance",
@@ -266,6 +278,9 @@ class AndroidAppStructureTest(unittest.TestCase):
         plan_model = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/TrainingPlan.kt").read_text(
             encoding="utf-8"
         )
+        log_model = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLog.kt").read_text(
+            encoding="utf-8"
+        )
         expected_terms = [
             "Today",
             "Plan",
@@ -275,6 +290,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "AI Coach",
             "addExercise",
             "addMeal",
+            "addMealTemplate",
             "updateMetrics",
             "updateTargets",
             "runDailyReview",
@@ -365,6 +381,16 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Leg Press",
             "NutritionPacing",
             "Nutrition Pacing",
+            "MealTemplate",
+            "Meal Templates",
+            "MealTemplateLibrary",
+            "MealTemplateCard",
+            "mealTemplates",
+            "Lean Protein Bowl",
+            "Pre-Workout Carbs",
+            "Low-Fat Protein Fix",
+            "Salmon Potato Plate",
+            "Fiber + Micronutrient Add",
             "BodyCompositionGuidance",
             "Body Composition Guidance",
             "BodyCompositionCard",
@@ -434,7 +460,7 @@ class AndroidAppStructureTest(unittest.TestCase):
         visual = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt").read_text(
             encoding="utf-8"
         )
-        combined = f"{ui}\n{view_model}\n{plan_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}\n{recovery}\n{visual}"
+        combined = f"{ui}\n{view_model}\n{plan_model}\n{log_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}\n{recovery}\n{visual}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -532,6 +558,10 @@ class AndroidAppStructureTest(unittest.TestCase):
             "example movement",
             "look-for cue",
             "Nutrition Pacing",
+            "Meal Templates",
+            "Lean Protein Bowl",
+            "Pre-Workout Carbs",
+            "Low-Fat Protein Fix",
             "remaining or over target",
             "macro adherence score",
             "next-meal focus",
@@ -577,6 +607,10 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Training Execution",
             "Rest timer",
             "Nutrition",
+            "Meal Templates",
+            "Lean Protein Bowl",
+            "Pre-Workout Carbs",
+            "Low-Fat Protein Fix",
             "Health Connect",
             "Xiaomi/Mi Fitness -> Health Connect",
             "Huawei Health -> Health Connect or Health Kit",
@@ -602,6 +636,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Unified exercise visual guide",
             "equipment/action instance diagrams",
             "Nutrition Pacing",
+            "Meal Templates",
             "Body Composition Guidance",
             "Recovery Guidance",
             "Training action",

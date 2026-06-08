@@ -43,6 +43,7 @@
 - Progression Cue：每个训练动作会根据完成组数、实际次数、RIR 和疼痛/动作备注，提示下次应该加次数、加重量、保持、修改动作或先完成基础组数。
 - 休息倒计时：点击一组 `Complete` 后自动启动休息倒计时。
 - Nutrition Pacing：显示今天热量、蛋白质、碳水、脂肪、纤维还剩多少或已经超出多少，给出宏量营养执行分数和下一餐建议，让用户知道接下来该优先吃什么。
+- Meal Templates 餐食模板：内置 Lean Protein Bowl、Pre-Workout Carbs、Low-Fat Protein Fix、Salmon Potato Plate 和 Fiber + Micronutrient Add，用户可以快速添加常见高蛋白餐，再根据实际份量、油、酱料、标签或照片修正。
 - Body Composition Guidance：根据当前阶段、体重趋势、平均热量、平均蛋白质和训练输出，判断热量目标应该保持、小幅上调还是小幅下调，避免只凭一天体重或一天饮食做过度调整。
 - Recovery Guidance：根据睡眠、疲劳、酸痛、压力、静息心率、计划/完成组数和近期趋势，判断今天训练应该继续推进、保持训练压力、减少容量，还是进入 deload 检查。
 - 饮食记录：设置热量和宏量营养目标，记录每餐热量、蛋白质、碳水、脂肪、纤维，并可上传食物照片让 AI 估算。

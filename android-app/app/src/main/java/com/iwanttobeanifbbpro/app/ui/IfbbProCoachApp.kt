@@ -75,10 +75,12 @@ import com.iwanttobeanifbbpro.app.data.DailyLog
 import com.iwanttobeanifbbpro.app.data.DailyMetrics
 import com.iwanttobeanifbbpro.app.data.DailyTargets
 import com.iwanttobeanifbbpro.app.data.ExerciseEntry
+import com.iwanttobeanifbbpro.app.data.MealTemplate
 import com.iwanttobeanifbbpro.app.data.PlannedExercise
 import com.iwanttobeanifbbpro.app.data.SetEntry
 import com.iwanttobeanifbbpro.app.data.TrainingPlanTemplate
 import com.iwanttobeanifbbpro.app.data.TrainingDay
+import com.iwanttobeanifbbpro.app.data.mealTemplates
 import com.iwanttobeanifbbpro.app.data.trainingPlanTemplates
 import com.iwanttobeanifbbpro.app.health.HealthConnectRepository
 import java.util.Locale
@@ -174,6 +176,7 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                             state = state,
                             onTargetsChange = viewModel::updateTargets,
                             onAddMeal = viewModel::addMeal,
+                            onAddMealTemplate = viewModel::addMealTemplate,
                             onRemoveMeal = viewModel::removeMeal,
                             onPickMealPhoto = {
                                 imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -1778,10 +1781,63 @@ private fun SetRow(
 }
 
 @Composable
+private fun MealTemplateLibrary(onAddMealTemplate: (String) -> Unit) {
+    SectionCard(
+        title = "Meal Templates",
+        subtitle = "Quick-add reliable meals, then edit notes or use photos when portions are uncertain."
+    ) {
+        mealTemplates().forEach { template ->
+            MealTemplateCard(template = template, onAddMealTemplate = onAddMealTemplate)
+        }
+    }
+}
+
+@Composable
+private fun MealTemplateCard(template: MealTemplate, onAddMealTemplate: (String) -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Text(template.title, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = template.subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                TextButton(onClick = { onAddMealTemplate(template.id) }) {
+                    Text("Add")
+                }
+            }
+            MetricGrid(
+                metrics = listOf(
+                    "Kcal" to template.calories.toString(),
+                    "Protein" to "${formatDecimal(template.protein)} g",
+                    "Carbs" to "${formatDecimal(template.carbs)} g",
+                    "Fat" to "${formatDecimal(template.fat)} g",
+                    "Fiber" to "${formatDecimal(template.fiber)} g"
+                )
+            )
+            Text(
+                text = template.notes,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
 private fun NutritionPage(
     state: CoachUiState,
     onTargetsChange: (DailyTargets) -> Unit,
     onAddMeal: (String, Int, Double, Double, Double, Double, String) -> Unit,
+    onAddMealTemplate: (String) -> Unit,
     onRemoveMeal: (Int) -> Unit,
     onPickMealPhoto: () -> Unit
 ) {
@@ -1801,6 +1857,7 @@ private fun NutritionPage(
             guidance = bodyCompositionGuidance(state.dailyLog, state.recentLogs, state.athleteProfile),
             subtitle = "Use body-weight trend, average intake, and phase goal before changing targets."
         )
+        MealTemplateLibrary(onAddMealTemplate = onAddMealTemplate)
         SectionCard(title = "Nutrition Targets", subtitle = "Use weighed food when possible; use photos for AI estimates when weighing is not practical.") {
             MacroLine("Calories", totals.calories.toString(), targets.calories.toString(), "kcal")
             MacroLine("Protein", totals.protein.toString(), targets.protein.toString(), "g")

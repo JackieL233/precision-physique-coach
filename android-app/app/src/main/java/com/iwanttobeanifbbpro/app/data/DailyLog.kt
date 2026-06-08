@@ -85,6 +85,90 @@ data class MealEntry(
     companion object
 }
 
+data class MealTemplate(
+    val id: String,
+    val title: String,
+    val subtitle: String,
+    val calories: Int,
+    val protein: Double,
+    val carbs: Double,
+    val fat: Double,
+    val fiber: Double,
+    val notes: String
+) {
+    fun toMealEntry(): MealEntry {
+        return MealEntry(
+            name = title,
+            calories = calories,
+            protein = protein,
+            carbs = carbs,
+            fat = fat,
+            fiber = fiber,
+            notes = notes
+        )
+    }
+}
+
+fun mealTemplates(): List<MealTemplate> {
+    return listOf(
+        MealTemplate(
+            id = "lean-protein-bowl",
+            title = "Lean Protein Bowl",
+            subtitle = "Chicken, rice, vegetables; reliable bodybuilding staple",
+            calories = 620,
+            protein = 52.0,
+            carbs = 72.0,
+            fat = 12.0,
+            fiber = 8.0,
+            notes = "Template estimate: adjust rice, oil, sauce, and meat weight when known."
+        ),
+        MealTemplate(
+            id = "pre-workout-carbs",
+            title = "Pre-Workout Carbs",
+            subtitle = "Oats, whey, banana; useful before hard training",
+            calories = 520,
+            protein = 38.0,
+            carbs = 76.0,
+            fat = 8.0,
+            fiber = 9.0,
+            notes = "Template estimate: place 60-120 minutes before training if digestion is comfortable."
+        ),
+        MealTemplate(
+            id = "low-fat-protein",
+            title = "Low-Fat Protein Fix",
+            subtitle = "Greek yogurt or lean protein when protein is behind",
+            calories = 320,
+            protein = 45.0,
+            carbs = 22.0,
+            fat = 4.0,
+            fiber = 2.0,
+            notes = "Template estimate: use when protein is behind and fats need to stay low."
+        ),
+        MealTemplate(
+            id = "salmon-potato",
+            title = "Salmon Potato Plate",
+            subtitle = "Higher-fat whole-food meal for satiety",
+            calories = 680,
+            protein = 46.0,
+            carbs = 58.0,
+            fat = 28.0,
+            fiber = 7.0,
+            notes = "Template estimate: fats vary with salmon size and added oil."
+        ),
+        MealTemplate(
+            id = "fiber-micronutrient",
+            title = "Fiber + Micronutrient Add",
+            subtitle = "Fruit, vegetables, beans, or oats to close fiber gap",
+            calories = 260,
+            protein = 12.0,
+            carbs = 46.0,
+            fat = 3.0,
+            fiber = 12.0,
+            notes = "Template estimate: add when fiber or food quality is behind."
+        )
+    )
+}
+
 data class DailyMetrics(
     val bodyWeightKg: Double? = null,
     val bodyFatPercent: Double? = null,
