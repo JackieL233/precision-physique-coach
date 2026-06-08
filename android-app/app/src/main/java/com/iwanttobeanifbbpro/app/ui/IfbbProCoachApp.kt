@@ -72,6 +72,7 @@ import com.iwanttobeanifbbpro.app.core.ProgressionCue
 import com.iwanttobeanifbbpro.app.core.RecoveryGuidance
 import com.iwanttobeanifbbpro.app.core.SessionQualityDashboard
 import com.iwanttobeanifbbpro.app.core.TomorrowCoachBrief
+import com.iwanttobeanifbbpro.app.core.TrainingCloseoutCoach
 import com.iwanttobeanifbbpro.app.core.TrainingReadinessBuilder
 import com.iwanttobeanifbbpro.app.core.WarmUpRampPlan
 import com.iwanttobeanifbbpro.app.core.WeeklyCheckInSummary
@@ -89,6 +90,7 @@ import com.iwanttobeanifbbpro.app.core.physiqueMeasurementSummary
 import com.iwanttobeanifbbpro.app.core.recoveryGuidance
 import com.iwanttobeanifbbpro.app.core.sessionQualityDashboard
 import com.iwanttobeanifbbpro.app.core.tomorrowCoachBrief
+import com.iwanttobeanifbbpro.app.core.trainingCloseoutCoach
 import com.iwanttobeanifbbpro.app.core.trainingReadinessBuilder
 import com.iwanttobeanifbbpro.app.core.warmUpRampPlan
 import com.iwanttobeanifbbpro.app.core.weeklyCheckInSummary
@@ -193,6 +195,12 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                             onRemoveExercise = viewModel::removeExercise,
                             onUpdateSetEntry = viewModel::updateSetEntry,
                             onCompleteSet = viewModel::completeSet,
+                            onRunDailyReview = viewModel::runDailyReview,
+                            onOpenPlan = { viewModel.selectTab(AppTab.PLAN) },
+                            onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
+                            onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
+                            onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
+                            onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) },
                             onPickTrainingPhoto = { type, note ->
                                 viewModel.preparePhotoEvidence(type, note)
                                 imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -2498,6 +2506,12 @@ private fun TrainingPage(
     onRemoveExercise: (Int) -> Unit,
     onUpdateSetEntry: (Int, Int, Int?, Double?, Double?, String) -> Unit,
     onCompleteSet: (Int, Int) -> Unit,
+    onRunDailyReview: () -> Unit,
+    onOpenPlan: () -> Unit,
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit,
+    onOpenAi: () -> Unit,
     onPickTrainingPhoto: (PhotoEvidenceType, String) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
@@ -2514,12 +2528,27 @@ private fun TrainingPage(
     val nextSet = nextSetCoach(state.dailyLog)
     val rampPlan = warmUpRampPlan(state.dailyLog, readinessBuilder, nextSet)
     val qualityDashboard = sessionQualityDashboard(state.dailyLog)
+    val closeoutCoach = trainingCloseoutCoach(
+        log = state.dailyLog,
+        hasAiReviewToday = state.reviewHistory.any { it.logDate == state.dailyLog.date }
+    )
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TrainingReadinessBuilderCard(builder = readinessBuilder)
         WarmUpRampPlanCard(plan = rampPlan)
         NextSetCoachCard(coach = nextSet)
         SessionQualityDashboardCard(dashboard = qualityDashboard)
+        TrainingCloseoutCoachCard(
+            coach = closeoutCoach,
+            isLoading = state.isLoading,
+            onRunDailyReview = onRunDailyReview,
+            onOpenPlan = onOpenPlan,
+            onOpenTraining = onOpenTraining,
+            onOpenNutrition = onOpenNutrition,
+            onOpenMetrics = onOpenMetrics,
+            onOpenAi = onOpenAi,
+            onPickTrainingPhoto = onPickTrainingPhoto
+        )
         SectionCard(title = "Training Execution", subtitle = "Log every working set, hard sets, rest time, and effort so AI can compare performance, pain, and recovery.") {
             MetricGrid(
                 metrics = listOf(
@@ -2888,6 +2917,139 @@ private fun SessionQualityDashboardCard(dashboard: SessionQualityDashboard) {
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun TrainingCloseoutCoachCard(
+    coach: TrainingCloseoutCoach,
+    isLoading: Boolean,
+    onRunDailyReview: () -> Unit,
+    onOpenPlan: () -> Unit,
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit,
+    onOpenAi: () -> Unit,
+    onPickTrainingPhoto: (PhotoEvidenceType, String) -> Unit
+) {
+    SectionCard(
+        title = "Training Closeout Coach",
+        subtitle = "Final checklist before AI review: sets, logs, photos, food, metrics, and progression confidence."
+    ) {
+        MetricGrid(
+            metrics = listOf(
+                "Status" to coach.statusLabel,
+                "Closeout" to coach.closeoutScore.toString(),
+                "Sets" to "${coach.completedSets}/${coach.plannedSets}",
+                "Missing logs" to coach.missingLogCount.toString(),
+                "Pain flags" to coach.painFlagCount.toString(),
+                "Technique" to coach.techniqueFlagCount.toString()
+            )
+        )
+        Text(
+            text = coach.aiReviewGate,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        coach.checklist.forEach { task ->
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                color = if (task.complete) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                Row(
+                    modifier = Modifier.padding(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Text(
+                        text = if (task.complete) "Done" else "Todo",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (task.complete) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        Text(task.label, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            text = task.status,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = task.actionCue,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+        Text(
+            text = "Photos: ${coach.photoCue}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = "Nutrition: ${coach.nutritionCue}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = "Metrics: ${coach.metricsCue}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = {
+                    when (coach.primaryActionRoute) {
+                        DailyExecutionRoute.PLAN -> onOpenPlan()
+                        DailyExecutionRoute.NUTRITION -> onOpenNutrition()
+                        DailyExecutionRoute.METRICS -> onOpenMetrics()
+                        DailyExecutionRoute.AI_REVIEW -> {
+                            if (coach.primaryActionLabel == "View review") onOpenAi() else onRunDailyReview()
+                        }
+                        else -> {
+                            if (coach.painFlagCount > 0 || coach.techniqueFlagCount > 0) {
+                                onPickTrainingPhoto(
+                                    PhotoEvidenceType.TRAINING_FORM,
+                                    "Training closeout form frame for pain/technique flags, visual guide ID mapping, and progression confidence."
+                                )
+                            } else {
+                                onOpenTraining()
+                            }
+                        }
+                    }
+                },
+                enabled = !isLoading,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(if (isLoading && coach.primaryActionRoute == DailyExecutionRoute.AI_REVIEW) "Reviewing" else coach.primaryActionLabel)
+            }
+            ElevatedButton(
+                onClick = {
+                    onPickTrainingPhoto(
+                        PhotoEvidenceType.EQUIPMENT,
+                        "Training closeout equipment photo for Unified Exercise Visual Atlas mapping and setup recognition."
+                    )
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Equipment photo")
+            }
+        }
+        DataChipGrid(
+            items = listOf(
+                "Training Closeout Coach",
+                "closeout score",
+                "missing set logs",
+                "photo evidence cue",
+                "post-workout nutrition cue",
+                "metrics sync cue",
+                "AI review readiness"
+            )
+        )
     }
 }
 

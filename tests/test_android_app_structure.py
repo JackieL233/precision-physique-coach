@@ -23,6 +23,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/DailyExecutionAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/MealAssemblyAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/SessionQualityAdvisor.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/core/TrainingCloseoutAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/NextSetAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/WarmUpRampAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseSubstitutionAdvisor.kt",
@@ -396,6 +397,19 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Session Quality Dashboard",
             "SessionQualityDashboard",
             "sessionQualityDashboard",
+            "Training Closeout Coach",
+            "TrainingCloseoutCoach",
+            "TrainingCloseoutTask",
+            "trainingCloseoutCoach",
+            "closeoutScore",
+            "missingLogCount",
+            "photoCue",
+            "nutritionCue",
+            "metricsCue",
+            "sessionNoteCue",
+            "AI review readiness",
+            "missing set logs",
+            "post-workout nutrition",
             "MuscleVolumeShare",
             "completionRatePercent",
             "loggedSetRatePercent",
@@ -510,6 +524,9 @@ class AndroidAppStructureTest(unittest.TestCase):
         session_quality = (
             APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/SessionQualityAdvisor.kt"
         ).read_text(encoding="utf-8")
+        training_closeout = (
+            APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/TrainingCloseoutAdvisor.kt"
+        ).read_text(encoding="utf-8")
         recovery = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt").read_text(
             encoding="utf-8"
         )
@@ -537,7 +554,7 @@ class AndroidAppStructureTest(unittest.TestCase):
         visual = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt").read_text(
             encoding="utf-8"
         )
-        combined = f"{model}\n{store}\n{ai_review_store}\n{athlete_profile}\n{plan_model}\n{plan_store}\n{summary}\n{progression}\n{history}\n{body_composition}\n{physique_measurement}\n{daily_execution}\n{meal_assembly}\n{session_quality}\n{recovery}\n{conditioning}\n{training_readiness}\n{next_set}\n{warm_ramp}\n{tomorrow}\n{weekly_checkin}\n{substitution}\n{visual}"
+        combined = f"{model}\n{store}\n{ai_review_store}\n{athlete_profile}\n{plan_model}\n{plan_store}\n{summary}\n{progression}\n{history}\n{body_composition}\n{physique_measurement}\n{daily_execution}\n{meal_assembly}\n{session_quality}\n{training_closeout}\n{recovery}\n{conditioning}\n{training_readiness}\n{next_set}\n{warm_ramp}\n{tomorrow}\n{weekly_checkin}\n{substitution}\n{visual}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -874,6 +891,22 @@ class AndroidAppStructureTest(unittest.TestCase):
             "SessionQualityDashboardCard",
             "sessionQualityDashboard",
             "Session Quality Dashboard",
+            "TrainingCloseoutCoach",
+            "TrainingCloseoutTask",
+            "TrainingCloseoutCoachCard",
+            "trainingCloseoutCoach",
+            "Training Closeout Coach",
+            "Closeout",
+            "Missing logs",
+            "Finish sets",
+            "Complete set logs",
+            "Add form evidence",
+            "Log post-workout food",
+            "Sync recovery metrics",
+            "AI review readiness",
+            "photo evidence cue",
+            "post-workout nutrition cue",
+            "metrics sync cue",
             "Completion rate",
             "Logged set rate",
             "Average RIR",
@@ -962,6 +995,9 @@ class AndroidAppStructureTest(unittest.TestCase):
         session_quality = (
             APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/SessionQualityAdvisor.kt"
         ).read_text(encoding="utf-8")
+        training_closeout = (
+            APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/TrainingCloseoutAdvisor.kt"
+        ).read_text(encoding="utf-8")
         recovery = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt").read_text(
             encoding="utf-8"
         )
@@ -989,7 +1025,7 @@ class AndroidAppStructureTest(unittest.TestCase):
         visual = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt").read_text(
             encoding="utf-8"
         )
-        combined = f"{ui}\n{view_model}\n{plan_model}\n{log_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}\n{physique_measurement}\n{daily_execution}\n{meal_assembly}\n{session_quality}\n{recovery}\n{conditioning}\n{training_readiness}\n{next_set}\n{warm_ramp}\n{tomorrow}\n{weekly_checkin}\n{substitution}\n{visual}"
+        combined = f"{ui}\n{view_model}\n{plan_model}\n{log_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}\n{physique_measurement}\n{daily_execution}\n{meal_assembly}\n{session_quality}\n{training_closeout}\n{recovery}\n{conditioning}\n{training_readiness}\n{next_set}\n{warm_ramp}\n{tomorrow}\n{weekly_checkin}\n{substitution}\n{visual}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -1177,6 +1213,13 @@ class AndroidAppStructureTest(unittest.TestCase):
             "tomorrow tracking action",
             "readiness gate",
             "Session Quality Dashboard",
+            "Training Closeout Coach",
+            "closeout score",
+            "missing set logs",
+            "photo evidence cue",
+            "post-workout nutrition cue",
+            "metrics sync cue",
+            "AI review readiness",
             "completion rate",
             "logged set rate",
             "average RIR",
@@ -1265,6 +1308,13 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Tomorrow tracking action",
             "Readiness gate",
             "Session Quality Dashboard",
+            "Training Closeout Coach",
+            "closeout score",
+            "missing set logs",
+            "photo evidence cue",
+            "post-workout nutrition cue",
+            "metrics sync cue",
+            "AI review readiness",
             "Completion rate",
             "Logged set rate",
             "Average RIR",
@@ -1530,6 +1580,13 @@ class AndroidAppStructureTest(unittest.TestCase):
             "final ramp set",
             "first working set gate",
             "Do not count warm-up ramp sets as hard sets",
+            "Training Closeout Coach",
+            "closeout score",
+            "missing set logs",
+            "form/equipment photo evidence",
+            "post-workout nutrition",
+            "Health Connect sync",
+            "AI review readiness",
             "waistCm",
             "chestCm",
             "shoulderCm",

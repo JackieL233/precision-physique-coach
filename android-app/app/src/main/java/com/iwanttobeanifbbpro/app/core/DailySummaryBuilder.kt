@@ -25,6 +25,7 @@ class DailySummaryBuilder {
         val nextSet = nextSetCoach(log)
         val warmUpRamp = warmUpRampPlan(log, trainingReadiness, nextSet)
         val sessionQuality = sessionQualityDashboard(log)
+        val trainingCloseout = trainingCloseoutCoach(log)
         val weeklyCheckIn = weeklyCheckInSummary(
             log = log,
             recentLogs = recentLogs,
@@ -150,6 +151,7 @@ class DailySummaryBuilder {
             - ${warmUpRamp.promptLine()}
             - ${nextSet.promptLine()}
             - ${sessionQuality.promptLine()}
+            - ${trainingCloseout.promptLine()}
             - Session notes: ${log.trainingSession.sessionNotes}
             - Exercise log:
             $exercises
@@ -207,6 +209,7 @@ class DailySummaryBuilder {
             5a. Use Warm-up Ramp Plan before judging the first working set: compare the ramp set checklist, planned load percentage, final ramp set quality, visual guide ID, first working set gate, and stop rule against what the user logged.
             6. Use Next Set Coach to compare the current exercise, next set target, visual guide ID, equipment/action diagram, load cue, reps cue, RIR cue, rest cue, stop cue, and after-set logging cue against what the user actually logged.
             7. Use Session Quality Dashboard to judge completion rate, logged set rate, average RIR, muscle-volume distribution, pain flags, technique flags, and whether the session is valid for progression.
+            7a. Use Training Closeout Coach as the final AI review gate: check completed sets, missing set logs, pain/technique flags, form/equipment photo evidence, post-workout nutrition, metrics sync, session notes, closeout score, primary action, and whether the review is high-confidence before changing tomorrow's plan.
             8. Review set-level performance: load, reps, RIR, rest time, completed sets, technique notes, pain flags, target-muscle stimulus, and whether progression is justified.
             9. Compare Exercise History for repeated movements: previous date, previous volume, current volume, best load, best reps, completed sets, and average RIR.
             10. Use each Progression Cue as a deterministic starting point, then decide which exercises should add reps, add load, hold, reduce volume, swap, or deload next time.

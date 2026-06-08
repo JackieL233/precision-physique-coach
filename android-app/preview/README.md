@@ -24,6 +24,7 @@ The preview mirrors the current Android app structure:
 - Warm-up Ramp Plan for exact ramp set checklist, planned load percentages, final ramp set quality, first working set gate, and stop rule before the first working set
 - Next Set Coach for the current exercise, next set target, load cue, reps cue, RIR cue, rest cue, stop cue, After-set logging cue, and the matching equipment/action instance diagram
 - Session Quality Dashboard for completion rate, logged set rate, average RIR, muscle-volume distribution, pain flags, and technique flags
+- Training Closeout Coach for closeout score, missing set logs, photo evidence cue, post-workout nutrition cue, metrics sync cue, and AI review readiness before changing tomorrow's plan
 - Exercise History comparison for previous/current volume, best load, best reps, sets, and average RIR
 - Exercise Substitution Coach for equipment unavailable, trigger reason, primaryOption, secondaryOptions, same target muscle, same movement pattern, preserve rep range, fatigue cost, keepIntentCue, loadAdjustmentCue, and visual guide ID continuity
 - Rest countdown after completing a set

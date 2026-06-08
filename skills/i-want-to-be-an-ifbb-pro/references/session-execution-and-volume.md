@@ -30,6 +30,19 @@ Before judging the first working set, translate the next exercise, planned load,
 
 If the final ramp set is unstable, painful, much harder than expected, or does not match the intended movement path, start the first working set lighter, repeat a lighter ramp set, reduce volume, or use Exercise Substitution Coach before changing the long-term plan.
 
+## Training Closeout Coach
+
+After the working sets and Session Quality Dashboard, run a final closeout gate before changing the next plan.
+
+- Confirm planned sets vs completed sets and do not treat an unfinished workout as a clean progression signal.
+- Check missing set logs: actual reps, load, RIR, rest time, completion state, and set notes.
+- Treat pain flags and technique flags as progression blockers until the user logs context, modifies the movement, or attaches form/equipment photo evidence.
+- Link form/equipment photos back to the Unified Exercise Visual Atlas, closest visual guide ID, equipment/action setup, and movement path before judging technique.
+- Check whether post-workout nutrition, food-photo evidence, body/recovery metrics, Health Connect sync, and session notes are present before a high-confidence AI review.
+- Use the closeout score and AI review readiness as a gate: if set data, photos, food, or metrics are missing, ask for the smallest useful evidence before changing load, volume, calories, or tomorrow's plan.
+
+The closeout response should name the primary action: finish sets, complete set logs, attach form/equipment evidence, log post-workout food, sync metrics, or run the AI review.
+
 ## Key Metrics
 
 - **Hard sets:** sets close enough to failure to count for the target muscle.
