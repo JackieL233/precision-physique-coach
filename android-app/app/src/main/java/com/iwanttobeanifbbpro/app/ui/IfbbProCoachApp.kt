@@ -66,6 +66,7 @@ import com.iwanttobeanifbbpro.app.core.ExerciseVisualType
 import com.iwanttobeanifbbpro.app.core.MealAssemblyGuide
 import com.iwanttobeanifbbpro.app.core.ProgressionCue
 import com.iwanttobeanifbbpro.app.core.RecoveryGuidance
+import com.iwanttobeanifbbpro.app.core.SessionQualityDashboard
 import com.iwanttobeanifbbpro.app.core.TrainingReadinessBuilder
 import com.iwanttobeanifbbpro.app.core.bodyCompositionGuidance
 import com.iwanttobeanifbbpro.app.core.dailyExecutionPlan
@@ -75,6 +76,7 @@ import com.iwanttobeanifbbpro.app.core.exerciseHistorySummary
 import com.iwanttobeanifbbpro.app.core.progressionCue
 import com.iwanttobeanifbbpro.app.core.mealAssemblyGuide
 import com.iwanttobeanifbbpro.app.core.recoveryGuidance
+import com.iwanttobeanifbbpro.app.core.sessionQualityDashboard
 import com.iwanttobeanifbbpro.app.core.trainingReadinessBuilder
 import com.iwanttobeanifbbpro.app.data.AiReviewEntry
 import com.iwanttobeanifbbpro.app.data.AthleteProfile
@@ -1934,9 +1936,11 @@ private fun TrainingPage(
     val session = state.dailyLog.trainingSession
     val recovery = recoveryGuidance(state.dailyLog, state.recentLogs)
     val readinessBuilder = trainingReadinessBuilder(state.dailyLog, recovery)
+    val qualityDashboard = sessionQualityDashboard(state.dailyLog)
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TrainingReadinessBuilderCard(builder = readinessBuilder)
+        SessionQualityDashboardCard(dashboard = qualityDashboard)
         SectionCard(title = "Training Execution", subtitle = "Log every working set, hard sets, rest time, and effort so AI can compare performance, pain, and recovery.") {
             MetricGrid(
                 metrics = listOf(
@@ -2040,6 +2044,49 @@ private fun TrainingPage(
                     onCompleteSet = onCompleteSet
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun SessionQualityDashboardCard(dashboard: SessionQualityDashboard) {
+    SectionCard(
+        title = "Session Quality Dashboard",
+        subtitle = "Track completion, logging quality, RIR, muscle capacity, and risk before AI changes the plan."
+    ) {
+        MetricGrid(
+            metrics = listOf(
+                "Status" to dashboard.statusLabel,
+                "Quality" to dashboard.qualityScore.toString(),
+                "Completion" to "${dashboard.completedSets}/${dashboard.plannedSets}",
+                "Logged" to "${dashboard.loggedSetRatePercent}%",
+                "Avg RIR" to (dashboard.averageRir?.let { formatDecimal(it) } ?: "--"),
+                "Volume" to "${formatDecimal(dashboard.completedVolumeKg)} kg",
+                "Pain flags" to dashboard.painFlagCount.toString(),
+                "Technique" to dashboard.techniqueFlagCount.toString()
+            )
+        )
+        Text(
+            text = dashboard.qualityCue,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            text = dashboard.capacityCue,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = dashboard.riskCue,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        if (dashboard.topMuscleVolumes.isNotEmpty()) {
+            DataChipGrid(
+                items = dashboard.topMuscleVolumes.map {
+                    "${it.targetMuscle}: ${it.completedSets} sets, ${formatDecimal(it.volumeKg)} kg"
+                }
+            )
         }
     }
 }
@@ -2758,6 +2805,13 @@ private fun AiCoachPage(
                     "AI review gate",
                     "Plan adjustment signal",
                     "Training Readiness Builder",
+                    "Session Quality Dashboard",
+                    "Completion rate",
+                    "Logged set rate",
+                    "Average RIR",
+                    "Muscle volume distribution",
+                    "Pain flags",
+                    "Technique flags",
                     "Warm-up cue",
                     "Ramp-up cue",
                     "First working set",

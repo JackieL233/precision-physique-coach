@@ -22,6 +22,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseHistoryAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/DailyExecutionAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/MealAssemblyAdvisor.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/core/SessionQualityAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/BodyCompositionAdvisor.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt",
@@ -271,6 +272,23 @@ class AndroidAppStructureTest(unittest.TestCase):
             "TrainingReadinessBuilder",
             "trainingReadinessBuilder",
             "promptLine",
+            "Session Quality Dashboard",
+            "SessionQualityDashboard",
+            "sessionQualityDashboard",
+            "MuscleVolumeShare",
+            "completionRatePercent",
+            "loggedSetRatePercent",
+            "averageRir",
+            "painFlagCount",
+            "techniqueFlagCount",
+            "topMuscleVolumes",
+            "qualityCue",
+            "capacityCue",
+            "riskCue",
+            "Muscle volume",
+            "Quality cue",
+            "Capacity cue",
+            "Risk cue",
             "Warm-up cue",
             "warmUpCue",
             "Ramp-up cue",
@@ -338,6 +356,9 @@ class AndroidAppStructureTest(unittest.TestCase):
         meal_assembly = (
             APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/MealAssemblyAdvisor.kt"
         ).read_text(encoding="utf-8")
+        session_quality = (
+            APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/SessionQualityAdvisor.kt"
+        ).read_text(encoding="utf-8")
         recovery = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt").read_text(
             encoding="utf-8"
         )
@@ -347,7 +368,7 @@ class AndroidAppStructureTest(unittest.TestCase):
         visual = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt").read_text(
             encoding="utf-8"
         )
-        combined = f"{model}\n{store}\n{ai_review_store}\n{athlete_profile}\n{plan_model}\n{plan_store}\n{summary}\n{progression}\n{history}\n{body_composition}\n{daily_execution}\n{meal_assembly}\n{recovery}\n{training_readiness}\n{visual}"
+        combined = f"{model}\n{store}\n{ai_review_store}\n{athlete_profile}\n{plan_model}\n{plan_store}\n{summary}\n{progression}\n{history}\n{body_composition}\n{daily_execution}\n{meal_assembly}\n{session_quality}\n{recovery}\n{training_readiness}\n{visual}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -569,6 +590,19 @@ class AndroidAppStructureTest(unittest.TestCase):
             "TrainingReadinessBuilderCard",
             "trainingReadinessBuilder",
             "Training Readiness Builder",
+            "SessionQualityDashboard",
+            "SessionQualityDashboardCard",
+            "sessionQualityDashboard",
+            "Session Quality Dashboard",
+            "Completion rate",
+            "Logged set rate",
+            "Average RIR",
+            "Muscle volume distribution",
+            "Pain flags",
+            "Technique flags",
+            "qualityCue",
+            "capacityCue",
+            "riskCue",
             "Warm-up cue",
             "Ramp-up cue",
             "First working set",
@@ -628,6 +662,9 @@ class AndroidAppStructureTest(unittest.TestCase):
         meal_assembly = (
             APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/MealAssemblyAdvisor.kt"
         ).read_text(encoding="utf-8")
+        session_quality = (
+            APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/SessionQualityAdvisor.kt"
+        ).read_text(encoding="utf-8")
         recovery = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/RecoveryAdvisor.kt").read_text(
             encoding="utf-8"
         )
@@ -637,7 +674,7 @@ class AndroidAppStructureTest(unittest.TestCase):
         visual = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/ExerciseVisualGuide.kt").read_text(
             encoding="utf-8"
         )
-        combined = f"{ui}\n{view_model}\n{plan_model}\n{log_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}\n{daily_execution}\n{meal_assembly}\n{recovery}\n{training_readiness}\n{visual}"
+        combined = f"{ui}\n{view_model}\n{plan_model}\n{log_model}\n{activity}\n{theme}\n{progression}\n{history}\n{body_composition}\n{daily_execution}\n{meal_assembly}\n{session_quality}\n{recovery}\n{training_readiness}\n{visual}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -774,6 +811,13 @@ class AndroidAppStructureTest(unittest.TestCase):
             "AI review gate",
             "plan adjustment signal",
             "Training Readiness Builder",
+            "Session Quality Dashboard",
+            "completion rate",
+            "logged set rate",
+            "average RIR",
+            "muscle-volume distribution",
+            "pain flags",
+            "technique flags",
             "warm-up strategy",
             "first working set",
             "volume adjustment",
@@ -821,6 +865,13 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Weekly Plan",
             "Training Execution",
             "Training Readiness Builder",
+            "Session Quality Dashboard",
+            "Completion rate",
+            "Logged set rate",
+            "Average RIR",
+            "Muscle volume distribution",
+            "Pain flags",
+            "Technique flags",
             "Warm-up cue",
             "Ramp-up cue",
             "First working set",
