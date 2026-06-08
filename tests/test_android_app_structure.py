@@ -19,6 +19,9 @@ class AndroidAppStructureTest(unittest.TestCase):
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/SkillPromptBuilder.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/core/SkillAssetRepository.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/network/OpenAiResponsesClient.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLog.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLogStore.kt",
+            "app/src/main/java/com/iwanttobeanifbbpro/app/core/DailySummaryBuilder.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/ui/CoachViewModel.kt",
             "app/src/main/java/com/iwanttobeanifbbpro/app/ui/IfbbProCoachApp.kt",
         ]
@@ -80,6 +83,67 @@ class AndroidAppStructureTest(unittest.TestCase):
             with self.subTest(term=term):
                 self.assertIn(term, prompt)
 
+    def test_daily_app_model_supports_training_nutrition_metrics_and_ai_review(self) -> None:
+        model = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLog.kt").read_text(
+            encoding="utf-8"
+        )
+        store = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLogStore.kt").read_text(
+            encoding="utf-8"
+        )
+        summary = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/core/DailySummaryBuilder.kt").read_text(
+            encoding="utf-8"
+        )
+        expected_terms = [
+            "TrainingSession",
+            "ExerciseEntry",
+            "MealEntry",
+            "DailyMetrics",
+            "DailyTargets",
+            "calories",
+            "protein",
+            "carbs",
+            "fat",
+            "bodyWeightKg",
+            "waistCm",
+            "sleepHours",
+            "readLog",
+            "saveLog",
+            "buildAiReviewContext",
+            "daily training",
+            "daily nutrition",
+            "AI review",
+        ]
+        combined = f"{model}\n{store}\n{summary}"
+        for term in expected_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
+    def test_ui_exposes_daily_workflows(self) -> None:
+        ui = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/IfbbProCoachApp.kt").read_text(
+            encoding="utf-8"
+        )
+        view_model = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/CoachViewModel.kt").read_text(
+            encoding="utf-8"
+        )
+        expected_terms = [
+            "Today",
+            "Training",
+            "Nutrition",
+            "Metrics",
+            "AI Coach",
+            "addExercise",
+            "addMeal",
+            "updateMetrics",
+            "updateTargets",
+            "runDailyReview",
+            "hard sets",
+            "meal photo",
+        ]
+        combined = f"{ui}\n{view_model}"
+        for term in expected_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
     def test_readme_documents_build_and_api_setup(self) -> None:
         readme = (APP / "README.md").read_text(encoding="utf-8")
         expected_terms = [
@@ -91,6 +155,9 @@ class AndroidAppStructureTest(unittest.TestCase):
             "OpenAI Responses API",
             "photos",
             "skill assets",
+            "daily training",
+            "daily nutrition",
+            "AI review",
         ]
         for term in expected_terms:
             with self.subTest(term=term):

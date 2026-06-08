@@ -10,6 +10,20 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - Configurable API key, base URL, and model from the app UI.
 - OpenAI Responses API request shape with text and photos.
 - Photo picker support for exercise frames, equipment photos, food photos, labels, and menus.
+- A daily training workflow for planned focus, completed sessions, exercises, hard sets, RIR, load, target muscle, and form/pain notes.
+- A daily nutrition workflow for calorie and macro targets, meal logging, meal photo support, and food-photo estimate follow-up.
+- A daily metrics workflow for body weight, waist, sleep, steps, hunger, fatigue, soreness, stress, and reflection.
+- An AI review workflow that summarizes the day and asks the model what to adjust tomorrow.
+
+## Daily workflow
+
+Use the app as a daily training and daily nutrition cockpit:
+
+1. Open `Today` to see the current training, nutrition, metrics, and readiness summary.
+2. Use `Training` to log the session plan, exercises, hard sets, load, RIR, target muscle, and pain/form notes.
+3. Use `Nutrition` to set calorie/macronutrient targets, log meals, and attach a meal photo when you want food-photo analysis.
+4. Use `Metrics` for body weight, waist, sleep, steps, hunger, fatigue, soreness, stress, and daily reflection.
+5. Use `AI Coach` or the `Run AI review` button to send the day's log, photos, and your extra question to the model for adjustment guidance.
 
 ## Build
 

@@ -88,7 +88,7 @@ Recommended runtime behavior:
 
 ## Android App
 
-A native Android companion app lives in [`android-app/`](android-app/). It packages the skill into Android assets and provides a configurable AI API client for text, photos, training visual analysis, food-photo nutrition estimates, and linked training/nutrition check-ins.
+A native Android companion app lives in [`android-app/`](android-app/). It packages the skill into Android assets and provides daily training, daily nutrition, metrics, photo analysis, and AI review workflows with a configurable AI API client.
 
 The app keeps API credentials out of source code. Users enter an API key, base URL, and model in the app settings screen. See [`android-app/README.md`](android-app/README.md) for Android Studio, JDK 17, build, and API setup notes.
 
