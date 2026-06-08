@@ -51,6 +51,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.iwanttobeanifbbpro.app.core.CoachMode
+import com.iwanttobeanifbbpro.app.data.DailyLog
 import com.iwanttobeanifbbpro.app.data.DailyMetrics
 import com.iwanttobeanifbbpro.app.data.DailyTargets
 import com.iwanttobeanifbbpro.app.data.ExerciseEntry
@@ -422,6 +423,53 @@ private fun BeginnerGuideCard(onOpenPlan: () -> Unit, onOpenNutrition: () -> Uni
         }
     }
 }
+
+@Composable
+private fun TrendOverviewCard(logs: List<DailyLog>) {
+    val window = logs.sortedBy { it.date }.takeLast(7)
+    if (window.isEmpty()) {
+        SectionCard(title = "7-Day Trend", subtitle = "Recent logs will appear here after you save a few days.") {
+            EmptyState("Log training, meals, and metrics for several days to unlock trend-based AI adjustments.")
+        }
+        return
+    }
+    val firstWeight = window.firstNotNullOfOrNull { it.metrics.bodyWeightKg }
+    val lastWeight = window.lastNotNullOfOrNull { it.metrics.bodyWeightKg }
+    val weightChange = if (firstWeight != null && lastWeight != null) {
+        "${formatSigned(lastWeight - firstWeight)} kg"
+    } else {
+        "--"
+    }
+    val nutrition = window.map { it.nutritionTotals() }
+    val avgCalories = nutrition.map { it.calories }.averageIntOrNull()
+    val avgProtein = nutrition.map { it.protein }.averageIntOrNull()
+    val avgSleep = window.mapNotNull { it.metrics.sleepHours }.averageDoubleOrNull()
+    val avgSteps = window.map { it.metrics.steps }.averageIntOrNull()
+    val totalCompletedSets = window.sumOf { it.completedHardSets() }
+    val totalPlannedSets = window.sumOf { it.plannedHardSets() }
+    SectionCard(title = "7-Day Trend", subtitle = "Used by AI review to avoid overreacting to a single day.") {
+        MetricGrid(
+            metrics = listOf(
+                "Days" to window.size.toString(),
+                "Weight" to weightChange,
+                "Avg kcal" to (avgCalories?.let { formatDecimal(it) } ?: "--"),
+                "Avg protein" to (avgProtein?.let { "${formatDecimal(it)} g" } ?: "--"),
+                "Avg sleep" to (avgSleep?.let { "${formatDecimal(it)} h" } ?: "--"),
+                "Avg steps" to (avgSteps?.let { formatDecimal(it) } ?: "--"),
+                "Hard sets" to "$totalCompletedSets/$totalPlannedSets"
+            )
+        )
+        window.forEach { day ->
+            val totals = day.nutritionTotals()
+            Text(
+                text = "${day.date}: ${day.completedHardSets()}/${day.plannedHardSets()} sets, ${totals.calories} kcal, P ${totals.protein} g, sleep ${formatOptional(day.metrics.sleepHours, "h")}, weight ${formatOptional(day.metrics.bodyWeightKg, "kg")}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
 @Composable
 private fun TodayDashboard(
     state: CoachUiState,
@@ -485,6 +533,7 @@ private fun TodayDashboard(
                 }
             }
         }
+        TrendOverviewCard(logs = state.recentLogs)
         BeginnerGuideCard(onOpenPlan = onOpenPlan, onOpenNutrition = onOpenNutrition, onOpenMetrics = onOpenMetrics)
     }
 }
@@ -1114,6 +1163,7 @@ private fun MetricsPage(
             onConnectHealthData = onConnectHealthData,
             onSyncHealthData = onSyncHealthData
         )
+        TrendOverviewCard(logs = state.recentLogs)
         SectionCard(title = "Metrics", subtitle = "These recovery and physique signals help AI decide whether to push, hold, deload, or adjust food.") {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 DecimalField(
@@ -1560,3 +1610,12 @@ private fun formatDecimal(value: Double): String {
         "%.1f".format(Locale.US, value)
     }
 }
+
+private fun formatSigned(value: Double): String {
+    val prefix = if (value > 0) "+" else ""
+    return "$prefix${formatDecimal(value)}"
+}
+
+private fun List<Int>.averageIntOrNull(): Double? = takeIf { it.isNotEmpty() }?.map { it.toDouble() }?.average()
+
+private fun List<Double>.averageDoubleOrNull(): Double? = takeIf { it.isNotEmpty() }?.average()

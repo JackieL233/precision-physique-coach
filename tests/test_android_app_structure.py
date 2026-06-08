@@ -137,6 +137,9 @@ class AndroidAppStructureTest(unittest.TestCase):
             "healthSyncedAt",
             "readLog",
             "saveLog",
+            "readRecentLogs",
+            "log_date_index",
+            "log_",
             "buildAiReviewContext",
             "daily training",
             "daily nutrition",
@@ -145,6 +148,9 @@ class AndroidAppStructureTest(unittest.TestCase):
             "rest time",
             "Current weekly training plan",
             "Health Connect-derived data",
+            "Recent trend window",
+            "Weight change in window",
+            "Daily trend rows",
         ]
         combined = f"{model}\n{store}\n{plan_model}\n{plan_store}\n{summary}"
         for term in expected_terms:
@@ -198,6 +204,9 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Readiness",
             "Today Snapshot",
             "dailyReadiness",
+            "recentLogs",
+            "7-Day Trend",
+            "TrendOverviewCard",
         ]
         activity = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/MainActivity.kt").read_text(encoding="utf-8")
         theme = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/AppTheme.kt").read_text(encoding="utf-8")

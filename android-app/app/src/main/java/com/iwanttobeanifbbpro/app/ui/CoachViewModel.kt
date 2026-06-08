@@ -69,6 +69,7 @@ data class CoachUiState(
     val userInput: String = CoachMode.LINKED_TRAINING_NUTRITION.defaultPrompt,
     val settings: AiSettings = AiSettings(),
     val dailyLog: DailyLog = DailyLog(),
+    val recentLogs: List<DailyLog> = emptyList(),
     val trainingPlan: WeeklyTrainingPlan = WeeklyTrainingPlan(),
     val selectedPlanDayIndex: Int = 0,
     val restTimer: RestTimerState? = null,
@@ -94,6 +95,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         CoachUiState(
             settings = settingsStore.load(),
             dailyLog = dailyLogStore.readLog(),
+            recentLogs = dailyLogStore.readRecentLogs(),
             trainingPlan = trainingPlanStore.readPlan()
         )
     )
@@ -242,6 +244,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
             }
             uiState = uiState.copy(
                 dailyLog = log,
+                recentLogs = dailyLogStore.readRecentLogs(),
                 healthSnapshot = snapshot,
                 isHealthSyncing = false
             )
@@ -382,7 +385,12 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     fun resetToday() {
         skipRestTimer()
         dailyLogStore.resetToday()
-        uiState = uiState.copy(dailyLog = dailyLogStore.readLog(), result = "", error = null)
+        uiState = uiState.copy(
+            dailyLog = dailyLogStore.readLog(),
+            recentLogs = dailyLogStore.readRecentLogs(),
+            result = "",
+            error = null
+        )
     }
 
     fun addImages(uris: List<Uri>) {
@@ -406,6 +414,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
     fun runDailyReview() {
         val context = dailySummaryBuilder.buildAiReviewContext(
             log = uiState.dailyLog,
+            recentLogs = uiState.recentLogs,
             plan = uiState.trainingPlan,
             extraRequest = uiState.userInput
         )
@@ -433,7 +442,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun updateLog(log: DailyLog) {
         dailyLogStore.saveLog(log)
-        uiState = uiState.copy(dailyLog = log)
+        uiState = uiState.copy(dailyLog = log, recentLogs = dailyLogStore.readRecentLogs())
     }
 
     private fun updatePlan(plan: WeeklyTrainingPlan) {

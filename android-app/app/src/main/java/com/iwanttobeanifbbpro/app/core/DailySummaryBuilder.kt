@@ -4,8 +4,14 @@ import com.iwanttobeanifbbpro.app.data.DailyLog
 import com.iwanttobeanifbbpro.app.data.WeeklyTrainingPlan
 
 class DailySummaryBuilder {
-    fun buildAiReviewContext(log: DailyLog, plan: WeeklyTrainingPlan? = null, extraRequest: String = ""): String {
+    fun buildAiReviewContext(
+        log: DailyLog,
+        recentLogs: List<DailyLog> = emptyList(),
+        plan: WeeklyTrainingPlan? = null,
+        extraRequest: String = ""
+    ): String {
         val totals = log.nutritionTotals()
+        val trend = buildTrendSummary(recentLogs.ifEmpty { listOf(log) })
         val weeklyPlan = plan?.days?.joinToString("\n") { day ->
             val plannedExercises = day.exercises.joinToString("\n") { exercise ->
                 "  - ${exercise.name}: ${exercise.sets} x ${exercise.reps}, load ${exercise.loadKg ?: "not specified"} kg, RIR ${exercise.rir ?: "not specified"}, rest ${exercise.restSeconds}s, target ${exercise.targetMuscle.ifBlank { "not specified" }}, notes: ${exercise.notes.ifBlank { "none" }}"
@@ -37,6 +43,9 @@ class DailySummaryBuilder {
             - Plan name: ${plan?.name ?: "not loaded"}
             - Phase goal: ${plan?.phaseGoal ?: "not loaded"}
             $weeklyPlan
+
+            Recent trend window:
+            $trend
 
             Daily nutrition logged:
             - Calories ${totals.calories}/${log.targets.calories}
@@ -80,7 +89,7 @@ class DailySummaryBuilder {
             ${extraRequest.ifBlank { "Perform an AI review and update recommendations for tomorrow." }}
 
             Please perform an AI review:
-            1. Identify the limiting factor across training execution, nutrition adherence, sleep/recovery, and body-composition trend signals.
+            1. Identify the limiting factor across training execution, nutrition adherence, sleep/recovery, and body-composition trend signals using the recent trend window before reacting to today's values.
             2. Compare today's execution against the current weekly training plan and decide whether later training days should stay unchanged or be adjusted.
             3. Review set-level performance: load, reps, RIR, rest time, completed sets, technique notes, pain flags, target-muscle stimulus, and whether progression is justified.
             4. Decide which exercises should add reps, add load, hold, reduce volume, swap, or deload next time.
@@ -89,5 +98,55 @@ class DailySummaryBuilder {
             7. Use attached photos, if provided, as approximate evidence for exercise form, equipment identification, food portions, nutrition labels, menus, and progress comparison.
             8. Specify tomorrow's training, nutrition, recovery, and tracking priorities.
         """.trimIndent()
+    }
+
+    private fun buildTrendSummary(logs: List<DailyLog>): String {
+        val ordered = logs.sortedBy { it.date }.takeLast(14)
+        if (ordered.isEmpty()) return "- No historical logs saved yet."
+        val firstWeight = ordered.firstNotNullOfOrNull { it.metrics.bodyWeightKg }
+        val lastWeight = ordered.lastNotNullOfOrNull { it.metrics.bodyWeightKg }
+        val weightChange = if (firstWeight != null && lastWeight != null) {
+            "${lastWeight - firstWeight} kg"
+        } else {
+            "not enough data"
+        }
+        val nutrition = ordered.map { it.nutritionTotals() }
+        val avgCalories = nutrition.map { it.calories }.averageIntOrNull()
+        val avgProtein = nutrition.map { it.protein }.averageIntOrNull()
+        val avgSleep = ordered.mapNotNull { it.metrics.sleepHours }.averageDoubleOrNull()
+        val avgSteps = ordered.map { it.metrics.steps }.averageIntOrNull()
+        val avgFatigue = ordered.map { it.metrics.fatigue }.averageIntOrNull()
+        val totalCompletedSets = ordered.sumOf { it.completedHardSets() }
+        val totalPlannedSets = ordered.sumOf { it.plannedHardSets() }
+        val totalVolume = ordered.sumOf { it.trainingVolumeKg() }
+        val days = ordered.joinToString("\n") { day ->
+            val totals = day.nutritionTotals()
+            "- ${day.date}: weight ${day.metrics.bodyWeightKg ?: "not logged"} kg, bodyFat ${day.metrics.bodyFatPercent ?: "not logged"}%, sets ${day.completedHardSets()}/${day.plannedHardSets()}, volume ${day.trainingVolumeKg()} kg, calories ${totals.calories}, protein ${totals.protein}g, sleep ${day.metrics.sleepHours ?: "not logged"}h, steps ${day.metrics.steps}, fatigue ${day.metrics.fatigue}/5"
+        }
+        return """
+            - Days available: ${ordered.size}
+            - Weight change in window: $weightChange
+            - Average calories: ${avgCalories?.roundForPrompt() ?: "not enough data"}
+            - Average protein: ${avgProtein?.roundForPrompt() ?: "not enough data"} g
+            - Average sleep: ${avgSleep?.roundForPrompt() ?: "not enough data"} h
+            - Average steps: ${avgSteps?.roundForPrompt() ?: "not enough data"}
+            - Average fatigue: ${avgFatigue?.roundForPrompt() ?: "not enough data"}/5
+            - Completed hard sets: $totalCompletedSets/$totalPlannedSets
+            - Total completed training volume: $totalVolume kg
+            Daily trend rows:
+            $days
+        """.trimIndent()
+    }
+}
+
+private fun List<Int>.averageIntOrNull(): Double? = takeIf { it.isNotEmpty() }?.map { it.toDouble() }?.average()
+
+private fun List<Double>.averageDoubleOrNull(): Double? = takeIf { it.isNotEmpty() }?.average()
+
+private fun Double.roundForPrompt(): String {
+    return if (this % 1.0 == 0.0) {
+        toInt().toString()
+    } else {
+        "%.1f".format(java.util.Locale.US, this)
     }
 }

@@ -92,6 +92,8 @@ A native Android companion app lives in [`android-app/`](android-app/). It packa
 
 The app UI is moving toward a simple Apple-inspired daily cockpit: a quiet light theme, bottom navigation, a `Today` Command Center, readiness score, next action guidance, and beginner-friendly steps that still expose professional set-level training, nutrition, health, and AI review data.
 
+The app also saves local daily log history and shows a 7-day trend card. AI review now receives recent trend rows, so it can compare today's training, calories, protein, body weight, sleep, steps, fatigue, and hard sets against recent direction instead of reacting to one isolated day.
+
 The app now supports weekly training plans, set-level workout execution, and Health Connect metric sync: build a weekly plan, apply a planned day to today's workout, record each set's weight, reps, RIR, completion state, rest time, and notes; tap a completed set to start a rest countdown; sync user-authorized body weight, body fat, lean mass, steps, sleep, resting heart rate, and calorie burn from Health Connect when Xiaomi, Huawei, scale, watch, or phone apps expose those records; then send the weekly plan, actual session log, meals, photos, body metrics, sleep, steps, hunger, fatigue, soreness, and stress into the AI review flow.
 
 Health Connect is the first Android health-data integration layer. It can read compatible Xiaomi/Huawei/phone/scale data only when the source app writes to Health Connect and the user grants permissions. Huawei Health Kit is documented as a future optional dedicated provider for deeper Huawei-specific syncing; manual entry remains the fallback.

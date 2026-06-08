@@ -8,6 +8,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - Bundled skill assets in `app/src/main/assets/skill/`.
 - Apple-inspired light UI theme with a quiet neutral background, blue action color, rounded grouped surfaces, and bottom navigation for the main daily tabs.
 - A `Today` Command Center with readiness, next action, training, nutrition, recovery, and body-composition cards so beginners know what to do first while advanced users can scan the key numbers.
+- Local daily log history with a 7-day trend summary for body weight, calories, protein, sleep, steps, hard sets, and training volume.
 - Coach modes for new plans, check-ins, training visual analysis, food visual analysis, linked training + nutrition analysis, existing plan audit, and evidence explanations.
 - Configurable API key, base URL, and model from the app UI.
 - OpenAI Responses API request shape with text and photos.
@@ -20,6 +21,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - A daily metrics workflow for body weight, waist, sleep, steps, hunger, fatigue, soreness, stress, and reflection.
 - Health Connect sync for user-authorized body weight, body fat, lean body mass, steps, sleep, resting heart rate, and total calories burned. Xiaomi, Huawei, scale, watch, and phone data can be imported when the source app writes those records into Health Connect.
 - An AI review workflow that summarizes the day and asks the model what to adjust tomorrow.
+- AI review includes recent trend rows so recommendations can compare today's execution against recent training, nutrition, recovery, and body-composition direction.
 - An AI Data Map that makes the connected analysis surface explicit: exercise selection, set load, actual reps, RIR, rest time, hard sets, tonnage, technique notes, pain flags, meal macros, food photos, equipment/form photos, body weight, body fat, lean mass, waist, sleep, steps, resting heart rate, calorie burn, hunger, fatigue, soreness, and stress.
 
 ## Daily workflow
@@ -28,6 +30,7 @@ Use the app as a daily training and daily nutrition cockpit:
 
 1. Open `Today` to see the current training, nutrition, metrics, and readiness summary.
    The Command Center shows the next best action and a beginner-friendly daily loop: plan, train, log food, sync health data, then run AI review.
+   The 7-day trend card shows whether body weight, food intake, hard sets, sleep, and activity are moving in the right direction.
 2. Use `Plan` to build the weekly training plan, select a day, add planned exercises, and tap `Apply today`.
 3. Use `Training` to log the applied session, set-by-set weight, reps, RIR, rest time, hard sets, target muscle, and pain/form notes. Tap `Complete` after a set to start the rest timer.
 4. Use `Nutrition` to set calorie/macronutrient targets, log meals, and attach a meal photo when you want food-photo analysis.
