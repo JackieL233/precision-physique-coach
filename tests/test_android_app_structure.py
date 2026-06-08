@@ -245,6 +245,15 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Huawei Health -> Health Connect or Health Kit",
             "Scale/watch/phone -> Health Connect",
             "Manual fallback",
+            "ExerciseVisualGuide",
+            "ExerciseVisualType",
+            "Exercise visual guide",
+            "Smith machine",
+            "Cable station",
+            "Dumbbells",
+            "Barbell",
+            "Machine",
+            "Bodyweight or open station",
         ]
         activity = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/MainActivity.kt").read_text(encoding="utf-8")
         theme = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/AppTheme.kt").read_text(encoding="utf-8")
@@ -327,6 +336,13 @@ class AndroidAppStructureTest(unittest.TestCase):
             "target weight/body fat",
             "weekly training days",
             "manual entry",
+            "unified exercise visual guide",
+            "Smith machine",
+            "cable station",
+            "dumbbells",
+            "barbell",
+            "machine",
+            "bodyweight/open-station",
         ]
         for term in expected_terms:
             with self.subTest(term=term):
@@ -355,12 +371,41 @@ class AndroidAppStructureTest(unittest.TestCase):
             "AI Coach",
             "AI Data Map",
             "Saved AI Reviews",
+            "Exercise visual guide",
+            "Smith machine",
+            "Cable station",
+            "Guided press path",
+            "Pulley resistance",
+            "Unified exercise visual guide",
             "data-tab",
             "complete-set",
             "setInterval",
             "Open `index.html`",
         ]
         combined = f"{html}\n{readme}"
+        for term in expected_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
+    def test_skill_assets_define_exercise_visual_guide_categories(self) -> None:
+        skill_library = (ROOT / "skills/i-want-to-be-an-ifbb-pro/references/exercise-library.md").read_text(
+            encoding="utf-8"
+        )
+        app_library = (APP / "app/src/main/assets/skill/references/exercise-library.md").read_text(
+            encoding="utf-8"
+        )
+        expected_terms = [
+            "Exercise Visual Guide",
+            "Smith machine",
+            "Cable station",
+            "Dumbbells",
+            "Barbell",
+            "Machine",
+            "Bodyweight or open station",
+            "guided incline press path",
+            "align bench under the fixed bar path",
+        ]
+        combined = f"{skill_library}\n{app_library}"
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)

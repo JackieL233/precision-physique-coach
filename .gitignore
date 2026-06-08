@@ -4,3 +4,7 @@ __pycache__/
 .venv/
 dist/
 build/
+android-app/.gradle/
+android-app/.kotlin/
+android-app/build/
+android-app/app/build/

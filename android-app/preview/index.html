@@ -432,6 +432,172 @@
       color: #00315f;
     }
 
+    .visual-guide {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 116px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .visual-guide.compact {
+      grid-template-columns: 88px minmax(0, 1fr);
+      padding: 9px;
+    }
+
+    .visual-guide strong {
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .visual-guide .chip-row {
+      gap: 5px;
+      margin-top: 7px;
+    }
+
+    .visual-guide .chip {
+      padding: 5px 8px;
+      font-size: 11px;
+      background: var(--surface);
+    }
+
+    .mini-figure {
+      width: 100%;
+      height: 82px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-figure.compact {
+      height: 66px;
+    }
+
+    .mini-figure::before {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: 13%;
+      height: 2px;
+      background: rgba(110, 110, 115, 0.35);
+    }
+
+    .mini-figure span {
+      position: absolute;
+      display: block;
+      border-radius: 999px;
+    }
+
+    .smith .rail-left,
+    .smith .rail-right {
+      top: 13%;
+      bottom: 16%;
+      width: 5px;
+      background: var(--muted);
+    }
+
+    .smith .rail-left {
+      left: 19%;
+    }
+
+    .smith .rail-right {
+      right: 19%;
+    }
+
+    .smith .bar-line {
+      left: 24%;
+      right: 24%;
+      top: 35%;
+      height: 5px;
+      background: var(--blue);
+    }
+
+    .smith .bench {
+      left: 33%;
+      right: 26%;
+      top: 63%;
+      height: 5px;
+      transform: rotate(-12deg);
+      background: var(--muted);
+    }
+
+    .smith .head,
+    .cable .head,
+    .body .head {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .smith .head {
+      left: 44%;
+      top: 43%;
+    }
+
+    .smith .body {
+      left: 48%;
+      top: 53%;
+      width: 30px;
+      height: 3px;
+      transform: rotate(42deg);
+      background: var(--green);
+    }
+
+    .cable .tower {
+      left: 18%;
+      top: 13%;
+      bottom: 16%;
+      width: 5px;
+      background: var(--muted);
+    }
+
+    .cable .arm {
+      left: 18%;
+      top: 13%;
+      width: 34%;
+      height: 5px;
+      background: var(--muted);
+    }
+
+    .cable .pulley {
+      left: 49%;
+      top: 18%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .cable .line {
+      left: 54%;
+      top: 25%;
+      width: 32%;
+      height: 2px;
+      transform: rotate(47deg);
+      background: var(--blue);
+    }
+
+    .cable .head {
+      right: 19%;
+      top: 35%;
+    }
+
+    .cable .body {
+      right: 22%;
+      top: 48%;
+      width: 30px;
+      height: 3px;
+      transform: rotate(108deg);
+      background: var(--green);
+    }
+
     .rest-banner {
       display: none;
       border: 1px solid #b8dcff;
@@ -599,6 +765,11 @@
         grid-template-columns: 1fr;
       }
 
+      .visual-guide,
+      .visual-guide.compact {
+        grid-template-columns: 1fr;
+      }
+
       .side {
         padding: 16px;
       }
@@ -721,10 +892,30 @@
               <span class="chip">Arms</span>
             </div>
             <div class="exercise">
+              <div class="visual-guide compact">
+                <div class="mini-figure compact smith" aria-hidden="true">
+                  <span class="rail-left"></span><span class="rail-right"></span><span class="bar-line"></span><span class="bench"></span><span class="head"></span><span class="body"></span>
+                </div>
+                <div>
+                  <strong>Exercise visual guide</strong>
+                  <p class="subtle">Smith machine | Guided press path</p>
+                  <div class="chip-row"><span class="chip">Upper chest</span><span class="chip">Fixed bar path</span></div>
+                </div>
+              </div>
               <strong>Incline Smith Press</strong>
               <p class="subtle">Upper chest | 4 x 6-10 | RIR 2 | rest 150s</p>
             </div>
             <div class="exercise">
+              <div class="visual-guide compact">
+                <div class="mini-figure compact cable" aria-hidden="true">
+                  <span class="tower"></span><span class="arm"></span><span class="pulley"></span><span class="line"></span><span class="head"></span><span class="body"></span>
+                </div>
+                <div>
+                  <strong>Exercise visual guide</strong>
+                  <p class="subtle">Cable station | Pulley resistance</p>
+                  <div class="chip-row"><span class="chip">Side delt</span><span class="chip">Set pulley height</span></div>
+                </div>
+              </div>
               <strong>Cable Lateral Raise</strong>
               <p class="subtle">Side delt | 4 x 12-20 | RIR 1 | rest 75s</p>
             </div>
@@ -753,6 +944,16 @@
             <div class="section-head">
               <h2>Incline Smith Press</h2>
               <p class="subtle">Upper chest | 4 x 6-10 | rest 150s | keep scapula set.</p>
+            </div>
+            <div class="visual-guide">
+              <div class="mini-figure smith" aria-hidden="true">
+                <span class="rail-left"></span><span class="rail-right"></span><span class="bar-line"></span><span class="bench"></span><span class="head"></span><span class="body"></span>
+              </div>
+              <div>
+                <strong>Exercise visual guide</strong>
+                <p class="subtle">Smith machine | Guided press path</p>
+                <div class="chip-row"><span class="chip">Upper chest</span><span class="chip">Align bench under bar</span></div>
+              </div>
             </div>
             <table class="set-table">
               <thead>

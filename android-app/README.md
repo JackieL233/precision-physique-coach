@@ -18,6 +18,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - A weekly training plan workflow for phase goals, training days, planned exercises, sets, reps, RIR, rest time, and notes.
 - An `Apply today` workflow that turns a planned training day into today's set-level executable workout log.
 - A daily training workflow for planned focus, completed sessions, exercises, set-level load, reps, RIR, rest time, hard sets, target muscle, and form/pain notes.
+- A unified exercise visual guide on planned and active workout cards, using simple equipment/action diagrams for Smith machine, cable station, dumbbells, barbell, machine, and bodyweight/open-station movements so non-pro users can recognize what the exercise name refers to.
 - A workout execution flow where tapping a set as complete starts a rest countdown for the next set.
 - A daily nutrition workflow for calorie and macro targets, meal logging, meal photo support, and food-photo estimate follow-up.
 - A daily metrics workflow for body weight, waist, sleep, steps, hunger, fatigue, soreness, stress, and reflection.
@@ -36,7 +37,7 @@ Use the app as a daily training and daily nutrition cockpit:
    The Command Center shows the next best action and a beginner-friendly daily loop: plan, train, log food, sync health data, then run AI review.
    The 7-day trend card shows whether body weight, food intake, hard sets, sleep, and activity are moving in the right direction.
 3. Use `Plan` to build the weekly training plan, select a day, add planned exercises, and tap `Apply today`.
-4. Use `Training` to log the applied session, set-by-set weight, reps, RIR, rest time, hard sets, target muscle, and pain/form notes. Tap `Complete` after a set to start the rest timer.
+4. Use `Training` to log the applied session, set-by-set weight, reps, RIR, rest time, hard sets, target muscle, and pain/form notes. The exercise visual guide helps identify the equipment/action before logging. Tap `Complete` after a set to start the rest timer.
 5. Use `Nutrition` to set calorie/macronutrient targets, log meals, and attach a meal photo when you want food-photo analysis.
 6. Use `Metrics` for body weight, body fat, lean mass, waist, sleep, steps, resting heart rate, calorie burn, hunger, fatigue, soreness, stress, and daily reflection. Tap `Connect health data` and `Sync today` to import supported Health Connect records.
 7. Use `AI Coach` or the `Run AI review` button to send the athlete profile, weekly training plan, day's log, set-level performance, photos, and your extra question to the model for adjustment guidance.
@@ -64,13 +65,18 @@ Current implementation status:
 
 ## Build
 
-Use Android Studio with JDK 17 and a normal Android SDK installation.
+Use JDK 17 with a normal Android SDK installation that includes Android API 36. The Gradle wrapper is included so the project builds with the tested Gradle version.
 
 1. Open `android-app/` in Android Studio.
 2. Let Android Studio sync Gradle.
 3. Build and run the `app` configuration on an emulator or phone.
 
-This workspace currently does not include a local JDK/Android SDK, so APK compilation is expected to happen in Android Studio or another Android build machine.
+Command-line build:
+
+```bash
+cd android-app
+./gradlew :app:assembleDebug
+```
 
 ## API setup
 

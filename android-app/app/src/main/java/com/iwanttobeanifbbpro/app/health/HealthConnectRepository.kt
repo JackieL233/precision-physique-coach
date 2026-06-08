@@ -20,6 +20,7 @@ import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlin.reflect.KClass
 
 class HealthConnectRepository(private val context: Context) {
     private val zoneId: ZoneId = ZoneId.systemDefault()
@@ -79,6 +80,7 @@ class HealthConnectRepository(private val context: Context) {
                 granted = granted,
                 startTime = bodyLookbackStart,
                 endTime = now,
+                recordType = WeightRecord::class,
                 timeOf = { it.time }
             )?.weight?.inKilograms
 
@@ -88,6 +90,7 @@ class HealthConnectRepository(private val context: Context) {
                 granted = granted,
                 startTime = bodyLookbackStart,
                 endTime = now,
+                recordType = BodyFatRecord::class,
                 timeOf = { it.time }
             )?.percentage?.value
 
@@ -97,6 +100,7 @@ class HealthConnectRepository(private val context: Context) {
                 granted = granted,
                 startTime = bodyLookbackStart,
                 endTime = now,
+                recordType = LeanBodyMassRecord::class,
                 timeOf = { it.time }
             )?.mass?.inKilograms
 
@@ -106,15 +110,17 @@ class HealthConnectRepository(private val context: Context) {
                 granted = granted,
                 startTime = bodyLookbackStart,
                 endTime = now,
+                recordType = RestingHeartRateRecord::class,
                 timeOf = { it.time }
             )?.beatsPerMinute?.toDouble()
 
-            val sleepHours = readRecordsIfGranted<SleepSessionRecord>(
+            val sleepHours = readRecordsIfGranted(
                 client = client,
                 permission = HealthPermission.getReadPermission(SleepSessionRecord::class),
                 granted = granted,
                 startTime = sleepLookbackStart,
-                endTime = now
+                endTime = now,
+                recordType = SleepSessionRecord::class
             ).sumOf { record ->
                 Duration.between(record.startTime, record.endTime).toMinutes().coerceAtLeast(0)
             }.takeIf { it > 0 }?.let { minutes -> minutes / 60.0 }
@@ -187,23 +193,25 @@ class HealthConnectRepository(private val context: Context) {
         )[TotalCaloriesBurnedRecord.ENERGY_TOTAL]?.inKilocalories
     }
 
-    private suspend inline fun <reified T : Record> readLatest(
+    private suspend fun <T : Record> readLatest(
         client: HealthConnectClient,
         permission: String,
         granted: Set<String>,
         startTime: Instant,
         endTime: Instant,
-        crossinline timeOf: (T) -> Instant
+        recordType: KClass<T>,
+        timeOf: (T) -> Instant
     ): T? {
-        return readRecordsIfGranted<T>(client, permission, granted, startTime, endTime).maxByOrNull { timeOf(it) }
+        return readRecordsIfGranted(client, permission, granted, startTime, endTime, recordType).maxByOrNull { timeOf(it) }
     }
 
-    private suspend inline fun <reified T : Record> readRecordsIfGranted(
+    private suspend fun <T : Record> readRecordsIfGranted(
         client: HealthConnectClient,
         permission: String,
         granted: Set<String>,
         startTime: Instant,
-        endTime: Instant
+        endTime: Instant,
+        recordType: KClass<T>
     ): List<T> {
         if (permission !in granted) return emptyList()
         val records = mutableListOf<T>()
@@ -211,7 +219,7 @@ class HealthConnectRepository(private val context: Context) {
         do {
             val response = client.readRecords(
                 ReadRecordsRequest(
-                    recordType = T::class,
+                    recordType = recordType,
                     timeRangeFilter = TimeRangeFilter.between(startTime, endTime),
                     pageToken = pageToken
                 )

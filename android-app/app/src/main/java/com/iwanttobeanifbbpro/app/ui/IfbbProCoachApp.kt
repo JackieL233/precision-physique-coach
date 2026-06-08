@@ -4,6 +4,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -455,7 +459,7 @@ private fun TrendOverviewCard(logs: List<DailyLog>) {
         return
     }
     val firstWeight = window.firstNotNullOfOrNull { it.metrics.bodyWeightKg }
-    val lastWeight = window.lastNotNullOfOrNull { it.metrics.bodyWeightKg }
+    val lastWeight = window.asReversed().firstNotNullOfOrNull { it.metrics.bodyWeightKg }
     val weightChange = if (firstWeight != null && lastWeight != null) {
         "${formatSigned(lastWeight - firstWeight)} kg"
     } else {
@@ -881,6 +885,7 @@ private fun PlanPage(
 private fun PlannedExerciseCard(exercise: PlannedExercise, onRemove: () -> Unit) {
     Card(shape = RoundedCornerShape(8.dp)) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ExerciseVisualGuide(name = exercise.name, targetMuscle = exercise.targetMuscle)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                     Text(exercise.name, fontWeight = FontWeight.SemiBold)
@@ -902,6 +907,195 @@ private fun PlannedExerciseCard(exercise: PlannedExercise, onRemove: () -> Unit)
                 }
             }
         }
+    }
+}
+
+private enum class ExerciseVisualType {
+    SMITH_MACHINE,
+    CABLE,
+    DUMBBELL,
+    BARBELL,
+    MACHINE,
+    BODYWEIGHT
+}
+
+private data class ExerciseVisualSpec(
+    val type: ExerciseVisualType,
+    val equipment: String,
+    val pattern: String,
+    val primaryMuscle: String,
+    val setupCue: String
+)
+
+@Composable
+private fun ExerciseVisualGuide(name: String, targetMuscle: String) {
+    val spec = remember(name, targetMuscle) { exerciseVisualSpec(name, targetMuscle) }
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        Row(
+            modifier = Modifier.padding(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .weight(0.9f)
+                    .height(92.dp)
+            ) {
+                val primary = Color(0xFF007AFF)
+                val secondary = Color(0xFF6E6E73)
+                val accent = Color(0xFF34C759)
+                val stroke = 4.dp.toPx()
+                val thin = 2.dp.toPx()
+                val w = size.width
+                val h = size.height
+
+                drawLine(secondary.copy(alpha = 0.35f), Offset(w * 0.08f, h * 0.82f), Offset(w * 0.92f, h * 0.82f), strokeWidth = thin)
+
+                when (spec.type) {
+                    ExerciseVisualType.SMITH_MACHINE -> {
+                        drawLine(secondary, Offset(w * 0.18f, h * 0.12f), Offset(w * 0.18f, h * 0.82f), strokeWidth = stroke)
+                        drawLine(secondary, Offset(w * 0.82f, h * 0.12f), Offset(w * 0.82f, h * 0.82f), strokeWidth = stroke)
+                        drawLine(primary, Offset(w * 0.22f, h * 0.34f), Offset(w * 0.78f, h * 0.34f), strokeWidth = stroke, cap = StrokeCap.Round)
+                        drawLine(secondary, Offset(w * 0.32f, h * 0.70f), Offset(w * 0.70f, h * 0.58f), strokeWidth = stroke, cap = StrokeCap.Round)
+                        drawCircle(accent, radius = 6.dp.toPx(), center = Offset(w * 0.46f, h * 0.43f))
+                        drawLine(accent, Offset(w * 0.47f, h * 0.48f), Offset(w * 0.59f, h * 0.61f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.52f, h * 0.50f), Offset(w * 0.38f, h * 0.34f), strokeWidth = thin, cap = StrokeCap.Round)
+                    }
+
+                    ExerciseVisualType.CABLE -> {
+                        drawLine(secondary, Offset(w * 0.16f, h * 0.12f), Offset(w * 0.16f, h * 0.82f), strokeWidth = stroke)
+                        drawLine(secondary, Offset(w * 0.16f, h * 0.12f), Offset(w * 0.46f, h * 0.12f), strokeWidth = stroke)
+                        drawCircle(primary, radius = 7.dp.toPx(), center = Offset(w * 0.44f, h * 0.18f))
+                        drawLine(primary, Offset(w * 0.44f, h * 0.18f), Offset(w * 0.64f, h * 0.46f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawCircle(accent, radius = 6.dp.toPx(), center = Offset(w * 0.72f, h * 0.34f))
+                        drawLine(accent, Offset(w * 0.70f, h * 0.40f), Offset(w * 0.62f, h * 0.62f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.66f, h * 0.46f), Offset(w * 0.52f, h * 0.56f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.66f, h * 0.46f), Offset(w * 0.78f, h * 0.56f), strokeWidth = thin, cap = StrokeCap.Round)
+                    }
+
+                    ExerciseVisualType.DUMBBELL -> {
+                        drawCircle(accent, radius = 7.dp.toPx(), center = Offset(w * 0.50f, h * 0.24f))
+                        drawLine(accent, Offset(w * 0.50f, h * 0.32f), Offset(w * 0.50f, h * 0.58f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.50f, h * 0.40f), Offset(w * 0.32f, h * 0.46f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.50f, h * 0.40f), Offset(w * 0.68f, h * 0.46f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(primary, Offset(w * 0.25f, h * 0.46f), Offset(w * 0.38f, h * 0.46f), strokeWidth = stroke, cap = StrokeCap.Round)
+                        drawLine(primary, Offset(w * 0.62f, h * 0.46f), Offset(w * 0.75f, h * 0.46f), strokeWidth = stroke, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.50f, h * 0.58f), Offset(w * 0.38f, h * 0.78f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.50f, h * 0.58f), Offset(w * 0.62f, h * 0.78f), strokeWidth = thin, cap = StrokeCap.Round)
+                    }
+
+                    ExerciseVisualType.BARBELL -> {
+                        drawLine(primary, Offset(w * 0.16f, h * 0.34f), Offset(w * 0.84f, h * 0.34f), strokeWidth = stroke, cap = StrokeCap.Round)
+                        drawLine(primary, Offset(w * 0.18f, h * 0.26f), Offset(w * 0.18f, h * 0.42f), strokeWidth = stroke)
+                        drawLine(primary, Offset(w * 0.82f, h * 0.26f), Offset(w * 0.82f, h * 0.42f), strokeWidth = stroke)
+                        drawCircle(accent, radius = 7.dp.toPx(), center = Offset(w * 0.50f, h * 0.45f))
+                        drawLine(accent, Offset(w * 0.50f, h * 0.53f), Offset(w * 0.50f, h * 0.70f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.50f, h * 0.56f), Offset(w * 0.38f, h * 0.36f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.50f, h * 0.56f), Offset(w * 0.62f, h * 0.36f), strokeWidth = thin, cap = StrokeCap.Round)
+                    }
+
+                    ExerciseVisualType.MACHINE -> {
+                        drawLine(secondary, Offset(w * 0.22f, h * 0.18f), Offset(w * 0.22f, h * 0.82f), strokeWidth = stroke)
+                        drawLine(secondary, Offset(w * 0.22f, h * 0.78f), Offset(w * 0.78f, h * 0.78f), strokeWidth = stroke)
+                        drawLine(primary, Offset(w * 0.40f, h * 0.62f), Offset(w * 0.70f, h * 0.42f), strokeWidth = stroke, cap = StrokeCap.Round)
+                        drawLine(secondary, Offset(w * 0.36f, h * 0.66f), Offset(w * 0.58f, h * 0.66f), strokeWidth = stroke, cap = StrokeCap.Round)
+                        drawCircle(accent, radius = 7.dp.toPx(), center = Offset(w * 0.50f, h * 0.36f))
+                        drawLine(accent, Offset(w * 0.50f, h * 0.44f), Offset(w * 0.46f, h * 0.62f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.48f, h * 0.52f), Offset(w * 0.66f, h * 0.44f), strokeWidth = thin, cap = StrokeCap.Round)
+                    }
+
+                    ExerciseVisualType.BODYWEIGHT -> {
+                        drawCircle(accent, radius = 7.dp.toPx(), center = Offset(w * 0.30f, h * 0.36f))
+                        drawLine(accent, Offset(w * 0.36f, h * 0.42f), Offset(w * 0.66f, h * 0.50f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.46f, h * 0.45f), Offset(w * 0.32f, h * 0.68f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(accent, Offset(w * 0.58f, h * 0.48f), Offset(w * 0.78f, h * 0.70f), strokeWidth = thin, cap = StrokeCap.Round)
+                        drawLine(primary, Offset(w * 0.26f, h * 0.70f), Offset(w * 0.84f, h * 0.70f), strokeWidth = stroke, cap = StrokeCap.Round)
+                    }
+                }
+            }
+            Column(modifier = Modifier.weight(1.1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("Exercise visual guide", fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = "${spec.equipment} | ${spec.pattern}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                DataChipGrid(items = listOf(spec.primaryMuscle, spec.setupCue))
+            }
+        }
+    }
+}
+
+private fun exerciseVisualSpec(name: String, targetMuscle: String): ExerciseVisualSpec {
+    val text = "$name $targetMuscle".lowercase(Locale.US)
+    val primaryMuscle = targetMuscle.ifBlank { inferPrimaryMuscle(text) }
+    return when {
+        text.contains("smith") -> ExerciseVisualSpec(
+            type = ExerciseVisualType.SMITH_MACHINE,
+            equipment = "Smith machine",
+            pattern = "Guided press or squat path",
+            primaryMuscle = primaryMuscle,
+            setupCue = "Align bench or stance under the fixed bar path"
+        )
+
+        text.contains("cable") || text.contains("pulley") || text.contains("rope") || text.contains("pushdown") || text.contains("face pull") -> ExerciseVisualSpec(
+            type = ExerciseVisualType.CABLE,
+            equipment = "Cable station",
+            pattern = "Pulley resistance",
+            primaryMuscle = primaryMuscle,
+            setupCue = "Set pulley height before choosing handle"
+        )
+
+        text.contains("dumbbell") || text.contains("db ") || text.endsWith(" db") -> ExerciseVisualSpec(
+            type = ExerciseVisualType.DUMBBELL,
+            equipment = "Dumbbells",
+            pattern = "Free-weight unilateral control",
+            primaryMuscle = primaryMuscle,
+            setupCue = "Match both sides and control the path"
+        )
+
+        text.contains("barbell") || text.contains("bench press") || text.contains("deadlift") || text.contains("squat") -> ExerciseVisualSpec(
+            type = ExerciseVisualType.BARBELL,
+            equipment = "Barbell",
+            pattern = "Free-weight compound lift",
+            primaryMuscle = primaryMuscle,
+            setupCue = "Set rack height, grip, stance, and safety pins"
+        )
+
+        text.contains("machine") || text.contains("press") || text.contains("extension") || text.contains("curl") || text.contains("pec deck") || text.contains("leg") -> ExerciseVisualSpec(
+            type = ExerciseVisualType.MACHINE,
+            equipment = "Machine",
+            pattern = "Guided resistance",
+            primaryMuscle = primaryMuscle,
+            setupCue = "Adjust seat and pads to match joint axis"
+        )
+
+        else -> ExerciseVisualSpec(
+            type = ExerciseVisualType.BODYWEIGHT,
+            equipment = "Bodyweight or open station",
+            pattern = "Movement pattern demo",
+            primaryMuscle = primaryMuscle,
+            setupCue = "Use notes or photos when the exact setup is unclear"
+        )
+    }
+}
+
+private fun inferPrimaryMuscle(text: String): String {
+    return when {
+        text.contains("lateral") || text.contains("delt") || text.contains("shoulder") -> "Delts"
+        text.contains("incline") || text.contains("chest") || text.contains("press") || text.contains("pec") -> "Chest"
+        text.contains("row") || text.contains("pulldown") || text.contains("lat") || text.contains("back") -> "Back"
+        text.contains("squat") || text.contains("leg press") || text.contains("quad") -> "Quads"
+        text.contains("deadlift") || text.contains("rdl") || text.contains("hamstring") || text.contains("glute") -> "Posterior chain"
+        text.contains("curl") || text.contains("biceps") -> "Biceps"
+        text.contains("extension") || text.contains("pushdown") || text.contains("triceps") -> "Triceps"
+        text.contains("calf") -> "Calves"
+        else -> "Target muscle"
     }
 }
 
@@ -954,7 +1148,7 @@ private fun TrainingPage(
             )
         }
 
-        SectionCard(title = "Add Exercise", subtitle = "Create planned set rows first, then update actual reps and load during the workout.") {
+        SectionCard(title = "Add Exercise", subtitle = "Create planned set rows first; the app adds a simple equipment/action visual so the movement is easier to recognize.") {
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -1041,6 +1235,7 @@ private fun ExerciseExecutionCard(
 ) {
     Card(shape = RoundedCornerShape(8.dp)) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            ExerciseVisualGuide(name = exercise.name, targetMuscle = exercise.targetMuscle)
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                     Text(exercise.name, fontWeight = FontWeight.SemiBold)

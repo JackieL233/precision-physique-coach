@@ -8,6 +8,7 @@ The preview mirrors the current Android app structure:
 
 - Today command center
 - Athlete profile and weekly plan
+- Unified exercise visual guide for equipment/action recognition
 - Set-level training execution
 - Rest countdown after completing a set
 - Daily nutrition tracking

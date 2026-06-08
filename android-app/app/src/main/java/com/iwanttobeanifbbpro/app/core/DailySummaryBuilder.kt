@@ -124,7 +124,7 @@ class DailySummaryBuilder {
         val ordered = logs.sortedBy { it.date }.takeLast(14)
         if (ordered.isEmpty()) return "- No historical logs saved yet."
         val firstWeight = ordered.firstNotNullOfOrNull { it.metrics.bodyWeightKg }
-        val lastWeight = ordered.lastNotNullOfOrNull { it.metrics.bodyWeightKg }
+        val lastWeight = ordered.asReversed().firstNotNullOfOrNull { it.metrics.bodyWeightKg }
         val weightChange = if (firstWeight != null && lastWeight != null) {
             "${lastWeight - firstWeight} kg"
         } else {

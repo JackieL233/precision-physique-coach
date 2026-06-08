@@ -4,6 +4,19 @@ Use movement patterns and equipment options instead of forcing one exercise. Cho
 
 If the user provides equipment photos, exercise photos, or video frames, use `visual-analysis-and-food-estimation.md` for equipment identification and exercise form analysis before choosing cues or substitutions. Ask for load, reps, set number, RIR/RPE, pain, and target muscle so the visual observation can be connected to the session log.
 
+## Exercise Visual Guide
+
+When outputting exercises for a beginner or a user who may not recognize professional exercise names, include a concise visual guide cue that maps the name to an equipment/action category. Use the same plain categories the Android app can display:
+
+- Smith machine: fixed bar path for guided presses, squats, or rows.
+- Cable station: pulley resistance, cable handle/rope, adjustable pulley height.
+- Dumbbells: free-weight unilateral or bilateral control with matched sides.
+- Barbell: free-weight compound lift with rack, plates, safety pins when relevant.
+- Machine: guided resistance with adjustable seat, pads, handles, or lever arms.
+- Bodyweight or open station: floor, bench, pull-up bar, dip station, bands, or open movement space.
+
+Pair the visual cue with the target muscle and one setup cue, for example: `Exercise visual guide: Smith machine | guided incline press path | upper chest | align bench under the fixed bar path`.
+
 ## Movement Patterns
 
 ### Squat / Knee-Dominant
