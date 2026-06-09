@@ -1524,70 +1524,50 @@
         </div>
 
         <section class="panel active" data-panel="today" aria-label="Today">
-          <div class="section">
+          <div class="section glass one-tap-hero today-hero">
             <div class="section-head">
-              <h2 data-en="Start Here" data-zh="从这里开始">Start Here</h2>
-              <p class="subtle" data-en="A clear daily loop: plan, train, eat, sync, then let AI review the evidence." data-zh="每天只按这个闭环执行：计划、训练、吃饭、同步数据，然后让 AI 复盘证据。">A clear daily loop: plan, train, eat, sync, then let AI review the evidence.</p>
+              <h2 data-en="Today Flow Coach" data-zh="今日流程教练">Today Flow Coach</h2>
+              <p class="subtle" data-en="Open the app, do the next step, and keep professional reasoning underneath." data-zh="打开 App 后只做下一步；专业判断放在下方，需要时再展开。">Open the app, do the next step, and keep professional reasoning underneath.</p>
             </div>
+            <div class="coach-stage">
+              <div>
+                <p class="eyebrow" data-en="NEXT BEST ACTION" data-zh="现在该做">NEXT BEST ACTION</p>
+                <h3 class="next-action-title" data-en="Finish today's workout" data-zh="完成今天训练">Finish today's workout</h3>
+                <p class="subtle" data-en="8/18 sets completed. Continue the next working set, then let the rest timer handle pacing." data-zh="已完成 8/18 组。继续下一组正式组，然后跟着休息倒计时走。">8/18 sets completed. Continue the next working set, then let the rest timer handle pacing.</p>
+              </div>
+              <div class="action-orb">
+                <div class="exercise-photo-slot">
+                  <strong data-en="daily coach focus" data-zh="今日教练重点">daily coach focus</strong>
+                </div>
+              </div>
+            </div>
+            <button class="primary-play" type="button" data-tab-target="training" data-en="Continue workout" data-zh="继续训练">Continue workout</button>
             <div class="metric-grid">
               <div class="metric"><span class="label" data-en="Progress" data-zh="今日进度">Progress</span><span class="value">3/5</span></div>
               <div class="metric"><span class="label" data-en="Readiness" data-zh="状态">Readiness</span><span class="value">82</span></div>
               <div class="metric"><span class="label" data-en="Phase" data-zh="阶段">Phase</span><span class="value" data-en="Hypertrophy" data-zh="增肌期">Hypertrophy</span></div>
-              <div class="metric"><span class="label" data-en="Next" data-zh="下一步">Next</span><span class="value" data-en="Finish training" data-zh="完成训练">Finish training</span></div>
+              <div class="metric"><span class="label" data-en="Protein" data-zh="蛋白质">Protein</span><span class="value" data-en="57 g left" data-zh="还差 57 g">57 g left</span></div>
             </div>
             <div class="progress"><span style="width: 60%"></span></div>
-            <h3 data-en="8/18 sets completed; finish working sets and rest timers." data-zh="已完成 8/18 组；继续完成正式组并跟随休息倒计时。">8/18 sets completed; finish working sets and rest timers.</h3>
-            <button class="button primary" type="button" data-tab-target="training" data-en="Continue workout" data-zh="继续训练">Continue workout</button>
-            <div class="task-list">
-              <div class="task">
-                <span class="step-number">1</span>
-                <div>
-                  <strong data-en="Plan prepared" data-zh="训练计划已准备">Plan prepared</strong>
-                  <p class="subtle" data-en="Push A: 18 planned sets loaded." data-zh="Push A：已载入 18 个计划组。">Push A: 18 planned sets loaded.</p>
-                </div>
-                <span class="badge green" data-en="Done" data-zh="已完成">Done</span>
-              </div>
-              <div class="task">
-                <span class="step-number">2</span>
-                <div>
-                  <strong data-en="Training in progress" data-zh="训练进行中">Training in progress</strong>
-                  <p class="subtle" data-en="Finish the remaining working sets and keep RIR honest." data-zh="完成剩余正式组，并如实记录 RIR。">Finish the remaining working sets and keep RIR honest.</p>
-                </div>
-                <span class="badge amber" data-en="Next" data-zh="下一步">Next</span>
-              </div>
-              <div class="task">
-                <span class="step-number">3</span>
-                <div>
-                  <strong>Food logged / 饮食已记录</strong>
-                  <p class="subtle">2 meals logged; protein still needs a lean anchor.</p>
-                </div>
-                <span class="badge green">Done</span>
-              </div>
-              <div class="task">
-                <span class="step-number">4</span>
-                <div>
-                  <strong>Metrics synced / 身体数据已同步</strong>
-                  <p class="subtle">Health Connect data is available for today's review.</p>
-                </div>
-                <span class="badge green">Done</span>
-              </div>
-              <div class="task">
-                <span class="step-number">5</span>
-                <div>
-                  <strong>AI review locked / AI 复盘已锁定</strong>
-                  <p class="subtle">Run review after training, food, and recovery evidence are complete.</p>
-                </div>
-                <span class="badge amber">Next</span>
-              </div>
+            <div class="coach-lane" aria-label="Daily flow">
+              <span data-en="Plan" data-zh="计划">Plan</span>
+              <span class="active" data-en="Train" data-zh="训练">Train</span>
+              <span data-en="Eat" data-zh="饮食">Eat</span>
+              <span data-en="Review" data-zh="复盘">Review</span>
             </div>
-            <div class="chip-row">
-              <span class="chip active">AppLanguage</span>
-              <span class="chip active">updateLanguage</span>
-              <span class="chip active">DailyStartStep</span>
-              <span class="chip active">StartHereCoachCard</span>
-              <span class="chip active">StartHereStepRow</span>
+            <p class="subtle" data-en="Coach read: training execution is the priority. Finish the planned sets before trusting today's AI adjustment." data-zh="教练判断：训练执行是当前优先级。先完成计划组数，再让 AI 做今天的调整。">Coach read: training execution is the priority. Finish the planned sets before trusting today's AI adjustment.</p>
+            <div class="action-row action-shortcuts">
+              <button class="button" type="button" data-tab-target="nutrition" data-en="Food" data-zh="饮食">Food</button>
+              <button class="button" type="button" data-tab-target="metrics" data-en="Metrics" data-zh="数据">Metrics</button>
+              <button class="button ghost" type="button" data-tab-target="ai" data-en="AI" data-zh="AI">AI</button>
             </div>
           </div>
+
+          <details class="advanced-stack">
+            <summary>
+              <span data-en="Daily detail layers" data-zh="今日细节层">Daily detail layers</span>
+              <span data-en="setup, checklist, evidence, trend, tomorrow" data-zh="设置、清单、证据、趋势、明天">setup, checklist, evidence, trend, tomorrow</span>
+            </summary>
 
           <div class="section">
             <div class="section-head">
@@ -1972,6 +1952,8 @@
             <div class="progress"><span style="width:82%"></span></div>
             <p class="subtle">Trend verdict: training compliance is strong; protein is close; recovery is good enough for cautious progression.</p>
           </div>
+
+          </details>
         </section>
 
         <section class="panel" data-panel="plan" aria-label="Plan">
@@ -2226,7 +2208,10 @@
           </div>
 
           <details class="advanced-stack">
-            <summary><span data-en="Professional detail layers" data-zh="专业细节层">Professional detail layers</span><span data-en="readiness, ramp, visual map, quality, closeout" data-zh="状态、热身递增、动作图、质量、收尾">readiness, ramp, visual map, quality, closeout</span></summary>
+            <summary>
+              <span data-en="Professional detail layers" data-zh="专业细节层">Professional detail layers</span>
+              <span data-en="readiness, ramp, visual map, quality, closeout" data-zh="状态、热身递增、动作图、质量、收尾">readiness, ramp, visual map, quality, closeout</span>
+            </summary>
 
           <div class="section">
             <div class="section-head">

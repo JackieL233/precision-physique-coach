@@ -18,7 +18,8 @@ The canonical skill lives in:
 - Helps map a long-term IFBB PRO-inspired physique aspiration into seasons, weak-point priorities, readiness criteria, and official-rule checkpoints when competition is relevant.
 - Creates periodized training plans with exercises, sets, reps, RIR/RPE, progression, deloads, cardio, and substitutions.
 - Includes app-ready Plan Templates so a user can start from Beginner Full Body, 4-Day Hypertrophy, or 5-Day Physique Priority before editing exercises, sets, RIR, rest, and weak-point focus.
-- Adds a bilingual Android UI shell with saved EN/中文 switching and a first-screen `Start Here` daily loop so users know the next action before entering advanced training, nutrition, metrics, and AI review modules.
+- Adds a bilingual Android UI shell with saved EN/中文 switching and a first-screen `Today Flow Coach` so users see one next action before entering advanced training, nutrition, metrics, and AI review modules.
+- Keeps the older `Start Here` loop as part of expandable daily detail layers, preserving the full plan -> train -> eat -> sync -> review checklist without making it the first thing a beginner has to parse.
 - Adds a one-tap `Workout Flow Coach` for the training screen, with `Complete set + start rest` as the primary path and `Professional detail layers` collapsed underneath for readiness, ramp planning, next-set logic, quality, and closeout.
 - Adds an `AI Setup & Review Readiness` state so the Android app checks API key, base URL, model, and photo context before daily review instead of letting the daily flow end in a late API setup error.
 - Tracks each workout at exercise/set level, including hard sets, tonnage, RIR/RPE, pain, technique quality, and target-muscle stimulus.
@@ -103,7 +104,7 @@ Recommended runtime behavior:
 
 A native Android companion app lives in [`android-app/`](android-app/). It packages the skill into Android assets and provides daily training, daily nutrition, metrics, photo analysis, and AI review workflows with a configurable AI API client.
 
-The app UI is moving toward a simple Apple-inspired daily cockpit: a quiet light theme, bottom navigation, saved EN/中文 language switching, a first-screen `Start Here` daily loop, a one-tap `Workout Flow Coach`, collapsed `Professional detail layers`, a `Today` Command Center, Daily Execution Plan, Daily Coach Checklist, readiness score, next action guidance, and beginner-friendly steps that still expose professional set-level training, nutrition, health, and AI review data.
+The app UI is moving toward a simple Apple-inspired daily cockpit: a quiet light theme, bottom navigation, saved EN/中文 language switching, a first-screen `Today Flow Coach`, expandable daily detail layers, a one-tap `Workout Flow Coach`, collapsed `Professional detail layers`, a `Today` Command Center, Daily Execution Plan, Daily Coach Checklist, readiness score, next action guidance, and beginner-friendly steps that still expose professional set-level training, nutrition, health, and AI review data.
 
 The app also saves local daily log history and shows a 7-day trend card. AI review now receives recent trend rows, so it can compare today's training, calories, protein, body weight, sleep, steps, fatigue, and hard sets against recent direction instead of reacting to one isolated day.
 

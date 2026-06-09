@@ -6,9 +6,11 @@ Open `index.html` in a browser to review the Apple-inspired product feel without
 
 The preview mirrors the current Android app structure:
 
-- Today command center
+- Today Flow Coach one-tap home screen with one next best action, daily loop progress, readiness, training sets, nutrition gap, AI gate, and a single primary button
 - EN/中文 language switch preview for the app shell and core training flow, implemented with `data-en`, `data-zh`, and `setLanguage`
-- Start Here first-screen loop with plan, training, food, metrics, and AI review steps
+- Daily detail layers that keep setup, checklist, evidence, trend, and tomorrow planning available without crowding the first screen
+- Start Here / 从这里开始 detail loop with plan, training, food, metrics, and AI review steps
+- Android structure parity for `AppLanguage`, `updateLanguage`, `DailyStartStep`, `StartHereCoachCard`, and `StartHereStepRow`
 - One-tap Training preview with `Workout Flow Coach`, `one-tap-hero`, `Complete set + start rest`, lightweight `action-shortcuts`, and an exercise image slot before the professional analysis layers
 - AI Setup & Review Readiness with API key, base URL, model, photo context, missing setup, and AI review ready states
 - Daily Execution Plan for priority focus, primary action, data quality gate, AI review gate, and plan adjustment signal

@@ -430,6 +430,14 @@ private data class DailyStartStep(
     val onAction: () -> Unit
 )
 
+private data class TodayFlowCoachState(
+    val doneCount: Int,
+    val totalCount: Int,
+    val progress: Float,
+    val nextStep: DailyStartStep?,
+    val completed: Boolean
+)
+
 private data class AiSetupStatus(
     val statusLabel: String,
     val detail: String,
@@ -1154,6 +1162,136 @@ private fun CoachUiState.dailyStartSteps(
             actionLabel = task.actionLabel,
             actionEnabled = task.actionEnabled,
             onAction = task.onAction
+        )
+    }
+}
+
+private fun todayFlowCoachState(steps: List<DailyStartStep>): TodayFlowCoachState {
+    val doneCount = steps.count { it.done }
+    val nextStep = steps.firstOrNull { !it.done && it.actionEnabled } ?: steps.firstOrNull { !it.done } ?: steps.lastOrNull()
+    val totalCount = steps.size
+    return TodayFlowCoachState(
+        doneCount = doneCount,
+        totalCount = totalCount,
+        progress = if (totalCount == 0) 0f else doneCount.toFloat() / totalCount.toFloat(),
+        nextStep = nextStep,
+        completed = totalCount > 0 && doneCount >= totalCount
+    )
+}
+
+@Composable
+private fun TodayFlowCoachCard(
+    state: CoachUiState,
+    readiness: DailyReadiness,
+    flow: TodayFlowCoachState,
+    executionPlan: DailyExecutionPlan,
+    showDetails: Boolean,
+    onToggleDetails: () -> Unit,
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit
+) {
+    val language = state.appLanguage
+    val log = state.dailyLog
+    val totals = log.nutritionTotals()
+    val pacing = log.nutritionPacing()
+    val nextStep = flow.nextStep
+    val primaryTitle = if (flow.completed) {
+        language.t("Daily loop complete", "今日闭环已完成")
+    } else {
+        nextStep?.title ?: language.t("Start today's loop", "开始今日闭环")
+    }
+    val primaryDetail = if (flow.completed) {
+        language.t(
+            "Review saved guidance, prepare tomorrow, and keep logging meals or recovery changes.",
+            "查看已保存建议，准备明天计划，并继续记录餐食或恢复变化。"
+        )
+    } else {
+        nextStep?.detail ?: executionPlan.nextBestAction
+    }
+    val primaryLabel = if (flow.completed) {
+        language.t("Review tomorrow", "查看明天安排")
+    } else {
+        nextStep?.actionLabel ?: executionPlan.primaryActionLabel
+    }
+    val primaryAction = if (flow.completed) {
+        onOpenMetrics
+    } else {
+        nextStep?.onAction ?: onOpenTraining
+    }
+
+    SectionCard(
+        title = language.t("Today Flow Coach", "今日流程教练"),
+        subtitle = language.t(
+            "Open the app, do the next step, and keep the professional reasoning underneath.",
+            "打开 App 后只做下一步；专业判断放在下方，需要时再展开。"
+        )
+    ) {
+        MetricGrid(
+            metrics = listOf(
+                language.t("Daily loop", "今日闭环") to "${flow.doneCount}/${flow.totalCount}",
+                language.t("Readiness", "状态") to readiness.score.toString(),
+                language.t("Sets", "组数") to "${log.completedHardSets()}/${log.plannedHardSets()}",
+                language.t("Protein", "蛋白质") to formatRemainingLocalized(pacing.proteinRemaining, "g", language),
+                language.t("Calories", "热量") to formatRemainingLocalized(pacing.caloriesRemaining, "kcal", language),
+                language.t("AI gate", "AI 闸门") to executionPlan.aiReviewGate
+            )
+        )
+        LinearProgressIndicator(progress = { flow.progress }, modifier = Modifier.fillMaxWidth())
+        Text(
+            text = primaryTitle,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = primaryDetail,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Button(
+            onClick = primaryAction,
+            enabled = nextStep?.actionEnabled ?: true,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(primaryLabel)
+        }
+        Text(
+            text = language.t(
+                "Coach read: ${executionPlan.priorityFocus}. ${executionPlan.trainingDecision} ${executionPlan.nutritionDecision}",
+                "教练判断：${executionPlan.priorityFocus}。${executionPlan.trainingDecision} ${executionPlan.nutritionDecision}"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        DataChipGrid(
+            items = listOf(
+                language.t("Plan -> train -> eat -> sync -> review", "计划 -> 训练 -> 饮食 -> 同步 -> 复盘"),
+                language.t("Primary action: ${executionPlan.primaryActionLabel}", "主动作：${executionPlan.primaryActionLabel}"),
+                language.t("Next meal: ${pacing.nextMealFocus}", "下一餐：${pacing.nextMealFocus}"),
+                language.t("Training volume: ${formatDecimal(log.trainingVolumeKg())} kg", "训练容量：${formatDecimal(log.trainingVolumeKg())} kg")
+            )
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(onClick = onToggleDetails, modifier = Modifier.weight(1f)) {
+                Text(if (showDetails) language.t("Hide detail layers", "收起细节层") else language.t("Show detail layers", "展开细节层"))
+            }
+            TextButton(onClick = onOpenTraining, modifier = Modifier.weight(1f)) {
+                Text(language.t("Train", "训练"))
+            }
+            TextButton(onClick = onOpenNutrition, modifier = Modifier.weight(1f)) {
+                Text(language.t("Food", "饮食"))
+            }
+            TextButton(onClick = onOpenMetrics, modifier = Modifier.weight(1f)) {
+                Text(language.t("Metrics", "数据"))
+            }
+        }
+        Text(
+            text = language.t(
+                "Logged today: ${totals.calories} kcal, P ${totals.protein} g, ${state.dailyLog.photoEvidence.size} photo evidence item(s).",
+                "今日已记录：${totals.calories} kcal，蛋白质 ${totals.protein} g，${state.dailyLog.photoEvidence.size} 条照片证据。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -2016,8 +2154,22 @@ private fun TodayDashboard(
         latestReview = state.reviewHistory.firstOrNull(),
         log = log
     )
+    val flow = todayFlowCoachState(startSteps)
+    var showTodayDetails by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        StartHereCoachCard(
+        TodayFlowCoachCard(
+            state = state,
+            readiness = readiness,
+            flow = flow,
+            executionPlan = executionPlan,
+            showDetails = showTodayDetails,
+            onToggleDetails = { showTodayDetails = !showTodayDetails },
+            onOpenTraining = onOpenTraining,
+            onOpenNutrition = onOpenNutrition,
+            onOpenMetrics = onOpenMetrics
+        )
+        if (showTodayDetails) {
+            StartHereCoachCard(
             state = state,
             readiness = readiness,
             steps = startSteps,
@@ -2025,7 +2177,7 @@ private fun TodayDashboard(
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
         )
-        AiSetupStatusCard(
+            AiSetupStatusCard(
             status = aiSetup,
             language = language,
             isLoading = state.isLoading,
@@ -2035,7 +2187,7 @@ private fun TodayDashboard(
             secondaryLabel = language.t("Open AI Coach", "打开 AI 教练"),
             onSecondaryAction = onOpenAi
         )
-        CommandCenterCard(
+            CommandCenterCard(
             readiness = readiness,
             state = state,
             language = language,
@@ -2044,7 +2196,7 @@ private fun TodayDashboard(
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
         )
-        DailyExecutionPlanCard(
+            DailyExecutionPlanCard(
             plan = executionPlan,
             language = language,
             onOpenPlan = onOpenPlan,
@@ -2054,7 +2206,7 @@ private fun TodayDashboard(
             onDailyReview = onDailyReview,
             onOpenAi = onOpenAi
         )
-        AiReviewActionQueueCard(
+            AiReviewActionQueueCard(
             queue = reviewQueue,
             isLoading = state.isLoading,
             language = language,
@@ -2065,21 +2217,21 @@ private fun TodayDashboard(
             onOpenMetrics = onOpenMetrics,
             onOpenAi = onOpenAi
         )
-        TomorrowCoachBriefCard(
+            TomorrowCoachBriefCard(
             brief = tomorrowBrief,
             language = language,
             onOpenPlan = onOpenPlan,
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
         )
-        WeeklyCheckInCard(
+            WeeklyCheckInCard(
             summary = weeklyCheckIn,
             language = language,
             onOpenPlan = onOpenPlan,
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
         )
-        DailyCoachChecklistCard(
+            DailyCoachChecklistCard(
             tasks = state.dailyCoachTasks(
                 language = language,
                 onOpenPlan = onOpenPlan,
@@ -2091,13 +2243,13 @@ private fun TodayDashboard(
             ),
             language = language
         )
-        TodayExerciseVisualPrimerCard(
+            TodayExerciseVisualPrimerCard(
             log = log,
             language = language,
             onOpenPlan = onOpenPlan,
             onOpenTraining = onOpenTraining
         )
-        TodayActionGrid(
+            TodayActionGrid(
             state = state,
             language = language,
             onOpenPlan = onOpenPlan,
@@ -2105,7 +2257,7 @@ private fun TodayDashboard(
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
         )
-        SectionCard(title = language.t("Today Snapshot", "今日快照"), subtitle = log.date) {
+            SectionCard(title = language.t("Today Snapshot", "今日快照"), subtitle = log.date) {
             MetricGrid(
                 metrics = listOf(
                     language.t("Volume", "容量") to "${formatDecimal(log.trainingVolumeKg())} kg",
@@ -2151,32 +2303,33 @@ private fun TodayDashboard(
                 }
             }
         }
-        PhotoEvidenceCard(photoEvidence = log.photoEvidence, compact = true)
-        BodyCompositionCard(
+            PhotoEvidenceCard(photoEvidence = log.photoEvidence, compact = true)
+            BodyCompositionCard(
             guidance = bodyCompositionGuidance(log, state.recentLogs, state.athleteProfile),
             subtitle = language.t("Trend-based target check before changing calories.", "调整热量前，先看趋势目标检查。"),
             language = language
         )
-        ConditioningHydrationCard(
+            ConditioningHydrationCard(
             log = log,
             recentLogs = state.recentLogs,
             profile = state.athleteProfile,
             compact = true
         )
-        RecoveryGuidanceCard(
+            RecoveryGuidanceCard(
             guidance = recoveryGuidance(log, state.recentLogs),
             subtitle = language.t(
                 "Sleep, soreness, stress, resting HR, and set pressure before pushing harder.",
                 "继续加压前，先看睡眠、酸痛、压力、静息心率和训练组压力。"
             )
         )
-        TrendOverviewCard(logs = state.recentLogs)
-        BeginnerGuideCard(
+            TrendOverviewCard(logs = state.recentLogs)
+            BeginnerGuideCard(
             language = language,
             onOpenPlan = onOpenPlan,
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
         )
+        }
     }
 }
 

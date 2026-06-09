@@ -8,7 +8,8 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - Bundled skill assets in `app/src/main/assets/skill/`.
 - Apple-inspired light UI theme with a quiet neutral background, blue action color, rounded grouped surfaces, and bottom navigation for the main daily tabs.
 - Saved EN/中文 language switching through `AppLanguage`, `updateLanguage`, `loadLanguage`, and local SharedPreferences so the high-frequency app shell, Today workflow, rest timer, and safety copy can be used in English or Chinese.
-- A first-screen `Start Here` daily loop on `Today` with `DailyStartStep`, `StartHereCoachCard`, and `StartHereStepRow`, guiding the user through plan, training, food, metrics, and AI review before the more advanced analytics cards.
+- A first-screen `Today Flow Coach` on `Today` with `TodayFlowCoachState` and `todayFlowCoachState`, showing the next best action, daily loop progress, readiness, training sets, nutrition gap, AI gate, and one primary button before any advanced cards.
+- Expandable daily detail layers that keep `Start Here`, `DailyStartStep`, `StartHereCoachCard`, `StartHereStepRow`, AI setup, command center, execution plan, checklist, tomorrow brief, weekly check-in, trends, and recovery data available without making the first screen feel like a feature wall.
 - A one-tap `Workout Flow Coach` on `Training` that surfaces the next useful action first: load the plan, warm up, complete the next set, start rest, close out, then run AI review.
 - A collapsible `Professional detail layers` section on `Training` so readiness, ramp planning, next-set analysis, session quality, and closeout logic stay available without overwhelming beginners on the first screen.
 - An `AI Setup & Review Readiness` card with `AiSetupStatus`, `AiSetupStatusCard`, and `AiSettings.isConfigured()` so the app shows API key, base URL, model, photo context, missing setup, and AI review ready state before the user reaches daily review.
@@ -71,7 +72,8 @@ Use the app as a daily training and daily nutrition cockpit:
 
 1. Set `Athlete Profile` in `Plan` so the app knows your phase, target, training schedule, equipment, weak points, and constraints.
 2. Open `Today` to see the current training, nutrition, metrics, and readiness summary.
-   Use `Start Here` first: it shows progress, readiness, the next step, and one primary button for the daily loop: plan, train, log food, sync health data, then run AI review.
+   Use `Today Flow Coach` first: it shows the next best action, daily loop progress, readiness, sets, nutrition gap, AI review gate, and one primary button.
+   Expand daily detail layers only when you want the full Start Here checklist, AI setup state, command center, execution plan, action queue, tomorrow brief, weekly check-in, visual primer, snapshot, trend, recovery, and body-composition reasoning.
    The AI Setup & Review Readiness card checks whether API key, base URL, model, and photo context are ready; if setup is missing, the daily loop sends the user to AI Coach settings instead of producing a late API error.
    The Command Center stays below it for the deeper decision layer and latest guidance.
    The Daily Execution Plan turns the current log into the single highest-priority action and explains whether training, food, recovery, or data quality should be handled before trusting the AI review.
