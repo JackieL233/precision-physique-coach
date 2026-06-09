@@ -63,7 +63,11 @@ data class AiSettings(
     val baseUrl: String = "https://api.openai.com/v1",
     val apiKey: String = "",
     val model: String = "gpt-4.1-mini"
-)
+) {
+    fun isConfigured(): Boolean {
+        return baseUrl.isNotBlank() && apiKey.isNotBlank() && model.isNotBlank()
+    }
+}
 
 data class ImageAttachment(
     val name: String,
@@ -515,6 +519,20 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun runAi(mode: CoachMode, request: String) {
         val current = uiState
+        if (!current.settings.isConfigured()) {
+            val message = if (current.appLanguage == AppLanguage.CHINESE) {
+                "AI 设置未完成。请先在 AI Coach 中填写 API key、base URL 和 model，再运行复盘或分析。"
+            } else {
+                "AI setup is not ready. Add API key, base URL, and model in AI Coach before running review or analysis."
+            }
+            uiState = current.copy(
+                selectedTab = AppTab.AI_COACH,
+                isLoading = false,
+                result = "",
+                error = message
+            )
+            return
+        }
         uiState = current.copy(isLoading = true, error = null, result = "")
         viewModelScope.launch {
             val instructions = promptBuilder.buildInstructions(mode)

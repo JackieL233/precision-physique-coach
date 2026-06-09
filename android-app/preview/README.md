@@ -9,6 +9,7 @@ The preview mirrors the current Android app structure:
 - Today command center
 - EN/中文 language switch preview for the app shell
 - Start Here / 从这里开始 first-screen loop with plan, training, food, metrics, and AI review steps
+- AI Setup & Review Readiness with API key, base URL, model, photo context, missing setup, and AI review ready states
 - Daily Execution Plan for priority focus, primary action, data quality gate, AI review gate, and plan adjustment signal
 - AI Review Action Queue with sourceLabel, confidenceLabel, primaryAction, actionLabel, training action, nutrition action, recovery action, tracking action, and plan action routing
 - Tomorrow Coach Brief for next-day training focus, calorie/protein targets, readiness gate, recovery action, and tracking action

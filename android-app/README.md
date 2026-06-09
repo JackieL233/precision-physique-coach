@@ -9,6 +9,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - Apple-inspired light UI theme with a quiet neutral background, blue action color, rounded grouped surfaces, and bottom navigation for the main daily tabs.
 - Saved EN/中文 language switching through `AppLanguage`, `updateLanguage`, `loadLanguage`, and local SharedPreferences so the high-frequency app shell, Today workflow, rest timer, and safety copy can be used in English or Chinese.
 - A first-screen `Start Here` daily loop on `Today` with `DailyStartStep`, `StartHereCoachCard`, and `StartHereStepRow`, guiding the user through plan, training, food, metrics, and AI review before the more advanced analytics cards.
+- An `AI Setup & Review Readiness` card with `AiSetupStatus`, `AiSetupStatusCard`, and `AiSettings.isConfigured()` so the app shows API key, base URL, model, photo context, missing setup, and AI review ready state before the user reaches daily review.
 - A `Today` Command Center with readiness, next action, training, nutrition, recovery, and body-composition cards so beginners know what to do first while advanced users can scan the key numbers.
 - A `Daily Coach Checklist` on `Today` that tracks whether the plan is prepared, training is executed, food is logged, metrics are synced, and the AI review is locked for the day.
 - Local daily log history with a 7-day trend summary for body weight, calories, protein, sleep, steps, hard sets, and training volume.
@@ -68,6 +69,7 @@ Use the app as a daily training and daily nutrition cockpit:
 1. Set `Athlete Profile` in `Plan` so the app knows your phase, target, training schedule, equipment, weak points, and constraints.
 2. Open `Today` to see the current training, nutrition, metrics, and readiness summary.
    Use `Start Here` first: it shows progress, readiness, the next step, and one primary button for the daily loop: plan, train, log food, sync health data, then run AI review.
+   The AI Setup & Review Readiness card checks whether API key, base URL, model, and photo context are ready; if setup is missing, the daily loop sends the user to AI Coach settings instead of producing a late API error.
    The Command Center stays below it for the deeper decision layer and latest guidance.
    The Daily Execution Plan turns the current log into the single highest-priority action and explains whether training, food, recovery, or data quality should be handled before trusting the AI review.
    AI Review Action Queue then turns the latest saved review into tappable next steps for Training, Nutrition, Metrics, Plan, or AI Coach.

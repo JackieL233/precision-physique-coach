@@ -429,6 +429,18 @@ private data class DailyStartStep(
     val onAction: () -> Unit
 )
 
+private data class AiSetupStatus(
+    val statusLabel: String,
+    val detail: String,
+    val canRunAi: Boolean,
+    val primaryActionLabel: String,
+    val missingItems: List<String>,
+    val apiKeyLabel: String,
+    val baseUrlLabel: String,
+    val modelLabel: String,
+    val photoContextLabel: String
+)
+
 private data class NextMealBuilder(
     val title: String,
     val summary: String,
@@ -708,6 +720,50 @@ private fun CoachUiState.dailyReadiness(language: AppLanguage): DailyReadiness {
     return DailyReadiness(score = score, label = label, nextAction = nextAction)
 }
 
+private fun CoachUiState.aiSetupStatus(language: AppLanguage): AiSetupStatus {
+    val missing = buildList {
+        if (settings.apiKey.isBlank()) add(language.t("API key", "API key"))
+        if (settings.baseUrl.isBlank()) add(language.t("Base URL", "Base URL"))
+        if (settings.model.isBlank()) add(language.t("Model", "Model"))
+    }
+    val canRun = missing.isEmpty()
+    val statusLabel = if (canRun) {
+        language.t("Ready", "已就绪")
+    } else {
+        language.t("Setup needed", "需要设置")
+    }
+    val detail = if (canRun) {
+        language.t(
+            "AI can run daily review, mode analysis, and multimodal photo checks using today's linked training, food, metrics, and evidence.",
+            "AI 已可使用今天的训练、饮食、身体数据和照片证据运行每日复盘、模式分析和多模态照片检查。"
+        )
+    } else {
+        language.t(
+            "Complete ${missing.joinToString(", ")} before daily review; the app will still save training, nutrition, metrics, and photos locally.",
+            "先补齐 ${missing.joinToString(", ")} 再运行每日复盘；训练、饮食、身体数据和照片仍会先保存在本地。"
+        )
+    }
+    return AiSetupStatus(
+        statusLabel = statusLabel,
+        detail = detail,
+        canRunAi = canRun,
+        primaryActionLabel = if (canRun) {
+            language.t("Run daily review", "运行每日复盘")
+        } else {
+            language.t("Set API first", "先设置 API")
+        },
+        missingItems = missing,
+        apiKeyLabel = if (settings.apiKey.isBlank()) language.t("Missing", "未填写") else language.t("Saved", "已保存"),
+        baseUrlLabel = settings.baseUrl.ifBlank { language.t("Missing", "未填写") },
+        modelLabel = settings.model.ifBlank { language.t("Missing", "未填写") },
+        photoContextLabel = if (images.isEmpty()) {
+            language.t("No photos queued", "未加入照片")
+        } else {
+            language.t("${images.size} photo(s) queued", "已加入 ${images.size} 张照片")
+        }
+    )
+}
+
 private fun CoachUiState.dailyCoachTasks(
     language: AppLanguage,
     onOpenPlan: () -> Unit,
@@ -730,6 +786,7 @@ private fun CoachUiState.dailyCoachTasks(
         log.metrics.steps > 0 ||
         log.metrics.healthSyncedAt.isNotBlank()
     val aiReviewedToday = reviewHistory.any { it.logDate == log.date }
+    val aiSetup = aiSetupStatus(language)
 
     return listOf(
         DailyCoachTask(
@@ -815,21 +872,29 @@ private fun CoachUiState.dailyCoachTasks(
         ),
         DailyCoachTask(
             title = language.t("AI review locked", "AI 复盘已锁定"),
-            detail = if (aiReviewedToday) {
-                language.t(
+            detail = when {
+                !aiSetup.canRunAi -> aiSetup.detail
+                aiReviewedToday -> language.t(
                     "Today's review is saved; use it to set tomorrow's training and food targets.",
                     "今天的复盘已保存；用它安排明天训练和饮食目标。"
                 )
-            } else {
-                language.t(
+                else -> language.t(
                     "Run after training, food, and metrics are logged for the cleanest adjustment.",
                     "训练、饮食和身体数据记录后再运行，调整会更可靠。"
                 )
             },
             done = aiReviewedToday,
-            actionLabel = if (aiReviewedToday) language.t("View review", "查看复盘") else language.t("Run review", "运行复盘"),
+            actionLabel = when {
+                !aiSetup.canRunAi -> aiSetup.primaryActionLabel
+                aiReviewedToday -> language.t("View review", "查看复盘")
+                else -> language.t("Run review", "运行复盘")
+            },
             actionEnabled = !isLoading,
-            onAction = if (aiReviewedToday) onOpenAi else onRunAiReview
+            onAction = when {
+                !aiSetup.canRunAi -> onOpenAi
+                aiReviewedToday -> onOpenAi
+                else -> onRunAiReview
+            }
         )
     )
 }
@@ -967,6 +1032,70 @@ private fun StartHereStepRow(step: DailyStartStep, language: AppLanguage) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.SemiBold
             )
+        }
+    }
+}
+
+@Composable
+private fun AiSetupStatusCard(
+    status: AiSetupStatus,
+    language: AppLanguage,
+    isLoading: Boolean,
+    primaryLabel: String,
+    primaryEnabled: Boolean,
+    onPrimaryAction: () -> Unit,
+    secondaryLabel: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
+) {
+    SectionCard(
+        title = language.t("AI Setup & Review Readiness", "AI 设置与复盘就绪状态"),
+        subtitle = language.t(
+            "Make sure the AI layer is usable before the daily loop reaches review.",
+            "在每日闭环走到复盘前，先确认 AI 层真的可以运行。"
+        )
+    ) {
+        MetricGrid(
+            metrics = listOf(
+                language.t("Status", "状态") to status.statusLabel,
+                language.t("API key", "API key") to status.apiKeyLabel,
+                language.t("Base URL", "Base URL") to status.baseUrlLabel,
+                language.t("Model", "Model") to status.modelLabel,
+                language.t("Photos", "照片") to status.photoContextLabel
+            )
+        )
+        Text(
+            text = status.detail,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        DataChipGrid(
+            items = if (status.missingItems.isEmpty()) {
+                listOf(
+                    language.t("AI review ready", "AI 复盘已就绪"),
+                    language.t("Daily review", "每日复盘"),
+                    language.t("Mode analysis", "模式分析"),
+                    language.t("Photo context linked", "照片上下文可联动")
+                )
+            } else {
+                listOf(language.t("Missing setup", "设置缺失")) + status.missingItems
+            }
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = onPrimaryAction,
+                enabled = primaryEnabled && !isLoading,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(if (isLoading) language.t("Reviewing", "复盘中") else primaryLabel)
+            }
+            if (secondaryLabel != null && onSecondaryAction != null) {
+                TextButton(
+                    onClick = onSecondaryAction,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(secondaryLabel)
+                }
+            }
         }
     }
 }
@@ -1625,6 +1754,7 @@ private fun TodayDashboard(
     val totals = log.nutritionTotals()
     val pacing = log.nutritionPacing()
     val readiness = state.dailyReadiness(language)
+    val aiSetup = state.aiSetupStatus(language)
     val startSteps = state.dailyStartSteps(
         language = language,
         onOpenPlan = onOpenPlan,
@@ -1665,6 +1795,16 @@ private fun TodayDashboard(
             onOpenTraining = onOpenTraining,
             onOpenNutrition = onOpenNutrition,
             onOpenMetrics = onOpenMetrics
+        )
+        AiSetupStatusCard(
+            status = aiSetup,
+            language = language,
+            isLoading = state.isLoading,
+            primaryLabel = aiSetup.primaryActionLabel,
+            primaryEnabled = true,
+            onPrimaryAction = if (aiSetup.canRunAi) onDailyReview else onOpenAi,
+            secondaryLabel = language.t("Open AI Coach", "打开 AI 教练"),
+            onSecondaryAction = onOpenAi
         )
         CommandCenterCard(
             readiness = readiness,
@@ -4623,7 +4763,19 @@ private fun AiCoachPage(
         latestReview = state.reviewHistory.firstOrNull(),
         log = state.dailyLog
     )
+    val language = state.appLanguage
+    val aiSetup = state.aiSetupStatus(language)
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        AiSetupStatusCard(
+            status = aiSetup,
+            language = language,
+            isLoading = state.isLoading,
+            primaryLabel = aiSetup.primaryActionLabel,
+            primaryEnabled = aiSetup.canRunAi,
+            onPrimaryAction = onDailyReview,
+            secondaryLabel = language.t("Run mode", "运行模式"),
+            onSecondaryAction = if (aiSetup.canRunAi) onRunAnalysis else null
+        )
         SettingsCard(settings = state.settings, onChange = onSettingsChange)
         SectionCard(title = "AI Coach", subtitle = "Use the bundled skill, daily logs, and optional photos together.") {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -4669,10 +4821,10 @@ private fun AiCoachPage(
             )
             ImageCard(images = state.images, onPick = onPickImages, onClear = onClearImages)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = onDailyReview, enabled = !state.isLoading, modifier = Modifier.weight(1f)) {
+                Button(onClick = onDailyReview, enabled = !state.isLoading && aiSetup.canRunAi, modifier = Modifier.weight(1f)) {
                     Text("Daily review")
                 }
-                ElevatedButton(onClick = onRunAnalysis, enabled = !state.isLoading, modifier = Modifier.weight(1f)) {
+                ElevatedButton(onClick = onRunAnalysis, enabled = !state.isLoading && aiSetup.canRunAi, modifier = Modifier.weight(1f)) {
                     Text("Run mode")
                 }
             }

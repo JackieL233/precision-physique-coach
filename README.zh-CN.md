@@ -37,6 +37,7 @@
 - 简洁 Apple-inspired 浅色界面：安静背景、蓝色主操作、底部导航、分组卡片和清晰层级。
 - 支持 EN/中文界面切换：通过 `AppLanguage`、`updateLanguage`、`loadLanguage` 和本地 SharedPreferences 保存语言偏好，让顶部导航、底部导航、今日流程、休息倒计时和安全提示可以在英文与中文之间切换。
 - `Start Here / 从这里开始` 每日闭环：`Today` 第一屏先显示今日进度、readiness、下一步和一个主按钮，用 `DailyStartStep`、`StartHereCoachCard`、`StartHereStepRow` 引导用户按“计划 -> 训练 -> 饮食 -> 身体数据 -> AI 复盘”执行，再进入更专业的数据卡片。
+- `AI Setup & Review Readiness / AI 设置与复盘就绪状态`：用 `AiSetupStatus`、`AiSetupStatusCard` 和 `AiSettings.isConfigured()` 检查 API key、base URL、model 和照片上下文；如果设置缺失，每日闭环会先引导用户去 `AI Coach` 设置，而不是到最后一步才报 API 错误，训练、饮食、身体数据和照片仍会继续本地保存。
 - `Today` Command Center：首页显示 readiness、下一步行动、训练、饮食、恢复和体成分卡片，让新手知道先做什么，也让进阶用户快速扫关键数据。
 - Daily Execution Plan：在 `Today` 中把当天训练执行、饮食缺口、恢复状态、数据完整度和 AI 复盘时机合成一个主决策层，显示 priority focus、primary action、training decision、nutrition decision、recovery decision、data quality gate、AI review gate 和 plan adjustment signal，让用户每天打开 app 后知道第一件事该做什么。
 - Tomorrow Coach Brief：在 `Today` 中把周计划、训练质量、身体趋势、饮食完成度和恢复信号合成明天的可执行 brief，明确明天 plan day、训练重点、热量/蛋白目标、readiness gate、恢复动作、追踪动作和明天打开 app 的第一步，避免 AI 复盘只停留在一段文字建议。

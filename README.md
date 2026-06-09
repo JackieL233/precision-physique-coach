@@ -19,6 +19,7 @@ The canonical skill lives in:
 - Creates periodized training plans with exercises, sets, reps, RIR/RPE, progression, deloads, cardio, and substitutions.
 - Includes app-ready Plan Templates so a user can start from Beginner Full Body, 4-Day Hypertrophy, or 5-Day Physique Priority before editing exercises, sets, RIR, rest, and weak-point focus.
 - Adds a bilingual Android UI shell with saved EN/中文 switching and a first-screen `Start Here` daily loop so users know the next action before entering advanced training, nutrition, metrics, and AI review modules.
+- Adds an `AI Setup & Review Readiness` state so the Android app checks API key, base URL, model, and photo context before daily review instead of letting the daily flow end in a late API setup error.
 - Tracks each workout at exercise/set level, including hard sets, tonnage, RIR/RPE, pain, technique quality, and target-muscle stimulus.
 - Turns readiness and the first unfinished exercise into a `Warm-up Ramp Plan`, with ramp set checklist, planned load percentages, final ramp set quality, first working set gate, and stop rule before the user enters the first working set.
 - Adds an app-ready `Training Closeout Coach` after the session quality review, checking completed sets, missing set logs, pain/technique flags, form/equipment photo evidence, post-workout nutrition cue, metrics sync cue, closeout score, and AI review readiness before tomorrow's plan is changed.
