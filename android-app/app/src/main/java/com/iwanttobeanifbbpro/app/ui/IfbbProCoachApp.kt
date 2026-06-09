@@ -5251,6 +5251,158 @@ private fun NutritionPage(
 }
 
 @Composable
+private fun MetricsFlowCoachCard(
+    state: CoachUiState,
+    showDetails: Boolean,
+    onToggleDetails: () -> Unit,
+    onConnectHealthData: () -> Unit,
+    onSyncHealthData: () -> Unit,
+    onPickPhysiquePhoto: () -> Unit
+) {
+    val language = state.appLanguage
+    val metrics = state.dailyLog.metrics
+    val snapshot = state.healthSnapshot
+    val recovery = recoveryGuidance(state.dailyLog, state.recentLogs)
+    val physique = physiqueMeasurementSummary(state.dailyLog, state.recentLogs)
+    val physiquePhotoCount = state.dailyLog.photoEvidence.count { it.type == PhotoEvidenceType.PHYSIQUE }
+    val missingKeyBodyData = metrics.bodyWeightKg == null || metrics.waistCm == null
+    val primaryTitle: String
+    val primaryDetail: String
+    val primaryLabel: String
+    val primaryEnabled: Boolean
+    val primaryAction: () -> Unit
+    when {
+        state.isHealthSyncing -> {
+            primaryTitle = language.t("Syncing health data", "正在同步健康数据")
+            primaryDetail = language.t(
+                "Wait for Health Connect to finish, then review any missing body or recovery fields.",
+                "等待 Health Connect 完成同步，然后检查是否还缺身体或恢复字段。"
+            )
+            primaryLabel = language.t("Syncing", "同步中")
+            primaryEnabled = false
+            primaryAction = {}
+        }
+        !snapshot.permissionsGranted -> {
+            primaryTitle = language.t("Connect health data", "连接健康数据")
+            primaryDetail = language.t(
+                "Authorize Health Connect when available; use manual entry for Xiaomi, Huawei, scale, watch, or phone data that is not exposed yet.",
+                "可用时授权 Health Connect；小米、华为、体脂秤、手表或手机数据尚未开放时用手动记录补齐。"
+            )
+            primaryLabel = language.t("Connect health data", "连接健康数据")
+            primaryEnabled = true
+            primaryAction = onConnectHealthData
+        }
+        metrics.healthSyncedAt.isBlank() -> {
+            primaryTitle = language.t("Sync today's metrics", "同步今天身体数据")
+            primaryDetail = language.t(
+                "Pull weight, body fat, steps, sleep, resting heart rate, and calorie burn before AI reviews the day.",
+                "在 AI 复盘前拉取体重、体脂、步数、睡眠、静息心率和消耗热量。"
+            )
+            primaryLabel = language.t("Sync today", "同步今天")
+            primaryEnabled = true
+            primaryAction = onSyncHealthData
+        }
+        missingKeyBodyData -> {
+            primaryTitle = language.t("Add body check-in", "补充身体记录")
+            primaryDetail = language.t(
+                "Add body weight and waist first; AI should not adjust calories from training or scale noise alone.",
+                "先补体重和腰围；AI 不应该只凭训练或体重波动调整热量。"
+            )
+            primaryLabel = language.t("Open fields", "打开字段")
+            primaryEnabled = true
+            primaryAction = onToggleDetails
+        }
+        physiquePhotoCount == 0 -> {
+            primaryTitle = language.t("Add progress photo", "添加体型照片")
+            primaryDetail = language.t(
+                "Use consistent lighting, distance, posture, and pump state so photos can be compared with measurements.",
+                "保持相同光线、距离、姿势和充血状态，让照片能和围度一起比较。"
+            )
+            primaryLabel = language.t("Progress photo", "体型照片")
+            primaryEnabled = true
+            primaryAction = onPickPhysiquePhoto
+        }
+        else -> {
+            primaryTitle = language.t("Metrics ready for AI", "身体数据可用于 AI")
+            primaryDetail = language.t(
+                "Health sync, measurements, and physique photo context are ready; expand details only when you want to inspect the evidence.",
+                "健康同步、围度和体型照片上下文已可用；需要检查证据时再展开细节。"
+            )
+            primaryLabel = language.t("Review details", "查看细节")
+            primaryEnabled = true
+            primaryAction = onToggleDetails
+        }
+    }
+    SectionCard(
+        title = language.t("Metrics Flow Coach", "身体数据流程教练"),
+        subtitle = language.t(
+            "Sync health data, fill the minimum body check-in, and keep recovery evidence ready for AI.",
+            "同步健康数据，补齐最小身体记录，并让恢复证据可用于 AI。"
+        )
+    ) {
+        MetricGrid(
+            metrics = listOf(
+                language.t("Health", "健康") to when {
+                    state.isHealthSyncing -> language.t("Syncing", "同步中")
+                    snapshot.permissionsGranted -> language.t("Authorized", "已授权")
+                    snapshot.available -> language.t("Needs access", "需要授权")
+                    else -> language.t("Manual", "手动")
+                },
+                language.t("Weight", "体重") to formatOptional(metrics.bodyWeightKg ?: snapshot.bodyWeightKg, "kg"),
+                language.t("Body fat", "体脂") to formatOptional(metrics.bodyFatPercent ?: snapshot.bodyFatPercent, "%"),
+                language.t("Sleep", "睡眠") to formatOptional(metrics.sleepHours ?: snapshot.sleepHours, "h"),
+                language.t("Steps", "步数") to ((metrics.steps.takeIf { it > 0 } ?: snapshot.steps)?.toString() ?: "--"),
+                language.t("Photo", "照片") to physiquePhotoCount.toString(),
+                language.t("Recovery", "恢复") to recovery.readinessScore.toString(),
+                language.t("Physique", "体型") to physique.measurementScore.toString()
+            )
+        )
+        Text(
+            text = primaryTitle,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = primaryDetail,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Button(onClick = primaryAction, enabled = primaryEnabled, modifier = Modifier.fillMaxWidth()) {
+            Text(primaryLabel)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(onClick = onToggleDetails, modifier = Modifier.weight(1f)) {
+                Text(
+                    if (showDetails) {
+                        language.t("Hide metrics details", "收起数据细节")
+                    } else {
+                        language.t("Show metrics details", "展开数据细节")
+                    }
+                )
+            }
+            TextButton(onClick = onSyncHealthData, enabled = !state.isHealthSyncing, modifier = Modifier.weight(1f)) {
+                Text(language.t("Sync", "同步"))
+            }
+            TextButton(onClick = onPickPhysiquePhoto, modifier = Modifier.weight(1f)) {
+                Text(language.t("Photo", "照片"))
+            }
+        }
+        DataChipGrid(
+            items = listOf(
+                language.t("Health Connect or manual fallback", "Health Connect 或手动补录"),
+                language.t("Weight, waist, sleep, steps, HR", "体重、腰围、睡眠、步数、心率"),
+                language.t("Progress photo linked to measurements", "体型照片联动围度"),
+                if (showDetails) {
+                    language.t("Metrics detail layers open", "数据细节层已展开")
+                } else {
+                    language.t("Metrics detail layers hidden", "数据细节层已收起")
+                }
+            )
+        )
+    }
+}
+
+@Composable
 private fun MetricsPage(
     state: CoachUiState,
     onMetricsChange: (DailyMetrics) -> Unit,
@@ -5261,12 +5413,22 @@ private fun MetricsPage(
     onSyncHealthData: () -> Unit
 ) {
     val metrics = state.dailyLog.metrics
+    var showMetricsDetails by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HealthConnectCard(
+        MetricsFlowCoachCard(
             state = state,
+            showDetails = showMetricsDetails,
+            onToggleDetails = { showMetricsDetails = !showMetricsDetails },
             onConnectHealthData = onConnectHealthData,
-            onSyncHealthData = onSyncHealthData
+            onSyncHealthData = onSyncHealthData,
+            onPickPhysiquePhoto = onPickPhysiquePhoto
         )
+        if (showMetricsDetails) {
+            HealthConnectCard(
+                state = state,
+                onConnectHealthData = onConnectHealthData,
+                onSyncHealthData = onSyncHealthData
+            )
         RecoveryGuidanceCard(
             guidance = recoveryGuidance(state.dailyLog, state.recentLogs),
             subtitle = "Conservative training-pressure guidance from logged recovery and health signals."
@@ -5472,6 +5634,7 @@ private fun MetricsPage(
             )
         }
     }
+}
 }
 
 @Composable

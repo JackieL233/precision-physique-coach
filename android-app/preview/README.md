@@ -13,6 +13,7 @@ The preview mirrors the current Android app structure:
 - Android structure parity for `AppLanguage`, `updateLanguage`, `DailyStartStep`, `StartHereCoachCard`, and `StartHereStepRow`
 - One-tap Training preview with `Workout Flow Coach`, `one-tap-hero`, `Complete set + start rest`, lightweight `action-shortcuts`, and an exercise image slot before the professional analysis layers
 - One-tap Nutrition preview with `Meal Flow Coach`, `NEXT MEAL ACTION`, `Prefill next meal`, food-photo and template shortcuts, and an AI nutrition review path before the nutrition analysis layers
+- One-tap Metrics preview with `Metrics Flow Coach`, `NEXT METRICS ACTION`, `Sync today`, progress-photo shortcut, and AI review path before body-data analysis layers
 - AI Setup & Review Readiness with API key, base URL, model, photo context, missing setup, and AI review ready states
 - Daily Execution Plan for priority focus, primary action, data quality gate, AI review gate, and plan adjustment signal
 - AI Review Action Queue with sourceLabel, confidenceLabel, primaryAction, actionLabel, training action, nutrition action, recovery action, tracking action, and plan action routing
@@ -48,6 +49,7 @@ The preview mirrors the current Android app structure:
 - Body Composition Guidance for trend-based calorie target checks
 - Conditioning & Hydration for step goal progress, cardio minutes/type/intensity, water liters, sodium, caffeine, alcohol, digestion notes, and scale-weight noise before calorie or volume changes
 - Physique Measurement Summary for waist, chest, shoulder, hip, left/right arms, left/right thighs, neck, shoulder-to-waist ratio, arm symmetry, thigh symmetry, and weekly tape-measure check-ins
+- Collapsed `Metrics detail layers` so health sync, recovery, conditioning, physique measurements, progress photos, photo evidence, trend, and manual metrics fields remain accessible without overwhelming a beginner
 - Recovery Guidance for sleep, soreness, stress, resting HR, and training-pressure decisions
 - Health Connect and vendor-data boundary
 - AI Coach and AI Data Map
