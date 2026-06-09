@@ -201,7 +201,7 @@
       right: 0;
       bottom: 0;
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 0;
       padding: 8px 8px 14px;
       background: rgba(255, 255, 255, 0.92);
@@ -1504,7 +1504,7 @@
         <header class="header">
           <div>
             <p class="eyebrow">I Want to be an IFBB PRO</p>
-            <h1 id="page-title">Today</h1>
+            <h1 id="page-title">Training</h1>
           </div>
           <div class="header-actions">
             <div class="language-toggle" aria-label="Language switch">
@@ -1523,7 +1523,7 @@
           <div class="rest-time" id="rest-time">02:00</div>
         </div>
 
-        <section class="panel active" data-panel="today" aria-label="Today">
+        <section class="panel" data-panel="ai" aria-label="AI daily overview">
           <div class="section glass one-tap-hero today-hero">
             <div class="section-head">
               <h2 data-en="Today Flow Coach" data-zh="今日流程教练">Today Flow Coach</h2>
@@ -1558,14 +1558,14 @@
             <p class="subtle" data-en="Coach read: training execution is the priority. Finish the planned sets before trusting today's AI adjustment." data-zh="教练判断：训练执行是当前优先级。先完成计划组数，再让 AI 做今天的调整。">Coach read: training execution is the priority. Finish the planned sets before trusting today's AI adjustment.</p>
             <div class="action-row action-shortcuts">
               <button class="button" type="button" data-tab-target="nutrition" data-en="Food" data-zh="饮食">Food</button>
-              <button class="button" type="button" data-tab-target="metrics" data-en="Metrics" data-zh="数据">Metrics</button>
+              <button class="button" type="button" data-tab-target="metrics" data-en="Metrics" data-zh="身体数据">Metrics</button>
               <button class="button ghost" type="button" data-tab-target="ai" data-en="AI" data-zh="AI">AI</button>
             </div>
           </div>
 
           <details class="advanced-stack">
             <summary>
-              <span data-en="Daily detail layers" data-zh="今日细节层">Daily detail layers</span>
+              <span data-en="AI daily overview layers" data-zh="AI 每日总览层">AI daily overview layers</span>
               <span data-en="setup, checklist, evidence, trend, tomorrow" data-zh="设置、清单、证据、趋势、明天">setup, checklist, evidence, trend, tomorrow</span>
             </summary>
 
@@ -1712,7 +1712,7 @@
             </div>
             <div class="action-row">
               <button class="button primary" type="button" data-tab-target="training">Open visual map</button>
-              <button class="button" type="button" data-tab-target="plan">Exercise Visual Library</button>
+              <button class="button" type="button" data-tab-target="training">Exercise Visual Library</button>
             </div>
           </div>
 
@@ -1822,7 +1822,7 @@
               <span class="chip active">Readiness gate</span>
             </div>
             <div class="action-row">
-              <button class="button primary" type="button" data-tab-target="plan">Plan tomorrow</button>
+              <button class="button primary" type="button" data-tab-target="training">Plan tomorrow</button>
               <button class="button" type="button" data-tab-target="nutrition">Food targets</button>
             </div>
           </div>
@@ -1852,7 +1852,7 @@
               <span class="chip active">Next week action</span>
             </div>
             <div class="action-row">
-              <button class="button primary" type="button" data-tab-target="plan">Plan</button>
+              <button class="button primary" type="button" data-tab-target="training">Plan</button>
               <button class="button" type="button" data-tab-target="metrics">Metrics</button>
             </div>
           </div>
@@ -1956,7 +1956,7 @@
           </details>
         </section>
 
-        <section class="panel" data-panel="plan" aria-label="Plan">
+        <section class="panel active" data-panel="training" aria-label="Training plan">
           <div class="section glass one-tap-hero plan-hero">
             <div class="section-head">
               <h2 data-en="Plan Flow Coach" data-zh="计划流程教练">Plan Flow Coach</h2>
@@ -1991,7 +1991,7 @@
 
           <details class="advanced-stack">
             <summary>
-              <span data-en="Plan detail layers" data-zh="计划细节层">Plan detail layers</span>
+              <span data-en="Training plan layers" data-zh="训练计划层">Training plan layers</span>
               <span data-en="profile, templates, weekly plan, visual map, exercise editing" data-zh="档案、模板、周计划、视觉图、动作编辑">profile, templates, weekly plan, visual map, exercise editing</span>
             </summary>
 
@@ -2209,7 +2209,7 @@
           </details>
         </section>
 
-        <section class="panel" data-panel="training" aria-label="Training">
+        <section class="panel active" data-panel="training" aria-label="Training">
           <div class="section glass one-tap-hero">
             <div class="section-head">
               <h2 data-en="Workout Flow Coach" data-zh="训练执行教练">Workout Flow Coach</h2>
@@ -3276,11 +3276,9 @@
       </div>
 
       <nav class="tabs" aria-label="App tabs">
-        <button class="tab active" type="button" data-tab="today"><span>T</span><span data-en="Today" data-zh="今日">Today</span></button>
-        <button class="tab" type="button" data-tab="plan"><span>P</span><span data-en="Plan" data-zh="计划">Plan</span></button>
-        <button class="tab" type="button" data-tab="training"><span>W</span><span data-en="Train" data-zh="训练">Train</span></button>
-        <button class="tab" type="button" data-tab="nutrition"><span>N</span><span data-en="Food" data-zh="饮食">Food</span></button>
-        <button class="tab" type="button" data-tab="metrics"><span>M</span><span data-en="Metrics" data-zh="数据">Metrics</span></button>
+        <button class="tab active" type="button" data-tab="training"><span>T</span><span data-en="Training" data-zh="训练">Training</span></button>
+        <button class="tab" type="button" data-tab="nutrition"><span>N</span><span data-en="Nutrition" data-zh="饮食">Nutrition</span></button>
+        <button class="tab" type="button" data-tab="metrics"><span>M</span><span data-en="Metrics" data-zh="身体数据">Metrics</span></button>
         <button class="tab" type="button" data-tab="ai"><span>A</span><span data-en="AI" data-zh="AI">AI</span></button>
       </nav>
     </section>
@@ -3596,36 +3594,37 @@
   <script>
     const titles = {
       en: {
-        today: "Today",
-        plan: "Plan",
         training: "Training",
         nutrition: "Nutrition",
         metrics: "Metrics",
-        ai: "AI Coach"
+        ai: "AI"
       },
       zh: {
-        today: "今日",
-        plan: "训练计划",
-        training: "训练执行",
-        nutrition: "饮食营养",
+        training: "训练",
+        nutrition: "饮食",
         metrics: "身体数据",
-        ai: "AI 教练"
+        ai: "AI"
       }
     };
 
     const uiCopy = {
       en: {
-        fallbackTitle: "Today",
+        fallbackTitle: "Training",
         done: "Done"
       },
       zh: {
-        fallbackTitle: "今日",
+        fallbackTitle: "训练",
         done: "已完成"
       }
     };
 
+    const tabAliases = {
+      today: "ai",
+      plan: "training"
+    };
+
     let currentLang = "en";
-    let currentTab = "today";
+    let currentTab = "training";
 
     function applyTextLanguage(lang) {
       document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
@@ -3647,15 +3646,15 @@
     }
 
     function activateTab(tabName) {
-      currentTab = tabName;
+      currentTab = tabAliases[tabName] || tabName;
       document.querySelectorAll(".tab").forEach((button) => {
-        button.classList.toggle("active", button.dataset.tab === tabName);
+        button.classList.toggle("active", button.dataset.tab === currentTab);
       });
       document.querySelectorAll(".panel").forEach((panel) => {
-        panel.classList.toggle("active", panel.dataset.panel === tabName);
+        panel.classList.toggle("active", panel.dataset.panel === currentTab);
       });
       document.getElementById("page-title").textContent =
-        titles[currentLang][tabName] || uiCopy[currentLang].fallbackTitle;
+        titles[currentLang][currentTab] || uiCopy[currentLang].fallbackTitle;
       document.querySelector(".app-scroll").scrollTop = 0;
     }
 
@@ -3708,6 +3707,7 @@
     completeSet.addEventListener("click", startRestTimer);
     heroCompleteSet.addEventListener("click", startRestTimer);
     setLanguage("en");
+    activateTab(currentTab);
   </script>
 </body>
 </html>

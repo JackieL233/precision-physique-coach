@@ -166,62 +166,55 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                 }
             }
             when (state.selectedTab) {
-                AppTab.TODAY -> {
-                    item {
-                        TodayDashboard(
-                            state = state,
-                            onDailyReview = viewModel::runDailyReview,
-                            onReset = viewModel::resetToday,
-                            onOpenPlan = { viewModel.selectTab(AppTab.PLAN) },
-                            onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
-                            onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
-                            onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
-                            onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
-                        )
-                    }
-                }
-
-                AppTab.PLAN -> {
-                    item {
-                        PlanPage(
-                            state = state,
-                            onProfileChange = viewModel::updateAthleteProfile,
-                            onNameChange = viewModel::updateTrainingPlanName,
-                            onGoalChange = viewModel::updateTrainingPlanGoal,
-                            onSelectDay = viewModel::selectPlanDay,
-                            onUpdateDay = viewModel::updateTrainingDay,
-                            onAddPlannedExercise = viewModel::addPlannedExercise,
-                            onRemovePlannedExercise = viewModel::removePlannedExercise,
-                            onApplyDay = viewModel::applyPlanDayToToday,
-                            onApplyTemplate = viewModel::applyTrainingPlanTemplate,
-                            onResetPlan = viewModel::resetTrainingPlan,
-                            onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) }
-                        )
-                    }
-                }
-
                 AppTab.TRAINING -> {
                     item {
-                        TrainingPage(
-                            state = state,
-                            onFocusChange = viewModel::updateTrainingFocus,
-                            onNotesChange = viewModel::updateSessionNotes,
-                            onCompletedChange = { viewModel.toggleTrainingCompleted() },
-                            onAddExercise = viewModel::addExercise,
-                            onRemoveExercise = viewModel::removeExercise,
-                            onUpdateSetEntry = viewModel::updateSetEntry,
-                            onCompleteSet = viewModel::completeSet,
-                            onRunDailyReview = viewModel::runDailyReview,
-                            onOpenPlan = { viewModel.selectTab(AppTab.PLAN) },
-                            onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
-                            onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
-                            onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
-                            onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) },
-                            onPickTrainingPhoto = { type, note ->
-                                viewModel.preparePhotoEvidence(type, note)
-                                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        val planContent: @Composable () -> Unit = {
+                            PlanPage(
+                                state = state,
+                                onProfileChange = viewModel::updateAthleteProfile,
+                                onNameChange = viewModel::updateTrainingPlanName,
+                                onGoalChange = viewModel::updateTrainingPlanGoal,
+                                onSelectDay = viewModel::selectPlanDay,
+                                onUpdateDay = viewModel::updateTrainingDay,
+                                onAddPlannedExercise = viewModel::addPlannedExercise,
+                                onRemovePlannedExercise = viewModel::removePlannedExercise,
+                                onApplyDay = viewModel::applyPlanDayToToday,
+                                onApplyTemplate = viewModel::applyTrainingPlanTemplate,
+                                onResetPlan = viewModel::resetTrainingPlan,
+                                onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) }
+                            )
+                        }
+                        val trainingContent: @Composable () -> Unit = {
+                            TrainingPage(
+                                state = state,
+                                onFocusChange = viewModel::updateTrainingFocus,
+                                onNotesChange = viewModel::updateSessionNotes,
+                                onCompletedChange = { viewModel.toggleTrainingCompleted() },
+                                onAddExercise = viewModel::addExercise,
+                                onRemoveExercise = viewModel::removeExercise,
+                                onUpdateSetEntry = viewModel::updateSetEntry,
+                                onCompleteSet = viewModel::completeSet,
+                                onRunDailyReview = viewModel::runDailyReview,
+                                onOpenPlan = { viewModel.selectTab(AppTab.TRAINING) },
+                                onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
+                                onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
+                                onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
+                                onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) },
+                                onPickTrainingPhoto = { type, note ->
+                                    viewModel.preparePhotoEvidence(type, note)
+                                    imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                                }
+                            )
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            if (state.dailyLog.trainingSession.exercises.isEmpty()) {
+                                planContent()
+                                trainingContent()
+                            } else {
+                                trainingContent()
+                                planContent()
                             }
-                        )
+                        }
                     }
                 }
 
@@ -262,24 +255,36 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
 
                 AppTab.AI_COACH -> {
                     item {
-                        AiCoachPage(
-                            state = state,
-                            onSettingsChange = viewModel::updateSettings,
-                            onModeChange = viewModel::updateMode,
-                            onPromptChange = viewModel::updateUserInput,
-                            onPreparePhoto = viewModel::preparePhotoEvidence,
-                            onPickImages = {
-                                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                            },
-                            onClearImages = viewModel::clearImages,
-                            onRunAnalysis = viewModel::runAnalysis,
-                            onDailyReview = viewModel::runDailyReview,
-                            onOpenPlan = { viewModel.selectTab(AppTab.PLAN) },
-                            onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
-                            onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
-                            onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
-                            onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
-                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            AiCoachPage(
+                                state = state,
+                                onSettingsChange = viewModel::updateSettings,
+                                onModeChange = viewModel::updateMode,
+                                onPromptChange = viewModel::updateUserInput,
+                                onPreparePhoto = viewModel::preparePhotoEvidence,
+                                onPickImages = {
+                                    imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                                },
+                                onClearImages = viewModel::clearImages,
+                                onRunAnalysis = viewModel::runAnalysis,
+                                onDailyReview = viewModel::runDailyReview,
+                                onOpenPlan = { viewModel.selectTab(AppTab.TRAINING) },
+                                onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
+                                onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
+                                onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
+                                onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
+                            )
+                            TodayDashboard(
+                                state = state,
+                                onDailyReview = viewModel::runDailyReview,
+                                onReset = viewModel::resetToday,
+                                onOpenPlan = { viewModel.selectTab(AppTab.TRAINING) },
+                                onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
+                                onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
+                                onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
+                                onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
+                            )
+                        }
                     }
                 }
             }
@@ -335,8 +340,8 @@ private fun Header(state: CoachUiState, onLanguageChange: (AppLanguage) -> Unit)
         )
         Text(
             text = language.t(
-                "Daily bodybuilding execution: training, food, recovery, photos, and AI adjustments in one log.",
-                "每日健美执行系统：训练、饮食、恢复、照片证据与 AI 调整都在同一个日志里。"
+                "Four sections: training plan and sets, food, body data, and AI review.",
+                "四个区：训练计划与组记录、饮食、身体数据和 AI 复盘。"
             ),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -360,9 +365,7 @@ private fun BottomNavigation(selected: AppTab, language: AppLanguage, onSelect: 
 
 private fun AppTab.navIcon(): String {
     return when (this) {
-        AppTab.TODAY -> "T"
-        AppTab.PLAN -> "P"
-        AppTab.TRAINING -> "+"
+        AppTab.TRAINING -> "T"
         AppTab.NUTRITION -> "N"
         AppTab.METRICS -> "M"
         AppTab.AI_COACH -> "AI"
@@ -371,8 +374,6 @@ private fun AppTab.navIcon(): String {
 
 private fun AppTab.shortTitle(language: AppLanguage): String {
     return when (this) {
-        AppTab.TODAY -> language.t("Today", "今日")
-        AppTab.PLAN -> language.t("Plan", "计划")
         AppTab.TRAINING -> language.t("Train", "训练")
         AppTab.NUTRITION -> language.t("Food", "饮食")
         AppTab.METRICS -> language.t("Metrics", "数据")
@@ -382,9 +383,7 @@ private fun AppTab.shortTitle(language: AppLanguage): String {
 
 private fun AppTab.localizedTitle(language: AppLanguage): String {
     return when (this) {
-        AppTab.TODAY -> language.t("Today", "今日")
-        AppTab.PLAN -> language.t("Plan", "训练计划")
-        AppTab.TRAINING -> language.t("Training", "训练执行")
+        AppTab.TRAINING -> language.t("Training", "训练")
         AppTab.NUTRITION -> language.t("Nutrition", "饮食营养")
         AppTab.METRICS -> language.t("Metrics", "身体数据")
         AppTab.AI_COACH -> language.t("AI Coach", "AI 教练")
@@ -2376,7 +2375,7 @@ private fun TodayExerciseVisualPrimerCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Button(onClick = onOpenPlan, modifier = Modifier.fillMaxWidth()) {
-                Text(language.t("Open plan", "打开计划"))
+                Text(language.t("Open training plan", "打开训练计划"))
             }
         } else {
             val atlas = exerciseVisualAtlas()
@@ -4073,8 +4072,8 @@ private fun WorkoutFlowCoachCard(
     }
     val nextStepDetail = when {
         !hasWorkout -> language.t(
-            "Use Plan first so every exercise has target reps, load, RIR, rest time, and a visual guide.",
-            "先在计划页载入训练，让每个动作都有目标次数、重量、RIR、休息时间和动作图例。"
+            "Use the training plan layer first so every exercise has target reps, load, RIR, rest time, and a visual guide.",
+            "先在训练区的计划层载入训练，让每个动作都有目标次数、重量、RIR、休息时间和动作图例。"
         )
         completedSets == 0 -> language.t(
             "Follow the Warm-up Ramp Plan, then use the active exercise cards below to log kg, reps, RIR, notes, and Complete.",
@@ -4094,7 +4093,7 @@ private fun WorkoutFlowCoachCard(
         )
     }
     val primaryLabel = when {
-        !hasWorkout -> language.t("Open plan", "打开计划")
+        !hasWorkout -> language.t("Open training plan", "打开训练计划")
         allSetsComplete && !sessionMarkedComplete -> language.t("Mark complete", "标记完成")
         sessionMarkedComplete -> language.t("Run review", "运行复盘")
         else -> language.t("Form check", "动作检查")

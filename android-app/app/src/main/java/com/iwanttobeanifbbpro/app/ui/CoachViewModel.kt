@@ -46,8 +46,6 @@ import java.time.LocalDateTime
 import kotlin.math.min
 
 enum class AppTab(val title: String) {
-    TODAY("Today"),
-    PLAN("Plan"),
     TRAINING("Training"),
     NUTRITION("Nutrition"),
     METRICS("Metrics"),
@@ -89,7 +87,7 @@ data class RestTimerState(
 )
 
 data class CoachUiState(
-    val selectedTab: AppTab = AppTab.TODAY,
+    val selectedTab: AppTab = AppTab.TRAINING,
     val appLanguage: AppLanguage = AppLanguage.ENGLISH,
     val mode: CoachMode = CoachMode.LINKED_TRAINING_NUTRITION,
     val userInput: String = CoachMode.LINKED_TRAINING_NUTRITION.defaultPrompt,

@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -593,9 +594,12 @@ class AndroidAppStructureTest(unittest.TestCase):
         log_model = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/data/DailyLog.kt").read_text(
             encoding="utf-8"
         )
+        app_tab_match = re.search(r"enum class AppTab[^{]*\{(?P<body>.*?)\n\}", view_model, re.DOTALL)
+        self.assertIsNotNone(app_tab_match, "AppTab enum should be declared in CoachViewModel.kt")
+        app_tabs = re.findall(r"^\s*([A-Z_]+)\(", app_tab_match.group("body"), re.MULTILINE)
+        self.assertEqual(["TRAINING", "NUTRITION", "METRICS", "AI_COACH"], app_tabs)
+        self.assertIn("AppTab.entries.forEach", ui)
         expected_terms = [
-            "Today",
-            "Plan",
             "Training",
             "Nutrition",
             "Metrics",
@@ -1206,6 +1210,53 @@ class AndroidAppStructureTest(unittest.TestCase):
             with self.subTest(term=term):
                 self.assertIn(term, combined)
 
+    def test_readmes_document_four_main_app_sections_and_folded_flows(self) -> None:
+        root_readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        zh_readme = (ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
+        app_readme = (APP / "README.md").read_text(encoding="utf-8")
+        readmes = {
+            "README.md": root_readme,
+            "README.zh-CN.md": zh_readme,
+            "android-app/README.md": app_readme,
+        }
+        common_terms = [
+            "Training / 训练",
+            "Nutrition / 饮食",
+            "Metrics / 身体数据",
+            "Today Flow Coach",
+            "Plan Flow Coach",
+            "Daily Coach Checklist",
+            "Weekly Check-in",
+        ]
+        for relative, readme in readmes.items():
+            for term in common_terms:
+                with self.subTest(readme=relative, term=term):
+                    self.assertIn(term, readme)
+
+        english_folded_terms = [
+            "four main sections",
+            "`Today Flow Coach` is folded into AI",
+            "`Plan Flow Coach` is folded into Training",
+            "no separate `Today` or `Plan` primary tab",
+        ]
+        for relative, readme in {
+            "README.md": root_readme,
+            "android-app/README.md": app_readme,
+        }.items():
+            for term in english_folded_terms:
+                with self.subTest(readme=relative, term=term):
+                    self.assertIn(term, readme)
+
+        zh_folded_terms = [
+            "四个主区",
+            "`Today Flow Coach` 折叠到 AI 的每日总览/复盘",
+            "`Plan Flow Coach` 折叠到 Training 的训练计划层",
+            "不再有单独的 `Today` 或 `Plan` 主 tab",
+        ]
+        for term in zh_folded_terms:
+            with self.subTest(readme="README.zh-CN.md", term=term):
+                self.assertIn(term, zh_readme)
+
     def test_readme_documents_build_and_api_setup(self) -> None:
         readme = (APP / "README.md").read_text(encoding="utf-8")
         expected_terms = [
@@ -1229,12 +1280,19 @@ class AndroidAppStructureTest(unittest.TestCase):
             "AI review",
             "rest countdown",
             "set-level",
+            "four main sections",
+            "Training / 训练",
+            "Nutrition / 饮食",
+            "Metrics / 身体数据",
+            "`Today Flow Coach` is folded into AI",
+            "`Plan Flow Coach` is folded into Training",
+            "no separate `Today` or `Plan` primary tab",
             "AI Data Map",
             "weekly training plan",
             "Plan Templates",
             "Plan Flow Coach",
             "showPlanDetails",
-            "Plan detail layers",
+            "Training plan layers",
             "Use recommended template",
             "Template -> weekly plan -> Apply today",
             "Beginner Full Body",
@@ -1475,7 +1533,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Athlete Profile",
             "Plan Flow Coach",
             "NEXT PLAN ACTION",
-            "Plan detail layers",
+            "Training plan layers",
             "profile, templates, weekly plan, visual map, exercise editing",
             "Plan Templates",
             "Beginner Full Body",

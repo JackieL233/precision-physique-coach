@@ -35,11 +35,12 @@
 当前 app 已支持：
 
 - 简洁 Apple-inspired 浅色界面：安静背景、蓝色主操作、底部导航、分组卡片和清晰层级。
+- 四个主区：Training / 训练、Nutrition / 饮食、Metrics / 身体数据、AI。`Today Flow Coach` 折叠到 AI 的每日总览/复盘，`Plan Flow Coach` 折叠到 Training 的训练计划层，不再有单独的 `Today` 或 `Plan` 主 tab。
 - 支持 EN/中文界面切换：通过 `AppLanguage`、`updateLanguage`、`loadLanguage` 和本地 SharedPreferences 保存语言偏好，让顶部导航、底部导航、今日流程、休息倒计时和安全提示可以在英文与中文之间切换。
-- `Today Flow Coach / 今日流程教练`：`Today` 第一屏只显示今天现在该做什么、为什么做、今日闭环进度、readiness、训练组数、饮食缺口和一个主按钮；用户打开 App 后先执行这一条，而不是先面对所有专业模块。
-- `Daily detail layers / 今日细节层`：`Start Here / 从这里开始`、AI 设置、Command Center、Daily Execution Plan、Daily Coach Checklist、Tomorrow Coach Brief、Weekly Check-in、趋势、恢复、体成分等专业内容默认收在细节层里，需要看原因或做深度检查时再展开。
-- `Plan Flow Coach / 计划流程教练`：`Plan` 第一屏只判断现在应该先补体型目标、使用推荐模板、选择训练日、点击 `Apply today / 应用今天`，还是直接打开 Training；新手不用先理解完整周计划编辑器。
-- `Plan detail layers / 计划细节层`：Athlete Profile、Plan Templates、Weekly Plan、Training Days、Selected Day Visual Map、Exercise Visual Library、Add Planned Exercise 和动作卡片默认收在细节层里，需要换模板、改动作、看视觉图或微调训练日时再展开。
+- `Today Flow Coach / 今日流程教练`：折叠到 AI 的每日总览/复盘层，只显示今天现在该做什么、为什么做、今日闭环进度、readiness、训练组数、饮食缺口和一个主按钮；用户先执行这一条，而不是先面对所有专业模块。
+- `AI daily overview layers / AI 每日总览层`：`Start Here / 从这里开始`、AI 设置、Command Center、Daily Execution Plan、Daily Coach Checklist、Tomorrow Coach Brief、Weekly Check-in、趋势、恢复、体成分等专业内容默认收在细节层里，需要看原因或做深度检查时再展开。
+- `Plan Flow Coach / 计划流程教练`：折叠到 Training 的训练计划层，只判断现在应该先补体型目标、使用推荐模板、选择训练日、点击 `Apply today / 应用今天`，还是直接进入训练执行；新手不用先理解完整周计划编辑器。
+- `Training plan layers / 训练计划层`：Athlete Profile、Plan Templates、Weekly Plan、Training Days、Selected Day Visual Map、Exercise Visual Library、Add Planned Exercise 和动作卡片默认收在细节层里，需要换模板、改动作、看视觉图或微调训练日时再展开。
 - `Workout Flow Coach / 训练执行教练`：`Training` 第一屏只突出下一步动作，例如载入计划、热身、完成下一组、开始休息、训练收尾或运行 AI 复盘；正常训练时用户主要点击 `Complete set + start rest`，不用先读完所有分析模块。
 - `Professional detail layers / 专业细节层`：Training Readiness Builder、Warm-up Ramp Plan、Next Set Coach、Session Quality Dashboard 和 Training Closeout Coach 默认收在专业细节层里，需要理解原因或调整策略时再展开，避免新手一打开训练页就被信息淹没。
 - `Meal Flow Coach / 餐食流程教练`：`Nutrition` 第一屏只突出下一餐该怎么吃、下一餐宏量目标、推荐模板、食物照片入口和一个 `Prefill next meal / 填入下一餐` 主按钮；用户先执行下一餐，再决定是否展开细节。
