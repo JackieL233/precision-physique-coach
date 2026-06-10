@@ -34,6 +34,11 @@ private val AppleInspiredLightColors: ColorScheme = lightColorScheme(
     onError = Color.White
 )
 
+val IfbbProGlassSurface: Color = Color.White.copy(alpha = 0.78f)
+val IfbbProGlassStrongSurface: Color = Color.White.copy(alpha = 0.92f)
+val IfbbProGlassBorder: Color = Color.White.copy(alpha = 0.68f)
+val GlassNavigationBarColor: Color = Color.White.copy(alpha = 0.88f)
+
 private val AppTypography = Typography().let { base ->
     base.copy(
         headlineSmall = base.headlineSmall.copy(

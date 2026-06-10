@@ -365,7 +365,7 @@ private fun Header(state: CoachUiState, onLanguageChange: (AppLanguage) -> Unit)
 
 @Composable
 private fun BottomNavigation(selected: AppTab, language: AppLanguage, onSelect: (AppTab) -> Unit) {
-    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+    NavigationBar(containerColor = GlassNavigationBarColor) {
         AppTab.entries.forEach { tab ->
             NavigationBarItem(
                 selected = selected == tab,
@@ -7843,9 +7843,10 @@ private fun SectionCard(title: String, subtitle: String? = null, content: @Compo
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        colors = CardDefaults.cardColors(containerColor = IfbbProGlassSurface),
+        border = BorderStroke(1.dp, IfbbProGlassBorder)
     ) {
+        // Apple glass surface: translucent outer material with stronger inner controls for readability.
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(title, fontWeight = FontWeight.SemiBold)
@@ -7870,7 +7871,7 @@ private fun MetricGrid(metrics: List<Pair<String, String>>) {
             Surface(
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                color = MaterialTheme.colorScheme.surface
+                color = IfbbProGlassStrongSurface
             ) {
                 Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
                     Text(
@@ -7893,7 +7894,7 @@ private fun DataChipGrid(items: List<String>) {
             Surface(
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                color = MaterialTheme.colorScheme.surface
+                color = IfbbProGlassStrongSurface
             ) {
                 Text(
                     text = item,

@@ -1327,6 +1327,36 @@ class AndroidAppStructureTest(unittest.TestCase):
             with self.subTest(term=term):
                 self.assertIn(term, preview)
 
+    def test_android_compose_uses_shared_apple_glass_surfaces(self) -> None:
+        theme = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/AppTheme.kt").read_text(
+            encoding="utf-8"
+        )
+        ui = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/IfbbProCoachApp.kt").read_text(
+            encoding="utf-8"
+        )
+        expected_theme_terms = [
+            "IfbbProGlassSurface",
+            "IfbbProGlassStrongSurface",
+            "IfbbProGlassBorder",
+            "GlassNavigationBarColor",
+            ".copy(alpha = 0.78f)",
+            ".copy(alpha = 0.92f)",
+        ]
+        for term in expected_theme_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, theme)
+
+        expected_ui_terms = [
+            "NavigationBar(containerColor = GlassNavigationBarColor)",
+            "CardDefaults.cardColors(containerColor = IfbbProGlassSurface)",
+            "BorderStroke(1.dp, IfbbProGlassBorder)",
+            "color = IfbbProGlassStrongSurface",
+            "Apple glass surface",
+        ]
+        for term in expected_ui_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, ui)
+
     def test_metrics_health_data_layer_uses_localized_labels(self) -> None:
         ui = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/IfbbProCoachApp.kt").read_text(
             encoding="utf-8"
