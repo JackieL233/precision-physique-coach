@@ -28,6 +28,7 @@ The preview mirrors the current Android app structure:
 - Daily Autopilot / 每日自动教练 on AI, showing the one-screen daily loop, current next step, evidence gaps, and Train -> Eat -> Sync -> Review order before AI changes tomorrow
 - Review Readiness Checklist / 复盘准备度清单 on the AI page, showing training evidence, nutrition evidence, metrics evidence, photo/API context, and the missing-evidence gate before AI changes training or food
 - AI Change Receipt / AI 变更回执 after review readiness, showing what changed for the next session, what stayed held until more evidence, and where to follow training, rest, nutrition, recovery, and tracking updates
+- AI Applied Tomorrow Training / AI 已应用明日训练 with `AiAppliedTomorrowTrainingCard`, an AI-applied tomorrow training handoff, `Applied split / focus / rest / gate`, `Open Training and start the applied plan`, and a reminder that sleep, food, and body data stay linked before the next change
 - AI Integrated Decision Matrix before the deep detail layer, linking training effect, nutrition, body trend, sleep/recovery, photos, data confidence, and the 3-day / 4-day / 5-day split decision so AI can decide whether to hold or change the current split
 - AI Setup & Review Readiness with API key, base URL, model, photo context, missing setup, and AI review ready states
 - Daily Execution Plan for priority focus, primary action, data quality gate, AI review gate, and plan adjustment signal

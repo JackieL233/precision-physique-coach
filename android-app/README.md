@@ -39,6 +39,7 @@ This is a native Android companion app for the `I Want to be an IFBB PRO` skill.
 - An `Apply today` workflow that turns a planned training day into today's set-level executable workout log.
 - A `Daily Execution Plan` on `Today` that turns training execution, nutrition gaps, recovery state, data completeness, and AI review timing into one priority focus, primary action, training decision, nutrition decision, recovery decision, data quality gate, AI review gate, and plan adjustment signal.
 - An `AI Review Action Queue` on `Today` and `AI Coach` that turns the latest saved review into tappable training action, nutrition action, recovery action, tracking action, and plan action items. It shows sourceLabel, confidenceLabel, primaryAction, actionLabel, evidence cue, and route so saved AI guidance becomes follow-through instead of a loose note.
+- An `AI Applied Tomorrow Training` handoff on `AI Coach` that turns the review into an AI-applied tomorrow training handoff. It shows `Applied split / focus / rest / gate`, food target, and tracking action, then gives one primary button: `Open Training and start the applied plan`. Sleep, food, and body data stay linked before the next change.
 - A daily training workflow for planned focus, completed sessions, exercises, set-level load, reps, RIR, rest time, hard sets, target muscle, form/pain notes, and Exercise History comparison against previous logged sessions.
 - Training photo shortcuts for form frames and equipment photos, so uncertain setup, technique, pain flags, target-muscle stimulus, and visual guide ID mapping can be attached to the same daily review.
 - A `Training Readiness Builder` on the training screen that turns Recovery Guidance into a warm-up strategy, ramp-up cue, first working set decision, volume adjustment, and stop rule before the user starts logging sets.
@@ -89,6 +90,7 @@ Use the app as a daily training and daily nutrition cockpit:
    The Command Center stays below it for the deeper decision layer and latest guidance.
    The Daily Execution Plan turns the current log into the single highest-priority action and explains whether training, food, recovery, or data quality should be handled before trusting the AI review.
    AI Review Action Queue then turns the latest saved review into tappable next steps for Training, Nutrition, Metrics, the Training plan layer, or AI.
+   The AI-applied tomorrow training handoff then shows the applied split, focus, rest, recovery gate, food target, and tracking action so the next morning can start with `Open Training and start the applied plan` instead of re-reading every detail layer.
    Weekly Check-in uses the recent 7-14 day window to decide whether next week should hold, simplify, reduce optional volume, adjust nutrition, or wait for better data before changing bigger targets.
    The Daily Coach Checklist turns that loop into tappable steps: `Plan prepared`, `Training executed`, `Food logged`, `Metrics synced`, and `AI review locked`.
    The 7-day trend card shows whether body weight, food intake, hard sets, sleep, and activity are moving in the right direction.

@@ -3498,6 +3498,74 @@ private fun TomorrowCoachBriefCard(
 }
 
 @Composable
+private fun AiAppliedTomorrowTrainingCard(
+    brief: TomorrowCoachBrief,
+    language: AppLanguage,
+    onOpenTraining: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit
+) {
+    SectionCard(
+        title = language.t("AI Applied Tomorrow Training", "AI 已应用明日训练"),
+        subtitle = language.t(
+            "AI-applied tomorrow training handoff: the next split, focus, rest, recovery gate, and food target are ready to follow.",
+            "AI 已应用明日训练交接：下一次分化、重点、休息、恢复闸门和饮食目标已经可以直接执行。"
+        )
+    ) {
+        Text(
+            text = language.t("AI APPLIED TOMORROW TRAINING", "AI 已应用明日训练"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        MetricGrid(
+            metrics = listOf(
+                language.t("Applied split / focus / rest / gate", "已应用分化 / 重点 / 休息 / 闸门") to
+                    "${brief.planDayName} / ${brief.planFocus} / AI rest / ${brief.readinessGate}",
+                language.t("Food target", "饮食目标") to "${brief.targetCalories} kcal / ${brief.targetProtein} g",
+                language.t("Tomorrow tracking action", "明天追踪动作") to brief.trackingAction
+            )
+        )
+        Text(
+            text = language.t("Open Training and start the applied plan", "打开训练并开始已应用计划"),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = language.t(
+                "Sleep, food, and body data stay linked before the next change",
+                "睡眠、饮食和身体数据会在下一次变更前保持联动"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        DataChipGrid(
+            items = listOf(
+                "AiAppliedTomorrowTrainingCard",
+                language.t("AI-applied tomorrow training handoff", "AI 已应用明日训练交接"),
+                language.t("Applied split / focus / rest / gate", "已应用分化 / 重点 / 休息 / 闸门"),
+                language.t("Open Training and start the applied plan", "打开训练并开始已应用计划"),
+                language.t(
+                    "Sleep, food, and body data stay linked before the next change",
+                    "睡眠、饮食和身体数据会在下一次变更前保持联动"
+                )
+            )
+        )
+        Button(onClick = onOpenTraining, modifier = Modifier.fillMaxWidth()) {
+            Text(language.t("Open Training and start the applied plan", "打开训练并开始已应用计划"))
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(onClick = onOpenNutrition, modifier = Modifier.weight(1f)) {
+                Text(language.t("Food target", "饮食目标"))
+            }
+            TextButton(onClick = onOpenMetrics, modifier = Modifier.weight(1f)) {
+                Text(language.t("Recovery gate", "恢复闸门"))
+            }
+        }
+    }
+}
+
+@Composable
 private fun NextDayHandoffCard(
     brief: TomorrowCoachBrief,
     language: AppLanguage,
@@ -10387,6 +10455,13 @@ private fun AiCoachPage(
             onOpenMetrics = onOpenMetrics,
             onOpenAi = onOpenAi,
             onDailyReview = onDailyReview
+        )
+        AiAppliedTomorrowTrainingCard(
+            brief = tomorrowBrief,
+            language = language,
+            onOpenTraining = onOpenTraining,
+            onOpenNutrition = onOpenNutrition,
+            onOpenMetrics = onOpenMetrics
         )
         NextDayHandoffCard(
             brief = tomorrowBrief,

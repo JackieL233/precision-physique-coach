@@ -1805,13 +1805,15 @@
       box-shadow: 0 0 0 5px rgba(255, 159, 10, 0.14);
     }
 
-    .ai-change-receipt-card {
+    .ai-change-receipt-card,
+    .ai-applied-tomorrow-training-card {
       position: relative;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.74);
     }
 
-    .ai-change-receipt-card::before {
+    .ai-change-receipt-card::before,
+    .ai-applied-tomorrow-training-card::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -1820,9 +1822,27 @@
       pointer-events: none;
     }
 
-    .ai-change-receipt-card > * {
+    .ai-change-receipt-card > *,
+    .ai-applied-tomorrow-training-card > * {
       position: relative;
       z-index: 1;
+    }
+
+    .ai-applied-tomorrow-training-card {
+      border-color: rgba(0, 122, 255, 0.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.90),
+        0 18px 42px rgba(0, 122, 255, 0.10);
+    }
+
+    .applied-tomorrow-training-receipt {
+      display: grid;
+      gap: 9px;
+      padding: 11px;
+      border: 1px solid rgba(0, 122, 255, 0.22);
+      border-radius: var(--radius);
+      background: rgba(238, 247, 255, 0.70);
+      backdrop-filter: blur(16px) saturate(150%);
     }
 
     .change-receipt-row {
@@ -5291,6 +5311,29 @@
               </div>
             </div>
             <button class="button primary" type="button" data-tab-target="training" data-en="Start next applied step" data-zh="开始下一步已应用动作">Start next applied step</button>
+          </div>
+
+          <div class="section glass ai-applied-tomorrow-training-card" data-component="AiAppliedTomorrowTrainingCard">
+            <div class="section-head">
+              <p class="eyebrow" data-en="AI APPLIED TOMORROW TRAINING" data-zh="AI 已应用明日训练">AI APPLIED TOMORROW TRAINING</p>
+              <h2 data-en="AI Applied Tomorrow Training" data-zh="AI 已应用明日训练">AI Applied Tomorrow Training</h2>
+              <p class="subtle" data-en="AI-applied tomorrow training handoff: the next split, focus, rest, recovery gate, and food target are ready to follow." data-zh="AI 已应用明日训练交接：下一次分化、重点、休息、恢复闸门和饮食目标已经可以直接执行。">AI-applied tomorrow training handoff: the next split, focus, rest, recovery gate, and food target are ready to follow.</p>
+            </div>
+            <div class="applied-tomorrow-training-receipt">
+              <div class="metric-grid">
+                <div class="metric"><span class="label" data-en="Applied split / focus / rest / gate" data-zh="已应用分化 / 重点 / 休息 / 闸门">Applied split / focus / rest / gate</span><span class="value" data-en="Tue / Back Width + Rear Delts / AI rest / Warm-up clean before pushing" data-zh="周二 / 背宽 + 后束 / AI 休息 / 热身干净再推进">Tue / Back Width + Rear Delts / AI rest / Warm-up clean before pushing</span></div>
+                <div class="metric"><span class="label" data-en="Food target" data-zh="饮食目标">Food target</span><span class="value">2,650 kcal / 185 g</span></div>
+                <div class="metric"><span class="label" data-en="Tomorrow tracking action" data-zh="明天追踪动作">Tomorrow tracking action</span><span class="value" data-en="weight + sleep + first set" data-zh="体重 + 睡眠 + 第一组">weight + sleep + first set</span></div>
+              </div>
+              <h3 data-en="Open Training and start the applied plan" data-zh="打开训练并开始已应用计划">Open Training and start the applied plan</h3>
+              <p class="subtle" data-en="Sleep, food, and body data stay linked before the next change" data-zh="睡眠、饮食和身体数据会在下一次变更前保持联动">Sleep, food, and body data stay linked before the next change</p>
+              <div class="chip-row">
+                <span class="chip active">AiAppliedTomorrowTrainingCard</span>
+                <span class="chip active" data-en="AI-applied tomorrow training handoff" data-zh="AI 已应用明日训练交接">AI-applied tomorrow training handoff</span>
+                <span class="chip active" data-en="Applied split / focus / rest / gate" data-zh="已应用分化 / 重点 / 休息 / 闸门">Applied split / focus / rest / gate</span>
+              </div>
+              <button class="button primary" type="button" data-tab-target="training" data-en="Open Training and start the applied plan" data-zh="打开训练并开始已应用计划">Open Training and start the applied plan</button>
+            </div>
           </div>
 
           <div class="section glass">
