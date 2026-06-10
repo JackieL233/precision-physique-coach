@@ -7146,18 +7146,73 @@ private fun LiveSetCoachCard(
         plannedRir?.let { "RIR ${formatDecimal(it)}" }
     ).joinToString(" | ").ifBlank { language.t("Use planned target", "使用计划目标") }
 
+    OneTapSetExecutionCard(
+        exercise = exercise,
+        set = set,
+        nextSet = nextSet,
+        targetLine = targetLine,
+        restSeconds = restPrescription.recommendedRestSeconds.coerceAtLeast(set.restSeconds),
+        reps = reps,
+        load = load,
+        rir = rir,
+        language = language,
+        isLoading = isLoading,
+        onRepsChange = {
+            reps = it
+            onUpdateSetEntry(exerciseIndex, setIndex, it.toIntOrNull(), load.toDoubleOrNull(), rir.toDoubleOrNull(), notes)
+        },
+        onLoadChange = {
+            load = it
+            onUpdateSetEntry(exerciseIndex, setIndex, reps.toIntOrNull(), it.toDoubleOrNull(), rir.toDoubleOrNull(), notes)
+        },
+        onRirChange = {
+            rir = it
+            onUpdateSetEntry(exerciseIndex, setIndex, reps.toIntOrNull(), load.toDoubleOrNull(), it.toDoubleOrNull(), notes)
+        },
+        onComplete = {
+            onUpdateSetEntry(exerciseIndex, setIndex, reps.toIntOrNull(), load.toDoubleOrNull(), rir.toDoubleOrNull(), notes)
+            onCompleteSet(exerciseIndex, setIndex)
+        },
+        onPickTrainingPhoto = onPickTrainingPhoto
+    )
+}
+
+@Composable
+private fun OneTapSetExecutionCard(
+    exercise: ExerciseEntry,
+    set: SetEntry,
+    nextSet: NextSetCoach,
+    targetLine: String,
+    restSeconds: Int,
+    reps: String,
+    load: String,
+    rir: String,
+    language: AppLanguage,
+    isLoading: Boolean,
+    onRepsChange: (String) -> Unit,
+    onLoadChange: (String) -> Unit,
+    onRirChange: (String) -> Unit,
+    onComplete: () -> Unit,
+    onPickTrainingPhoto: (PhotoEvidenceType, String) -> Unit
+) {
     SectionCard(
-        title = language.t("Live Set Coach", "当前组教练"),
+        title = language.t("One-Tap Set Execution", "下一组一键执行"),
         subtitle = language.t(
             "Stand at the machine, do this set, then tap once to start the AI matched rest countdown.",
             "站到器械前，完成这一组，然后点一次即可开始 AI 匹配休息倒计时。"
         )
     ) {
         Text(
-            text = language.t("LIVE SET COACH", "当前组教练"),
+            text = language.t("ONE-TAP SET EXECUTION", "下一组一键执行"),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = language.t("Live Set Coach", "当前组教练"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.SemiBold
         )
         Text(
             text = language.t("Do this set now", "现在完成这一组"),
@@ -7171,8 +7226,8 @@ private fun LiveSetCoachCard(
         )
         MetricGrid(
             metrics = listOf(
-                language.t("Target", "目标") to targetLine,
-                language.t("AI matched rest", "AI 匹配休息") to "${restPrescription.recommendedRestSeconds.coerceAtLeast(set.restSeconds)}s",
+                language.t("Target reps / kg / RIR", "目标次数 / kg / RIR") to targetLine,
+                language.t("AI matched rest", "AI 匹配休息") to "${restSeconds}s",
                 language.t("Visual guide", "动作图例") to nextSet.visualSpec.visualId,
                 language.t("Status", "状态") to nextSet.statusLabel
             )
@@ -7182,47 +7237,51 @@ private fun LiveSetCoachCard(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        Text(
+            text = language.t("Adjust actuals only if needed", "只在需要时调整实际数据"),
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.SemiBold
+        )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             NumberField(
                 value = reps,
-                onChange = {
-                    reps = it
-                    onUpdateSetEntry(exerciseIndex, setIndex, it.toIntOrNull(), load.toDoubleOrNull(), rir.toDoubleOrNull(), notes)
-                },
+                onChange = onRepsChange,
                 label = language.t("Reps", "次数"),
                 modifier = Modifier.weight(1f)
             )
             DecimalField(
                 value = load,
-                onChange = {
-                    load = it
-                    onUpdateSetEntry(exerciseIndex, setIndex, reps.toIntOrNull(), it.toDoubleOrNull(), rir.toDoubleOrNull(), notes)
-                },
+                onChange = onLoadChange,
                 label = "kg",
                 modifier = Modifier.weight(1f)
             )
             DecimalField(
                 value = rir,
-                onChange = {
-                    rir = it
-                    onUpdateSetEntry(exerciseIndex, setIndex, reps.toIntOrNull(), load.toDoubleOrNull(), it.toDoubleOrNull(), notes)
-                },
+                onChange = onRirChange,
                 label = "RIR",
                 modifier = Modifier.weight(1f)
             )
         }
         Button(
-            onClick = {
-                onUpdateSetEntry(exerciseIndex, setIndex, reps.toIntOrNull(), load.toDoubleOrNull(), rir.toDoubleOrNull(), notes)
-                onCompleteSet(exerciseIndex, setIndex)
-            },
+            onClick = onComplete,
             enabled = !isLoading && !set.completed,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(language.t("Complete this set + start AI rest", "完成本组并开始 AI 休息"))
         }
+        Text(
+            text = language.t(
+                "Tap complete to start AI rest; the next countdown uses reps, kg, RIR, sleep, soreness, fatigue, heart rate, and set quality.",
+                "完成后开始 AI 休息；下一段倒计时会结合次数、重量、RIR、睡眠、酸痛、疲劳、心率和本组质量。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         DataChipGrid(
             items = listOf(
+                language.t("Target reps / kg / RIR", "目标次数 / kg / RIR"),
+                language.t("Tap complete to start AI rest", "完成后开始 AI 休息"),
+                language.t("Adjust actuals only if needed", "只在需要时调整实际数据"),
                 language.t("Auto-start rest timer", "自动启动休息倒计时"),
                 language.t("AI matched rest", "AI 匹配休息"),
                 language.t("Complete set logs", "补全组记录"),
