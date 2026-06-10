@@ -9676,6 +9676,12 @@ private fun AiCoachPage(
             onOpenMetrics = onOpenMetrics,
             onOpenAi = onOpenAi
         )
+        QuickAiSetupCard(
+            settings = state.settings,
+            setup = aiSetup,
+            language = language,
+            onChange = onSettingsChange
+        )
         AiReviewFlowCoachCard(
             state = state,
             setup = aiSetup,
@@ -9990,6 +9996,74 @@ private fun AiCoachPage(
             )
         }
         }
+    }
+}
+
+@Composable
+private fun QuickAiSetupCard(
+    settings: AiSettings,
+    setup: AiSetupStatus,
+    language: AppLanguage,
+    onChange: (AiSettings) -> Unit
+) {
+    SectionCard(
+        title = language.t("Quick AI Setup", "快速 AI 设置"),
+        subtitle = language.t(
+            "API key quick setup for daily review, food photos, form checks, and equipment recognition.",
+            "快速填写 API key，用于每日复盘、食物照片、动作检查和器械识别。"
+        )
+    ) {
+        Text(
+            text = language.t("QUICK AI SETUP", "快速 AI 设置"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        MetricGrid(
+            metrics = listOf(
+                language.t("API status", "API 状态") to setup.statusLabel,
+                language.t("API key", "API key") to setup.apiKeyLabel,
+                language.t("OpenAI-compatible endpoint", "OpenAI 兼容接口") to settings.baseUrl.ifBlank { "/v1" },
+                language.t("Model", "模型") to settings.model.ifBlank { language.t("Not set", "未填写") }
+            )
+        )
+        OutlinedTextField(
+            value = settings.apiKey,
+            onValueChange = { onChange(settings.copy(apiKey = it)) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(language.t("API key", "API key")) },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation()
+        )
+        OutlinedTextField(
+            value = settings.baseUrl,
+            onValueChange = { onChange(settings.copy(baseUrl = it)) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(language.t("Base URL", "接口地址")) },
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = settings.model,
+            onValueChange = { onChange(settings.copy(model = it)) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(language.t("Model", "模型")) },
+            singleLine = true
+        )
+        DataChipGrid(
+            items = listOf(
+                language.t("API key quick setup", "快速填写 API key"),
+                language.t("Save API key, base URL, and model", "保存 API key、接口地址和模型"),
+                language.t("OpenAI-compatible endpoint", "OpenAI 兼容接口")
+            )
+        )
+        Text(
+            text = language.t(
+                "Save API key, base URL, and model here; the app uses them only when you run AI review, photo analysis, food estimates, or plan improvement.",
+                "在这里保存 API key、接口地址和模型；App 只会在运行 AI 复盘、照片分析、餐食估算或计划改进时使用。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 

@@ -1036,6 +1036,56 @@
       min-height: 58px;
     }
 
+    .quick-ai-setup-card {
+      position: relative;
+      overflow: hidden;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(0, 122, 255, 0.12), rgba(255, 255, 255, 0.74) 50%, rgba(52, 199, 89, 0.10)),
+        rgba(255, 255, 255, 0.74);
+      backdrop-filter: blur(20px) saturate(155%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 14px 34px rgba(29, 29, 31, 0.10);
+    }
+
+    .quick-ai-setup-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    .quick-ai-setup-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .quick-ai-setup-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .quick-ai-setup-grid .metric {
+      min-height: 58px;
+    }
+
+    .quick-ai-fields {
+      display: grid;
+      gap: 8px;
+    }
+
+    .quick-ai-fields .field input {
+      background: rgba(255, 255, 255, 0.74);
+      border-color: rgba(209, 209, 214, 0.78);
+    }
+
     .metrics-step-row {
       display: grid;
       grid-template-columns: 32px minmax(0, 1fr) auto;
@@ -4588,6 +4638,31 @@
             <p class="subtle" data-en="Setup -> evidence -> review -> apply. AI changes split, volume, rest, calories, or macros only after reading training, food, metrics, photos, and trends together." data-zh="设置 -> 证据 -> 复盘 -> 应用。AI 只有在联动读取训练、饮食、身体数据、照片和趋势后，才调整分化、容量、休息、热量或宏量。">Setup -> evidence -> review -> apply. AI changes split, volume, rest, calories, or macros only after reading training, food, metrics, photos, and trends together.</p>
           </div>
 
+          <div class="quick-ai-setup-card" data-component="QuickAiSetupCard">
+            <div class="section-head">
+              <p class="eyebrow" data-en="QUICK AI SETUP" data-zh="快速 AI 设置">QUICK AI SETUP</p>
+              <h2 data-en="Quick AI Setup" data-zh="快速 AI 设置">Quick AI Setup</h2>
+              <p class="subtle" data-en="API key quick setup for daily review, food photos, form checks, and equipment recognition." data-zh="快速填写 API key，用于每日复盘、食物照片、动作检查和器械识别。">API key quick setup for daily review, food photos, form checks, and equipment recognition.</p>
+            </div>
+            <div class="quick-ai-setup-grid">
+              <div class="metric"><span class="label" data-en="API status" data-zh="API 状态">API status</span><span class="value" data-en="Missing setup" data-zh="缺少设置">Missing setup</span></div>
+              <div class="metric"><span class="label" data-en="API key" data-zh="API key">API key</span><span class="value" data-en="Missing" data-zh="未填写">Missing</span></div>
+              <div class="metric"><span class="label" data-en="OpenAI-compatible endpoint" data-zh="OpenAI 兼容接口">OpenAI-compatible endpoint</span><span class="value">/v1</span></div>
+              <div class="metric"><span class="label" data-en="Model" data-zh="模型">Model</span><span class="value">gpt-4.1-mini</span></div>
+            </div>
+            <div class="quick-ai-fields">
+              <div class="field"><label for="quick-ai-key" data-en="API key" data-zh="API key">API key</label><input id="quick-ai-key" type="password" value="" placeholder="sk-..."></div>
+              <div class="field"><label for="quick-ai-base-url" data-en="Base URL" data-zh="接口地址">Base URL</label><input id="quick-ai-base-url" value="https://api.openai.com/v1"></div>
+              <div class="field"><label for="quick-ai-model" data-en="Model" data-zh="模型">Model</label><input id="quick-ai-model" value="gpt-4.1-mini"></div>
+            </div>
+            <div class="chip-row">
+              <span class="chip active" data-en="Save API key, base URL, and model" data-zh="保存 API key、接口地址和模型">Save API key, base URL, and model</span>
+              <span class="chip active" data-en="OpenAI-compatible endpoint" data-zh="OpenAI 兼容接口">OpenAI-compatible endpoint</span>
+              <span class="chip active" data-en="快速填写 API key" data-zh="快速填写 API key">快速填写 API key</span>
+            </div>
+            <p class="subtle" data-en="Save API key, base URL, and model here; the app uses them only when you run AI review, photo analysis, food estimates, or plan improvement." data-zh="在这里保存 API key、接口地址和模型；App 只会在运行 AI 复盘、照片分析、餐食估算或计划改进时使用。">Save API key, base URL, and model here; the app uses them only when you run AI review, photo analysis, food estimates, or plan improvement.</p>
+          </div>
+
           <div class="section glass one-tap-hero ai-hero">
             <div class="section-head">
               <h2 data-en="AI Review Flow Coach" data-zh="AI 复盘流程教练">AI Review Flow Coach</h2>
@@ -5474,6 +5549,12 @@
       });
     }
 
+    function scrollActivePanelIntoView() {
+      const activePanel = document.querySelector(".panel.active");
+      if (!activePanel) return;
+      activePanel.scrollIntoView({ block: "start", inline: "nearest", behavior: "auto" });
+    }
+
     function activateTab(tabName) {
       currentTab = tabAliases[tabName] || tabName;
       document.querySelectorAll(".tab").forEach((button) => {
@@ -5484,7 +5565,7 @@
       });
       document.getElementById("page-title").textContent =
         titles[currentLang][currentTab] || uiCopy[currentLang].fallbackTitle;
-      document.querySelector(".app-scroll").scrollTop = 0;
+      scrollActivePanelIntoView();
     }
 
     document.querySelectorAll("[data-lang-option]").forEach((button) => {
