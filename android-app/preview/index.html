@@ -365,6 +365,7 @@
       cursor: pointer;
     }
 
+    .first-run-quick-start-card,
     .today-command-strip,
     .global-next-strip {
       margin: -2px 0 12px;
@@ -424,6 +425,50 @@
       background:
         linear-gradient(135deg, rgba(0, 122, 255, 0.10), rgba(52, 199, 89, 0.08) 56%, rgba(255, 255, 255, 0.68)),
         rgba(255, 255, 255, 0.72);
+    }
+
+    .first-run-quick-start-card {
+      gap: 11px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(0, 122, 255, 0.10) 52%, rgba(52, 199, 89, 0.10)),
+        rgba(255, 255, 255, 0.74);
+    }
+
+    .quick-start-step-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .quick-start-step {
+      min-height: 56px;
+      padding: 9px;
+      border: 1px solid rgba(209, 209, 214, 0.62);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(14px) saturate(145%);
+    }
+
+    .quick-start-step strong {
+      display: block;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .quick-start-step span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+      font-weight: 650;
+    }
+
+    .setup-progress-receipt {
+      padding: 10px;
+      border: 1px solid rgba(0, 122, 255, 0.20);
+      border-radius: var(--radius);
+      background: rgba(238, 247, 255, 0.72);
     }
 
     .daily-launch-closeout-card {
@@ -2885,6 +2930,34 @@
             <span class="date-pill">Jun 8</span>
           </div>
         </header>
+
+        <section class="first-run-quick-start-card" data-component="FirstRunSetupCard" aria-label="First-run quick start">
+          <div class="global-next-head">
+            <div>
+              <p class="eyebrow" data-en="FIRST RUN QUICK START" data-zh="一键新手启动">FIRST RUN QUICK START</p>
+              <h2 class="global-next-title" data-en="First-run quick start" data-zh="一键新手启动">First-run quick start</h2>
+              <p class="subtle" data-en="3-minute setup: goal, split, food, health, AI key. Finish this once, then follow the daily command." data-zh="三分钟设置：目标、分化、饮食、健康、AI key。先完成一次，之后每天跟随今日指挥台。">3-minute setup: goal, split, food, health, AI key. Finish this once, then follow the daily command.</p>
+            </div>
+            <button class="global-next-button" type="button" data-tab-target="training" data-en="Start with recommended setup" data-zh="使用推荐设置开始">Start with recommended setup</button>
+          </div>
+          <div class="setup-progress-receipt">
+            <p class="subtle" data-en="Goal, split, food, health, AI key" data-zh="目标、分化、饮食、健康、AI key">Goal, split, food, health, AI key</p>
+            <div class="progress"><span style="width: 60%"></span></div>
+          </div>
+          <div class="quick-start-step-grid" aria-label="3-minute setup">
+            <div class="quick-start-step"><strong data-en="Goal" data-zh="目标">Goal</strong><span data-en="IFBB-style physique" data-zh="IFBB 风格体型">IFBB-style physique</span></div>
+            <div class="quick-start-step"><strong data-en="Split" data-zh="分化">Split</strong><span data-en="4-Day Upper/Lower" data-zh="四分化上下肢">4-Day Upper/Lower</span></div>
+            <div class="quick-start-step"><strong data-en="Food" data-zh="饮食">Food</strong><span data-en="2650 kcal / 185 g" data-zh="2650 kcal / 185 g">2650 kcal / 185 g</span></div>
+            <div class="quick-start-step"><strong data-en="Health" data-zh="健康">Health</strong><span data-en="Connect once" data-zh="授权一次">Connect once</span></div>
+            <div class="quick-start-step"><strong data-en="AI key" data-zh="AI key">AI key</strong><span data-en="Local only" data-zh="仅本地保存">Local only</span></div>
+          </div>
+          <p class="subtle global-next-helper" data-en="Open profile, connect health, set API, then the app can choose the first plan, meal target, and review gate." data-zh="打开档案、连接健康数据、设置 API，然后 App 就能选择第一个计划、饮食目标和复盘闸门。">Open profile, connect health, set API, then the app can choose the first plan, meal target, and review gate.</p>
+          <div class="chip-row">
+            <span class="chip active">FirstRunSetupCard</span>
+            <span class="chip active" data-en="3-minute setup" data-zh="三分钟设置">3-minute setup</span>
+            <span class="chip active" data-en="Open profile, connect health, set API" data-zh="打开档案、连接健康数据、设置 API">Open profile, connect health, set API</span>
+          </div>
+        </section>
 
         <section class="today-command-strip" aria-label="Today command">
           <div class="global-next-head">

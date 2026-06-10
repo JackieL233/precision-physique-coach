@@ -432,6 +432,14 @@ private fun GlobalNextActionStrip(
     )
     var showDailyEvidenceDetails by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        FirstRunSetupCard(
+            state = state,
+            language = language,
+            onOpenPlan = onOpenPlan,
+            onOpenNutrition = onOpenNutrition,
+            onOpenMetrics = onOpenMetrics,
+            onOpenAi = onOpenAi
+        )
         TodayCommandStrip(steps = steps, language = language)
         DailyCoachDecisionReceiptCard(
             state = state,
@@ -466,6 +474,97 @@ private fun GlobalNextActionStrip(
             )
         }
     }
+}
+
+@Composable
+private fun FirstRunSetupCard(
+    state: CoachUiState,
+    language: AppLanguage,
+    onOpenPlan: () -> Unit,
+    onOpenNutrition: () -> Unit,
+    onOpenMetrics: () -> Unit,
+    onOpenAi: () -> Unit
+) {
+    val profile = state.athleteProfile
+    val profileReady = profile.primaryGoal.isNotBlank() &&
+        profile.currentPhase.isNotBlank() &&
+        profile.availableEquipment.isNotBlank() &&
+        profile.weeklyTrainingDays in 1..7
+    val planReady = state.trainingPlan.days.any { it.exercises.isNotEmpty() }
+    val foodReady = state.dailyLog.targets.calories > 0 && state.dailyLog.targets.protein > 0
+    val healthReady = state.healthSnapshot.permissionsGranted || state.dailyLog.metrics.healthSyncedAt.isNotBlank()
+    val aiReady = state.settings.isConfigured()
+    val readyCount = listOf(profileReady, planReady, foodReady, healthReady, aiReady).count { it }
+
+    SectionCard(
+        title = language.t("First-run quick start", "一键新手启动"),
+        subtitle = language.t(
+            "3-minute setup: goal, split, food, health, AI key. Finish this once, then follow the daily command.",
+            "三分钟设置：目标、分化、饮食、健康、AI key。先完成一次，之后每天跟随今日指挥台。"
+        )
+    ) {
+        Text(
+            text = language.t("FIRST RUN QUICK START", "一键新手启动"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        MetricGrid(
+            metrics = listOf(
+                language.t("3-minute setup", "三分钟设置") to "$readyCount/5",
+                language.t("Goal, split, food, health, AI key", "目标、分化、饮食、健康、AI key") to
+                    language.t("one-time setup", "一次设置"),
+                language.t("Recommended split", "推荐分化") to recommendedPlanTemplateTitle(profile, language),
+                language.t("AI", "AI") to if (aiReady) language.t("Ready", "就绪") else language.t("API key needed", "需要 API key")
+            )
+        )
+        Text(
+            text = language.t("Start with recommended setup", "使用推荐设置开始"),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = language.t(
+                "Open profile, connect health, set API, then the app can choose the first plan, meal target, and review gate.",
+                "打开档案、连接健康数据、设置 API，然后 App 就能选择第一个计划、饮食目标和复盘闸门。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        DataChipGrid(
+            items = listOf(
+                "FirstRunSetupCard",
+                language.t("FIRST RUN QUICK START", "一键新手启动"),
+                language.t("First-run quick start", "一键新手启动"),
+                language.t("3-minute setup", "三分钟设置"),
+                language.t("Goal, split, food, health, AI key", "目标、分化、饮食、健康、AI key"),
+                language.t("Start with recommended setup", "使用推荐设置开始"),
+                language.t("Open profile, connect health, set API", "打开档案、连接健康数据、设置 API")
+            )
+        )
+        Button(onClick = onOpenPlan, modifier = Modifier.fillMaxWidth()) {
+            Text(language.t("Start with recommended setup", "使用推荐设置开始"))
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(onClick = onOpenNutrition, modifier = Modifier.weight(1f)) {
+                Text(language.t("Food", "饮食"))
+            }
+            TextButton(onClick = onOpenMetrics, modifier = Modifier.weight(1f)) {
+                Text(language.t("Connect health", "连接健康"))
+            }
+            TextButton(onClick = onOpenAi, modifier = Modifier.weight(1f)) {
+                Text(language.t("Set API", "设置 API"))
+            }
+        }
+    }
+}
+
+private fun recommendedPlanTemplateTitle(profile: AthleteProfile, language: AppLanguage): String {
+    val templateId = recommendedPlanTemplateId(profile)
+    return trainingPlanTemplates()
+        .firstOrNull { it.id == templateId }
+        ?.localizedTitle(language)
+        ?: language.t("4-Day Upper/Lower", "四分化上下肢")
 }
 
 @Composable

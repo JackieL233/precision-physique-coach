@@ -8,6 +8,7 @@ The preview mirrors the current Android app structure:
 
 - Four primary zones in the bottom navigation: training / nutrition / metrics / ai, shown as 训练 / 饮食 / 身体数据 / AI in Chinese
 - Semantic bottom-navigation icons for training, nutrition, body metrics, and AI instead of letter placeholders
+- First-run quick start / 一键新手启动 with `FirstRunSetupCard`, `3-minute setup`, `Goal, split, food, health, AI key`, `Start with recommended setup`, and `Open profile, connect health, set API` before the daily command becomes the normal workflow
 - Today Flow Coach is folded into the AI daily overview/review layer with one next best action, daily loop progress, readiness, training sets, nutrition gap, AI gate, and a single primary button
 - EN/中文 language switch preview for the app shell and core training flow, implemented with `data-en`, `data-zh`, and `setLanguage`
 - Daily detail layers that keep setup, checklist, evidence, trend, and tomorrow planning available without crowding the first screen
