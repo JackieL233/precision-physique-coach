@@ -653,6 +653,52 @@
       line-height: 1.24;
     }
 
+    .training-autopilot-card {
+      position: relative;
+      overflow: hidden;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(18px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        0 12px 32px rgba(29, 29, 31, 0.08);
+    }
+
+    .training-autopilot-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 159, 10, 0.12), rgba(0, 122, 255, 0.08) 56%, rgba(255, 255, 255, 0.18));
+      pointer-events: none;
+    }
+
+    .training-autopilot-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .training-step-row {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid rgba(209, 209, 214, 0.66);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.70);
+    }
+
+    .training-step-row strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.24;
+    }
+
     .metrics-autopilot-card {
       position: relative;
       overflow: hidden;
@@ -2936,6 +2982,43 @@
         </section>
 
         <section class="panel active" data-panel="training" aria-label="Training">
+          <div class="training-autopilot-card" data-component="TrainingAutopilotCard">
+            <div class="section-head">
+              <p class="eyebrow" data-en="TRAINING AUTOPILOT" data-zh="训练自动教练">TRAINING AUTOPILOT</p>
+              <h2 data-en="Training Autopilot" data-zh="训练自动教练">Training Autopilot</h2>
+              <p class="subtle" data-en="One-screen training loop: follow the planned set, log evidence, rest correctly, then close out for AI." data-zh="一屏训练闭环：跟随计划组、记录证据、按处方休息，然后收尾交给 AI。">One-screen training loop: follow the planned set, log evidence, rest correctly, then close out for AI.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label" data-en="Loop" data-zh="闭环">Loop</span><span class="value" data-en="Plan -> Warm up -> Work sets -> Rest -> Closeout" data-zh="计划 -> 热身 -> 正式组 -> 休息 -> 收尾">Plan -> Warm up -> Work sets -> Rest -> Closeout</span></div>
+              <div class="metric"><span class="label" data-en="Current training step" data-zh="当前训练步骤">Current training step</span><span class="value" data-en="Work sets" data-zh="正式组">Work sets</span></div>
+              <div class="metric"><span class="label" data-en="Next set target" data-zh="下一组目标">Next set target</span><span class="value">Incline Smith Press 3/4 | 82.5 kg | 6-10 | RIR 2</span></div>
+              <div class="metric"><span class="label" data-en="Rest prescription" data-zh="休息处方">Rest prescription</span><span class="value">165s</span></div>
+            </div>
+            <div class="progress green"><span style="width:44%"></span></div>
+            <div class="training-step-row">
+              <div class="sync-icon">AI</div>
+              <div>
+                <strong data-en="Next training action" data-zh="下一步训练动作">Next training action</strong>
+                <p class="subtle" data-en="Log the next working set, then start rest." data-zh="记录下一组，并开始休息倒计时。">Log the next working set, then start rest.</p>
+              </div>
+              <button class="button primary" type="button" data-en="Form" data-zh="动作">Form</button>
+            </div>
+            <div class="coach-lane">
+              <span data-en="Plan" data-zh="计划">Plan</span>
+              <span data-en="Warm up" data-zh="热身">Warm up</span>
+              <span class="active" data-en="Work sets" data-zh="正式组">Work sets</span>
+              <span data-en="Rest" data-zh="休息">Rest</span>
+              <span data-en="Closeout" data-zh="收尾">Closeout</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label" data-en="Sets" data-zh="组数">Sets</span><span class="value">8/18</span></div>
+              <div class="metric"><span class="label" data-en="Readiness" data-zh="准备度">Readiness</span><span class="value">74</span></div>
+              <div class="metric"><span class="label" data-en="Quality" data-zh="质量">Quality</span><span class="value">82</span></div>
+              <div class="metric"><span class="label" data-en="Closeout" data-zh="收尾">Closeout</span><span class="value">63</span></div>
+            </div>
+            <p class="subtle" data-en="AI updates the next workout only after set logs, rest quality, readiness, pain flags, and closeout evidence are linked." data-zh="AI 只会在组记录、休息质量、准备状态、疼痛信号和收尾证据联动后，更新下一次训练。">AI updates the next workout only after set logs, rest quality, readiness, pain flags, and closeout evidence are linked.</p>
+          </div>
+
           <div class="section glass one-tap-hero">
             <div class="section-head">
               <h2 data-en="Workout Flow Coach" data-zh="训练执行教练">Workout Flow Coach</h2>

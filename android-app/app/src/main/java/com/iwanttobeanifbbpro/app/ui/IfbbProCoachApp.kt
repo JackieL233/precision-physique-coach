@@ -6222,6 +6222,141 @@ private fun WorkoutFlowCoachCard(
 }
 
 @Composable
+private fun TrainingAutopilotCard(
+    log: DailyLog,
+    readinessBuilder: TrainingReadinessBuilder,
+    nextSet: NextSetCoach,
+    restPrescription: AiRestPrescription,
+    qualityDashboard: SessionQualityDashboard,
+    closeoutCoach: TrainingCloseoutCoach,
+    language: AppLanguage,
+    isLoading: Boolean,
+    onOpenPlan: () -> Unit,
+    onMarkTrainingComplete: () -> Unit,
+    onRunDailyReview: () -> Unit,
+    onPickTrainingPhoto: (PhotoEvidenceType, String) -> Unit
+) {
+    val totalSets = log.plannedHardSets()
+    val completedSets = log.completedHardSets()
+    val hasWorkout = log.trainingSession.exercises.isNotEmpty() && totalSets > 0
+    val allSetsComplete = hasWorkout && completedSets >= totalSets
+    val sessionMarkedComplete = log.trainingSession.completed
+    val currentStep = when {
+        !hasWorkout -> language.t("Plan", "计划")
+        completedSets == 0 -> language.t("Warm up", "热身")
+        !allSetsComplete -> language.t("Work sets", "正式组")
+        !sessionMarkedComplete -> language.t("Closeout", "收尾")
+        else -> language.t("Review", "复盘")
+    }
+    val nextSetTarget = if (nextSet.hasActiveSet) {
+        val load = nextSet.plannedLoadKg?.let { "${formatDecimal(it)} kg" } ?: language.t("planned load", "计划重量")
+        "${nextSet.currentExerciseName} ${nextSet.setNumber}/${nextSet.totalSets} | $load | ${nextSet.targetReps} | RIR ${nextSet.plannedRir?.let { formatDecimal(it) } ?: "--"}"
+    } else {
+        language.t("No active set", "暂无当前组")
+    }
+    val restLabel = if (restPrescription.recommendedRestSeconds > 0) {
+        "${restPrescription.recommendedRestSeconds}s (${restPrescription.statusLabel})"
+    } else {
+        language.t("After a set is logged", "记录一组后生成")
+    }
+    val nextTrainingAction: String
+    val actionLabel: String
+    val action: () -> Unit
+    when {
+        !hasWorkout -> {
+            nextTrainingAction = language.t("Apply today's plan first", "先应用今天的训练计划")
+            actionLabel = language.t("Open training plan", "打开训练计划")
+            action = onOpenPlan
+        }
+        !allSetsComplete -> {
+            nextTrainingAction = language.t("Log the next working set, then start rest", "记录下一组并开始休息")
+            actionLabel = language.t("Form check", "动作检查")
+            action = {
+                onPickTrainingPhoto(
+                    PhotoEvidenceType.TRAINING_FORM,
+                    "Training Autopilot form check for current working set, target-muscle stimulus, pain flags, and rest prescription context."
+                )
+            }
+        }
+        !sessionMarkedComplete -> {
+            nextTrainingAction = language.t("Mark workout complete and close out", "标记训练完成并收尾")
+            actionLabel = language.t("Mark complete", "标记完成")
+            action = onMarkTrainingComplete
+        }
+        else -> {
+            nextTrainingAction = language.t("Run AI review after food and metrics", "饮食和身体数据就绪后运行 AI 复盘")
+            actionLabel = language.t("Run review", "运行复盘")
+            action = onRunDailyReview
+        }
+    }
+    SectionCard(
+        title = language.t("Training Autopilot", "训练自动教练"),
+        subtitle = language.t(
+            "One-screen training loop: follow the planned set, log evidence, rest correctly, then close out for AI.",
+            "一屏训练闭环：跟随计划组、记录证据、按处方休息，然后收尾交给 AI。"
+        )
+    ) {
+        Text(
+            text = language.t("TRAINING AUTOPILOT", "训练自动教练"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        MetricGrid(
+            metrics = listOf(
+                language.t("Loop", "闭环") to language.t("Plan -> Warm up -> Work sets -> Rest -> Closeout", "计划 -> 热身 -> 正式组 -> 休息 -> 收尾"),
+                language.t("Current training step", "当前训练步骤") to currentStep,
+                language.t("Next set target", "下一组目标") to nextSetTarget,
+                language.t("Rest prescription", "休息处方") to restLabel
+            )
+        )
+        LinearProgressIndicator(
+            progress = { if (totalSets > 0) completedSets.toFloat() / totalSets.toFloat() else 0f },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            color = IfbbProGlassStrongSurface
+        ) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(language.t("Next training action", "下一步训练动作"), fontWeight = FontWeight.SemiBold)
+                Text(nextTrainingAction, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = language.t(
+                        "AI updates the next workout only after set logs, rest quality, readiness, pain flags, and closeout evidence are linked.",
+                        "AI 只会在组记录、休息质量、准备状态、疼痛信号和收尾证据联动后，更新下一次训练。"
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Button(onClick = action, enabled = !isLoading, modifier = Modifier.fillMaxWidth()) {
+                    Text(actionLabel)
+                }
+            }
+        }
+        DataChipGrid(
+            items = listOf(
+                language.t("Plan", "计划"),
+                language.t("Warm up", "热身"),
+                language.t("Work sets", "正式组"),
+                language.t("Rest", "休息"),
+                language.t("Closeout", "收尾")
+            )
+        )
+        MetricGrid(
+            metrics = listOf(
+                language.t("Sets", "组数") to "$completedSets/$totalSets",
+                language.t("Readiness", "准备度") to readinessBuilder.readinessScore.toString(),
+                language.t("Quality", "质量") to qualityDashboard.qualityScore.toString(),
+                language.t("Closeout", "收尾") to closeoutCoach.closeoutScore.toString()
+            )
+        )
+    }
+}
+
+@Composable
 private fun TrainingPage(
     state: CoachUiState,
     onFocusChange: (String) -> Unit,
@@ -6262,6 +6397,20 @@ private fun TrainingPage(
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        TrainingAutopilotCard(
+            log = state.dailyLog,
+            readinessBuilder = readinessBuilder,
+            nextSet = nextSet,
+            restPrescription = restPrescription,
+            qualityDashboard = qualityDashboard,
+            closeoutCoach = closeoutCoach,
+            language = language,
+            isLoading = state.isLoading,
+            onOpenPlan = onOpenPlan,
+            onMarkTrainingComplete = onCompletedChange,
+            onRunDailyReview = onRunDailyReview,
+            onPickTrainingPhoto = onPickTrainingPhoto
+        )
         WorkoutFlowCoachCard(
             log = state.dailyLog,
             readinessBuilder = readinessBuilder,

@@ -16,6 +16,7 @@ The preview mirrors the current Android app structure:
 - Quick Setup Gate / 三步起始设置 with a beginner-friendly Goal / Days / Equipment picker, `Recommended split from setup`, and AI setup context before the user edits the full athlete profile
 - Training zone plan entry with `Plan Flow Coach`, `NEXT PLAN ACTION`, `Apply today`, `Recommended split`, 3/4/5-day split choices, template and training shortcuts, and selected-day visual-map readiness before weekly-plan editing layers
 - AI Plan Adjustment Proposal on the plan entry, turning linked AI evidence into a next-week template proposal, split action, volume action, nutrition guardrail, recovery guardrail, and `Apply AI split template` action
+- Training Autopilot / 训练自动教练 on Training, showing the Plan -> Warm up -> Work sets -> Rest -> Closeout loop, current training step, next set target, rest prescription, next training action, and AI evidence linkage before next-workout changes
 - One-tap Training preview with `Workout Flow Coach`, `one-tap-hero`, `Complete set + start rest`, lightweight `action-shortcuts`, and an exercise image slot before the professional analysis layers
 - Nutrition Autopilot / 饮食自动教练 on Nutrition, showing the Eat -> Capture -> Confirm -> Review loop, current meal target, macro gaps, photo confidence, next nutrition action, and AI linkage before calorie or macro changes
 - One-tap Nutrition preview with `Meal Flow Coach`, `NEXT MEAL ACTION`, food photo, `Describe meal`, `Use AI estimate`, a remaining macro summary, and an AI nutrition review path before the nutrition analysis layers
