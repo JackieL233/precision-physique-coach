@@ -7736,6 +7736,153 @@ private fun MetricsFlowCoachCard(
 }
 
 @Composable
+private fun MetricsAutopilotCard(
+    state: CoachUiState,
+    onConnectHealthData: () -> Unit,
+    onSyncHealthData: () -> Unit,
+    onPickPhysiquePhoto: () -> Unit,
+    onOpenDetails: () -> Unit
+) {
+    val language = state.appLanguage
+    val log = state.dailyLog
+    val metrics = log.metrics
+    val snapshot = state.healthSnapshot
+    val recovery = recoveryGuidance(log, state.recentLogs)
+    val physique = physiqueMeasurementSummary(log, state.recentLogs)
+    val physiquePhotoCount = log.photoEvidence.count { it.type == PhotoEvidenceType.PHYSIQUE }
+    val trendDays = state.recentLogs.count {
+        it.metrics.bodyWeightKg != null || it.metrics.waistCm != null || it.metrics.sleepHours != null
+    }.coerceAtMost(7)
+    val trendConfidence = when {
+        trendDays >= 5 && metrics.waistCm != null -> language.t("High: 5+ days + waist", "高：5 天以上 + 腰围")
+        trendDays >= 3 -> language.t("Medium: trend forming", "中：趋势正在形成")
+        metrics.bodyWeightKg != null || snapshot.bodyWeightKg != null -> language.t("Low: single-day signal", "低：单日信号")
+        else -> language.t("Missing: log body data", "缺失：先记录身体数据")
+    }
+    val healthPermission = when {
+        state.isHealthSyncing -> language.t("Refreshing", "刷新中")
+        snapshot.permissionsGranted -> language.t("Authorized", "已授权")
+        snapshot.available -> language.t("Needs permission", "需要授权")
+        else -> language.t("Manual fallback", "手动补录")
+    }
+    val sleepAndRecovery = "${formatOptional(metrics.sleepHours ?: snapshot.sleepHours, "h")} / ${recovery.readinessScore}"
+    val nextMetricsAction: String
+    val actionLabel: String
+    val actionEnabled: Boolean
+    val action: () -> Unit
+    when {
+        state.isHealthSyncing -> {
+            nextMetricsAction = language.t("Wait for health refresh", "等待健康数据刷新")
+            actionLabel = language.t("Refreshing", "刷新中")
+            actionEnabled = false
+            action = {}
+        }
+        !snapshot.permissionsGranted -> {
+            nextMetricsAction = language.t("Grant health permission", "授权健康数据")
+            actionLabel = language.t("Connect health data", "连接健康数据")
+            actionEnabled = true
+            action = onConnectHealthData
+        }
+        metrics.healthSyncedAt.isBlank() -> {
+            nextMetricsAction = language.t("Sync today's metrics", "同步今天的数据")
+            actionLabel = language.t("Sync today", "同步今天")
+            actionEnabled = true
+            action = onSyncHealthData
+        }
+        metrics.bodyWeightKg == null || metrics.waistCm == null -> {
+            nextMetricsAction = language.t("Add weight and waist", "补充体重和腰围")
+            actionLabel = language.t("Open fields", "打开字段")
+            actionEnabled = true
+            action = onOpenDetails
+        }
+        physiquePhotoCount == 0 -> {
+            nextMetricsAction = language.t("Add progress photo", "添加体型照片")
+            actionLabel = language.t("Progress photo", "体型照片")
+            actionEnabled = true
+            action = onPickPhysiquePhoto
+        }
+        else -> {
+            nextMetricsAction = language.t("Review trend before AI changes", "AI 调整前查看趋势")
+            actionLabel = language.t("Review details", "查看细节")
+            actionEnabled = true
+            action = onOpenDetails
+        }
+    }
+    SectionCard(
+        title = language.t("Metrics Autopilot", "身体数据自动教练"),
+        subtitle = language.t(
+            "One screen body-data loop: sync health data, read the trend, attach physique context, then let AI review.",
+            "一屏身体数据闭环：同步健康数据、读取趋势、补充体型上下文，再交给 AI 复盘。"
+        )
+    ) {
+        Text(
+            text = language.t("METRICS AUTOPILOT", "身体数据自动教练"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        MetricGrid(
+            metrics = listOf(
+                language.t("Loop", "闭环") to language.t("Sync -> Trend -> Photo -> Review", "同步 -> 趋势 -> 照片 -> 复盘"),
+                language.t("Health permission", "健康权限") to healthPermission,
+                language.t("Trend confidence", "趋势置信度") to trendConfidence,
+                language.t("Sleep and recovery", "睡眠与恢复") to sleepAndRecovery
+            )
+        )
+        LinearProgressIndicator(
+            progress = { ((trendDays.coerceAtLeast(1) / 7f) + (recovery.readinessScore / 100f)) / 2f },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            color = IfbbProGlassStrongSurface
+        ) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(language.t("Next metrics action", "下一步身体数据动作"), fontWeight = FontWeight.SemiBold)
+                Text(nextMetricsAction, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = language.t(
+                        "AI should not change training or calories until body trend, sleep/recovery, and photo/measurement evidence are linked.",
+                        "身体趋势、睡眠恢复、照片和围度证据联动前，AI 不应轻易改变训练或热量。"
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Button(onClick = action, enabled = actionEnabled, modifier = Modifier.fillMaxWidth()) {
+                    Text(actionLabel)
+                }
+            }
+        }
+        DataChipGrid(
+            items = listOf(
+                language.t("Sync", "同步"),
+                language.t("Trend", "趋势"),
+                language.t("Photo", "照片"),
+                language.t("Review", "复盘")
+            )
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            ElevatedButton(onClick = onSyncHealthData, enabled = !state.isHealthSyncing, modifier = Modifier.weight(1f)) {
+                Text(language.t("Refresh health", "刷新健康"))
+            }
+            TextButton(onClick = onPickPhysiquePhoto, modifier = Modifier.weight(1f)) {
+                Text(language.t("Progress photo", "体型照片"))
+            }
+        }
+        Text(
+            text = language.t(
+                "AI uses health permission status, imported sleep, body weight, waist trend, recovery score, and progress photos as one evidence bundle.",
+                "AI 会把健康权限状态、导入睡眠、体重、腰围趋势、恢复评分和体型照片作为同一组证据。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
 private fun HealthSyncReceiptCard(
     state: CoachUiState,
     onConnectHealthData: () -> Unit,
@@ -7873,6 +8020,13 @@ private fun MetricsPage(
     val language = state.appLanguage
     var showMetricsDetails by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        MetricsAutopilotCard(
+            state = state,
+            onConnectHealthData = onConnectHealthData,
+            onSyncHealthData = onSyncHealthData,
+            onPickPhysiquePhoto = onPickPhysiquePhoto,
+            onOpenDetails = { showMetricsDetails = true }
+        )
         MetricsFlowCoachCard(
             state = state,
             showDetails = showMetricsDetails,

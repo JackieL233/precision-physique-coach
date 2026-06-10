@@ -653,6 +653,52 @@
       line-height: 1.24;
     }
 
+    .metrics-autopilot-card {
+      position: relative;
+      overflow: hidden;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(18px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        0 12px 32px rgba(29, 29, 31, 0.08);
+    }
+
+    .metrics-autopilot-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(0, 122, 255, 0.12), rgba(52, 199, 89, 0.10) 56%, rgba(255, 255, 255, 0.18));
+      pointer-events: none;
+    }
+
+    .metrics-autopilot-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .metrics-step-row {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid rgba(209, 209, 214, 0.66);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.70);
+    }
+
+    .metrics-step-row strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.24;
+    }
+
     .health-sync-receipt-card {
       position: relative;
       overflow: hidden;
@@ -3714,6 +3760,40 @@
         </section>
 
         <section class="panel" data-panel="metrics" aria-label="Metrics">
+          <div class="metrics-autopilot-card" data-component="MetricsAutopilotCard">
+            <div class="section-head">
+              <p class="eyebrow" data-en="METRICS AUTOPILOT" data-zh="身体数据自动教练">METRICS AUTOPILOT</p>
+              <h2 data-en="Metrics Autopilot" data-zh="身体数据自动教练">Metrics Autopilot</h2>
+              <p class="subtle" data-en="One screen body-data loop: sync health data, read the trend, attach physique context, then let AI review." data-zh="一屏身体数据闭环：同步健康数据、读取趋势、补充体型上下文，再交给 AI 复盘。">One screen body-data loop: sync health data, read the trend, attach physique context, then let AI review.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label" data-en="Loop" data-zh="闭环">Loop</span><span class="value" data-en="Sync -> Trend -> Photo -> Review" data-zh="同步 -> 趋势 -> 照片 -> 复盘">Sync -> Trend -> Photo -> Review</span></div>
+              <div class="metric"><span class="label" data-en="Health permission" data-zh="健康权限">Health permission</span><span class="value" data-en="Authorized" data-zh="已授权">Authorized</span></div>
+              <div class="metric"><span class="label" data-en="Trend confidence" data-zh="趋势置信度">Trend confidence</span><span class="value" data-en="High: 5+ days + waist" data-zh="高：5 天以上 + 腰围">High: 5+ days + waist</span></div>
+              <div class="metric"><span class="label" data-en="Sleep and recovery" data-zh="睡眠与恢复">Sleep and recovery</span><span class="value">7.2 h / 71</span></div>
+            </div>
+            <div class="progress green"><span style="width:78%"></span></div>
+            <div class="metrics-step-row">
+              <div class="sync-icon">AI</div>
+              <div>
+                <strong data-en="Next metrics action" data-zh="下一步身体数据动作">Next metrics action</strong>
+                <p class="subtle" data-en="Review trend before AI changes training or calories." data-zh="AI 调整训练或热量前，先查看趋势证据。">Review trend before AI changes training or calories.</p>
+              </div>
+              <button class="button primary" type="button" data-en="Review" data-zh="查看">Review</button>
+            </div>
+            <div class="coach-lane">
+              <span data-en="Sync" data-zh="同步">Sync</span>
+              <span data-en="Trend" data-zh="趋势">Trend</span>
+              <span data-en="Photo" data-zh="照片">Photo</span>
+              <span data-en="Review" data-zh="复盘">Review</span>
+            </div>
+            <div class="action-row">
+              <button class="button primary" type="button" data-en="Refresh health" data-zh="刷新健康">Refresh health</button>
+              <button class="button ghost" type="button" data-en="Progress photo" data-zh="体型照片">Progress photo</button>
+            </div>
+            <p class="subtle" data-en="AI uses health permission status, imported sleep, body weight, waist trend, recovery score, and progress photos as one evidence bundle." data-zh="AI 会把健康权限状态、导入睡眠、体重、腰围趋势、恢复评分和体型照片作为同一组证据。">AI uses health permission status, imported sleep, body weight, waist trend, recovery score, and progress photos as one evidence bundle.</p>
+          </div>
+
           <div class="section glass one-tap-hero metrics-hero">
             <div class="section-head">
               <h2 data-en="Metrics Flow Coach" data-zh="身体数据流程教练">Metrics Flow Coach</h2>
