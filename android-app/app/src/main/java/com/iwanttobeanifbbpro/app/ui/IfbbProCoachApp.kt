@@ -3901,6 +3901,108 @@ private fun MealLoggingCoachCard(
 }
 
 @Composable
+private fun NutritionAutopilotCard(
+    log: DailyLog,
+    language: AppLanguage,
+    onPrefillMeal: (NextMealBuilder) -> Unit,
+    onPickMealPhoto: (String) -> Unit,
+    onOpenAi: () -> Unit
+) {
+    val pacing = log.nutritionPacing()
+    val builder = log.nextMealBuilder()
+    val mealPhotoCount = log.photoEvidence.count { it.type == PhotoEvidenceType.MEAL || it.type == PhotoEvidenceType.MENU_LABEL }
+    val photoConfidence = when {
+        mealPhotoCount > 0 && log.meals.isNotEmpty() -> language.t("High: photo + logged meal", "高：照片 + 已记录餐食")
+        mealPhotoCount > 0 -> language.t("Medium: photo ready", "中：已有照片")
+        log.meals.isNotEmpty() -> language.t("Medium: text log only", "中：仅文字记录")
+        else -> language.t("Low: capture first", "低：先拍照或描述")
+    }
+    val nextNutritionAction = when {
+        log.meals.isEmpty() && mealPhotoCount == 0 -> language.t("Capture first meal", "记录第一餐")
+        pacing.proteinRemaining > 30 -> language.t("Close protein gap", "补齐蛋白质缺口")
+        pacing.caloriesRemaining < -150 -> language.t("Keep next meal lean", "下一餐保持低脂清淡")
+        mealPhotoCount == 0 -> language.t("Add photo if portions are uncertain", "份量不确定就加照片")
+        else -> language.t("Confirm and review with AI", "确认后交给 AI 复盘")
+    }
+    SectionCard(
+        title = language.t("Nutrition Autopilot", "饮食自动教练"),
+        subtitle = language.t(
+            "One-tap meal loop: eat the target, capture uncertainty, confirm the log, then let AI adjust tomorrow.",
+            "一键式饮食闭环：按目标吃、拍下不确定份量、确认记录，再让 AI 调整明天。"
+        )
+    ) {
+        Text(
+            text = language.t("NUTRITION AUTOPILOT", "饮食自动教练"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        MetricGrid(
+            metrics = listOf(
+                language.t("Loop", "闭环") to language.t("Eat -> Capture -> Confirm -> Review", "吃 -> 拍照/描述 -> 确认 -> 复盘"),
+                language.t("Current meal target", "当前餐目标") to builder.localizedTitle(language),
+                language.t("Macro gaps", "宏量缺口") to "P ${formatRemainingLocalized(pacing.proteinRemaining, "g", language)} / C ${formatRemainingLocalized(pacing.carbsRemaining, "g", language)}",
+                language.t("Photo confidence", "照片置信度") to photoConfidence
+            )
+        )
+        LinearProgressIndicator(
+            progress = { pacing.adherenceScore / 100f },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            color = IfbbProGlassStrongSurface
+        ) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(language.t("Next nutrition action", "下一步饮食动作"), fontWeight = FontWeight.SemiBold)
+                Text(nextNutritionAction, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = builder.localizedSummary(language),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Button(onClick = { onPrefillMeal(builder) }, modifier = Modifier.fillMaxWidth()) {
+                    Text(language.t("Prefill next meal", "填入下一餐"))
+                }
+            }
+        }
+        DataChipGrid(
+            items = listOf(
+                language.t("Eat", "吃"),
+                language.t("Capture", "拍照/描述"),
+                language.t("Confirm", "确认"),
+                language.t("Review", "复盘")
+            )
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            ElevatedButton(
+                onClick = {
+                    onPickMealPhoto(
+                        "Nutrition Autopilot food/menu/label photo. Current meal target: ${builder.title}; P ${builder.proteinGrams} g, C ${builder.carbsGrams} g, F ${builder.fatGrams} g, fiber ${builder.fiberGrams} g. Capture portion size, oil, sauce, labels, menu, and bowl depth for AI nutrition estimate."
+                    )
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(language.t("Capture food", "拍摄食物"))
+            }
+            TextButton(onClick = onOpenAi, modifier = Modifier.weight(1f)) {
+                Text(language.t("AI review", "AI 复盘"))
+            }
+        }
+        Text(
+            text = language.t(
+                "AI uses this with training volume, sleep, weight trend, photos, and logged macros before changing calories or macros.",
+                "AI 会把这里的数据与训练容量、睡眠、体重趋势、照片和已记录宏量联动，再决定是否调整热量或宏量。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
 private fun MealFlowCoachCard(
     log: DailyLog,
     language: AppLanguage,
@@ -7231,6 +7333,13 @@ private fun NutritionPage(
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        NutritionAutopilotCard(
+            log = state.dailyLog,
+            language = language,
+            onPrefillMeal = prefillMeal,
+            onPickMealPhoto = onPickMealPhoto,
+            onOpenAi = onOpenAi
+        )
         MealFlowCoachCard(
             log = state.dailyLog,
             language = language,

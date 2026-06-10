@@ -607,6 +607,52 @@
       line-height: 1.24;
     }
 
+    .nutrition-autopilot-card {
+      position: relative;
+      overflow: hidden;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(18px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        0 12px 32px rgba(29, 29, 31, 0.08);
+    }
+
+    .nutrition-autopilot-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(52, 199, 89, 0.12), rgba(0, 122, 255, 0.08) 56%, rgba(255, 255, 255, 0.18));
+      pointer-events: none;
+    }
+
+    .nutrition-autopilot-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nutrition-step-row {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid rgba(209, 209, 214, 0.66);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.70);
+    }
+
+    .nutrition-step-row strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.24;
+    }
+
     .health-sync-receipt-card {
       position: relative;
       overflow: hidden;
@@ -3311,6 +3357,40 @@
         </section>
 
         <section class="panel" data-panel="nutrition" aria-label="Nutrition">
+          <div class="nutrition-autopilot-card" data-component="NutritionAutopilotCard">
+            <div class="section-head">
+              <p class="eyebrow" data-en="NUTRITION AUTOPILOT" data-zh="饮食自动教练">NUTRITION AUTOPILOT</p>
+              <h2 data-en="Nutrition Autopilot" data-zh="饮食自动教练">Nutrition Autopilot</h2>
+              <p class="subtle" data-en="One-tap meal loop: eat the target, capture uncertainty, confirm the log, then let AI adjust tomorrow." data-zh="一键式饮食闭环：按目标吃、拍下不确定份量、确认记录，再让 AI 调整明天。">One-tap meal loop: eat the target, capture uncertainty, confirm the log, then let AI adjust tomorrow.</p>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span class="label" data-en="Loop" data-zh="闭环">Loop</span><span class="value" data-en="Eat -> Capture -> Confirm -> Review" data-zh="吃 -> 拍照/描述 -> 确认 -> 复盘">Eat -> Capture -> Confirm -> Review</span></div>
+              <div class="metric"><span class="label" data-en="Current meal target" data-zh="当前餐目标">Current meal target</span><span class="value" data-en="Protein-first meal" data-zh="蛋白质优先餐">Protein-first meal</span></div>
+              <div class="metric"><span class="label" data-en="Macro gaps" data-zh="宏量缺口">Macro gaps</span><span class="value" data-en="P 57g / C 105g" data-zh="蛋白 57g / 碳水 105g">P 57g / C 105g</span></div>
+              <div class="metric"><span class="label" data-en="Photo confidence" data-zh="照片置信度">Photo confidence</span><span class="value" data-en="Photo + text" data-zh="照片 + 文字">Photo + text</span></div>
+            </div>
+            <div class="progress green"><span style="width:84%"></span></div>
+            <div class="nutrition-step-row">
+              <div class="food-icon">AI</div>
+              <div>
+                <strong data-en="Next nutrition action" data-zh="下一步饮食动作">Next nutrition action</strong>
+                <p class="subtle" data-en="Close protein gap before adding extra carbs or fats." data-zh="先补齐蛋白质缺口，再考虑额外碳水或脂肪。">Close protein gap before adding extra carbs or fats.</p>
+              </div>
+              <button class="button primary" type="button" data-en="Prefill" data-zh="填入">Prefill</button>
+            </div>
+            <div class="coach-lane">
+              <span data-en="Eat" data-zh="吃">Eat</span>
+              <span data-en="Capture" data-zh="拍照/描述">Capture</span>
+              <span data-en="Confirm" data-zh="确认">Confirm</span>
+              <span data-en="Review" data-zh="复盘">Review</span>
+            </div>
+            <div class="action-row">
+              <button class="button primary" type="button" data-en="Capture food" data-zh="拍摄食物">Capture food</button>
+              <button class="button ghost" type="button" data-tab-target="ai" data-en="AI review" data-zh="AI 复盘">AI review</button>
+            </div>
+            <p class="subtle" data-en="AI uses this with training volume, sleep, weight trend, photos, and logged macros before changing calories or macros." data-zh="AI 会把这里的数据与训练容量、睡眠、体重趋势、照片和已记录宏量联动，再决定是否调整热量或宏量。">AI uses this with training volume, sleep, weight trend, photos, and logged macros before changing calories or macros.</p>
+          </div>
+
           <div class="section glass one-tap-hero meal-hero">
             <div class="section-head">
               <h2 data-en="Meal Flow Coach" data-zh="餐食流程教练">Meal Flow Coach</h2>
