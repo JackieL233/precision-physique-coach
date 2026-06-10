@@ -276,6 +276,8 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
 
                 AppTab.AI_COACH -> {
                     item {
+                        var showAiDailyOverview by remember { mutableStateOf(false) }
+                        val language = state.appLanguage
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             AiCoachPage(
                                 state = state,
@@ -295,16 +297,43 @@ fun IfbbProCoachApp(viewModel: CoachViewModel = viewModel()) {
                                 onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
                                 onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
                             )
-                            TodayDashboard(
-                                state = state,
-                                onDailyReview = viewModel::runDailyReview,
-                                onReset = viewModel::resetToday,
-                                onOpenPlan = { viewModel.selectTab(AppTab.TRAINING) },
-                                onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
-                                onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
-                                onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
-                                onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
-                            )
+                            SectionCard(
+                                title = language.t("AI Daily Overview", "AI 每日总览"),
+                                subtitle = language.t(
+                                    "Open this only when you want the whole daily cockpit under the AI review flow.",
+                                    "只有需要在 AI 复盘下查看完整每日驾驶舱时再展开。"
+                                )
+                            ) {
+                                Text(
+                                    text = language.t(
+                                        "The default AI page stays focused on review, tomorrow handoff, and API setup.",
+                                        "AI 页默认聚焦复盘、明日交接和 API 设置。"
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                TextButton(onClick = { showAiDailyOverview = !showAiDailyOverview }, modifier = Modifier.fillMaxWidth()) {
+                                    Text(
+                                        if (showAiDailyOverview) {
+                                            language.t("Hide daily overview", "收起每日总览")
+                                        } else {
+                                            language.t("Show daily overview", "展开每日总览")
+                                        }
+                                    )
+                                }
+                            }
+                            if (showAiDailyOverview) {
+                                TodayDashboard(
+                                    state = state,
+                                    onDailyReview = viewModel::runDailyReview,
+                                    onReset = viewModel::resetToday,
+                                    onOpenPlan = { viewModel.selectTab(AppTab.TRAINING) },
+                                    onOpenTraining = { viewModel.selectTab(AppTab.TRAINING) },
+                                    onOpenNutrition = { viewModel.selectTab(AppTab.NUTRITION) },
+                                    onOpenMetrics = { viewModel.selectTab(AppTab.METRICS) },
+                                    onOpenAi = { viewModel.selectTab(AppTab.AI_COACH) }
+                                )
+                            }
                         }
                     }
                 }
@@ -7604,16 +7633,16 @@ private fun AiCoachPage(
             onOpenMetrics = onOpenMetrics
         )
         SettingsCard(settings = state.settings, language = language, onChange = onSettingsChange)
-        AiIntegratedDecisionMatrixCard(
-            decision = integratedDecision,
-            language = language,
-            onOpenPlan = onOpenPlan,
-            onOpenTraining = onOpenTraining,
-            onOpenNutrition = onOpenNutrition,
-            onOpenMetrics = onOpenMetrics,
-            onDailyReview = onDailyReview
-        )
         if (showAiDetails) {
+            AiIntegratedDecisionMatrixCard(
+                decision = integratedDecision,
+                language = language,
+                onOpenPlan = onOpenPlan,
+                onOpenTraining = onOpenTraining,
+                onOpenNutrition = onOpenNutrition,
+                onOpenMetrics = onOpenMetrics,
+                onDailyReview = onDailyReview
+            )
         AiSetupStatusCard(
             status = aiSetup,
             language = language,
