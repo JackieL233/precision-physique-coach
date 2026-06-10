@@ -3963,6 +3963,103 @@ private fun AthleteProfileCard(profile: AthleteProfile, onProfileChange: (Athlet
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
+private fun QuickSetupGateCard(
+    profile: AthleteProfile,
+    language: AppLanguage,
+    onProfileChange: (AthleteProfile) -> Unit,
+    onApplyTemplate: (String) -> Unit
+) {
+    val recommendedTemplate = trainingPlanTemplates().firstOrNull { it.id == recommendedPlanTemplateId(profile) }
+        ?: trainingPlanTemplates().first()
+    val goalOptions = listOf(
+        language.t("Build muscle", "增肌") to "Build an IFBB PRO-inspired physique",
+        language.t("Recomp", "增肌减脂") to "Build muscle while slowly reducing body fat",
+        language.t("Cut", "减脂") to "Reduce body fat while preserving muscle"
+    )
+    val dayOptions = listOf(3, 4, 5)
+    val equipmentOptions = listOf(
+        language.t("Full gym", "完整健身房") to "Full gym",
+        language.t("Basic gym", "基础健身房") to "Basic gym",
+        language.t("Dumbbells", "哑铃/居家") to "Dumbbells and adjustable bench"
+    )
+
+    SectionCard(
+        title = language.t("Quick Setup Gate", "快速起始设置"),
+        subtitle = language.t(
+            "3-tap setup gate: choose goal, weekly days, and equipment before the app recommends the first split.",
+            "三步起始设置：先选目标、每周天数和器械条件，再让 App 推荐第一个分化。"
+        )
+    ) {
+        MetricGrid(
+            metrics = listOf(
+                language.t("Goal", "目标") to profile.primaryGoal,
+                language.t("Days/wk", "每周天数") to profile.weeklyTrainingDays.toString(),
+                language.t("Equipment", "器械") to profile.availableEquipment,
+                language.t("Recommended split", "推荐分化") to recommendedTemplate.localizedTitle(language)
+            )
+        )
+        Text(
+            text = language.t("Goal / Days / Equipment", "目标 / 天数 / 器械"),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            goalOptions.forEach { (label, value) ->
+                FilterChip(
+                    selected = profile.primaryGoal == value,
+                    onClick = { onProfileChange(profile.copy(primaryGoal = value)) },
+                    label = { Text(label) }
+                )
+            }
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            dayOptions.forEach { days ->
+                FilterChip(
+                    selected = profile.weeklyTrainingDays == days,
+                    onClick = { onProfileChange(profile.copy(weeklyTrainingDays = days)) },
+                    label = { Text(language.t("$days days/wk", "每周 $days 天")) }
+                )
+            }
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            equipmentOptions.forEach { (label, value) ->
+                FilterChip(
+                    selected = profile.availableEquipment == value,
+                    onClick = { onProfileChange(profile.copy(availableEquipment = value)) },
+                    label = { Text(label) }
+                )
+            }
+        }
+        Text(
+            text = language.t(
+                "Recommended split from setup: ${recommendedTemplate.localizedTitle(language)}. AI uses setup: goal, training days, equipment, phase, constraints.",
+                "根据起始设置推荐分化：${recommendedTemplate.localizedTitle(language)}。AI 会读取起始设置：目标、训练天数、器械、阶段和限制。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Button(
+            onClick = { onApplyTemplate(recommendedTemplate.id) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(language.t("Use recommended split", "使用推荐分化"))
+        }
+        DataChipGrid(
+            items = listOf(
+                "QuickSetupGateCard",
+                "3-tap setup gate",
+                "Goal / Days / Equipment",
+                "Recommended split from setup",
+                "AI uses setup: goal, training days, equipment, phase, constraints",
+                "目标 / 天数 / 器械"
+            )
+        )
+    }
+}
+
+@Composable
 private fun PlanTemplateLibrary(
     currentPlanName: String,
     onApplyTemplate: (String) -> Unit
@@ -4367,6 +4464,12 @@ private fun PlanPage(
     var showPlanDetails by remember { mutableStateOf(false) }
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        QuickSetupGateCard(
+            profile = state.athleteProfile,
+            language = state.appLanguage,
+            onProfileChange = onProfileChange,
+            onApplyTemplate = onApplyTemplate
+        )
         PlanFlowCoachCard(
             state = state,
             selectedDay = selectedDay,
