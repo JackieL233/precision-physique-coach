@@ -365,6 +365,7 @@
       cursor: pointer;
     }
 
+    .today-command-strip,
     .global-next-strip {
       margin: -2px 0 12px;
       padding: 12px;
@@ -416,6 +417,53 @@
       font-size: 11px;
       line-height: 1.35;
       font-weight: 650;
+    }
+
+    .today-command-strip {
+      gap: 11px;
+      background:
+        linear-gradient(135deg, rgba(0, 122, 255, 0.10), rgba(52, 199, 89, 0.08) 56%, rgba(255, 255, 255, 0.68)),
+        rgba(255, 255, 255, 0.72);
+    }
+
+    .today-command-main {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    }
+
+    .today-command-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .today-command-pill {
+      min-height: 52px;
+      padding: 8px;
+      border: 1px solid rgba(209, 209, 214, 0.66);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.64);
+      display: grid;
+      gap: 2px;
+      align-content: center;
+    }
+
+    .today-command-pill strong {
+      font-size: 11px;
+      line-height: 1.12;
+      font-weight: 780;
+    }
+
+    .today-command-pill span {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.12;
+      font-weight: 660;
     }
 
     .quick-setup-card {
@@ -2202,7 +2250,44 @@
           </div>
         </header>
 
-        <section class="global-next-strip" aria-label="Today next action">
+        <section class="today-command-strip" aria-label="Today command">
+          <div class="global-next-head">
+            <div>
+              <p class="eyebrow" data-en="TODAY COMMAND" data-zh="今日指挥台">TODAY COMMAND</p>
+              <h2 class="global-next-title" data-en="Today Command" data-zh="今日指挥台">Today Command</h2>
+              <p class="subtle" data-en="One command for today: Train -> Eat -> Sync -> Review." data-zh="今天只跟随一个指令：训练 -> 饮食 -> 同步 -> 复盘。">One command for today: Train -> Eat -> Sync -> Review.</p>
+            </div>
+            <button class="global-next-button" type="button" data-tab-target="training" data-en="Log sets" data-zh="记录训练组">Log sets</button>
+          </div>
+          <div class="today-command-main">
+            <p class="eyebrow" data-en="TODAY NEXT" data-zh="今天下一步">TODAY NEXT</p>
+            <h3 data-en="Finish today's workout" data-zh="完成今天训练">Finish today's workout</h3>
+            <p class="subtle" data-en="8/18 sets completed; finish working sets and let AI match each rest timer." data-zh="已完成 8/18 组；完成正式组，并让 AI 匹配每组休息时间。">8/18 sets completed; finish working sets and let AI match each rest timer.</p>
+            <div class="progress"><span style="width: 44%"></span></div>
+            <p class="subtle global-next-helper" data-en="One tap daily start: plan -> train -> eat -> sync -> review." data-zh="一键式每日开始：计划 -> 训练 -> 饮食 -> 同步 -> 复盘。">One tap daily start: plan -> train -> eat -> sync -> review.</p>
+          </div>
+          <div class="today-command-row" aria-label="Four-section daily status">
+            <div class="today-command-pill">
+              <strong data-en="Training status" data-zh="训练状态">Training status</strong>
+              <span data-en="8/18 sets" data-zh="8/18 组">8/18 sets</span>
+            </div>
+            <div class="today-command-pill">
+              <strong data-en="Nutrition status" data-zh="饮食状态">Nutrition status</strong>
+              <span data-en="57 g protein left" data-zh="蛋白质差 57 g">57 g protein left</span>
+            </div>
+            <div class="today-command-pill">
+              <strong data-en="Metrics status" data-zh="身体数据状态">Metrics status</strong>
+              <span data-en="Sleep synced" data-zh="睡眠已同步">Sleep synced</span>
+            </div>
+            <div class="today-command-pill">
+              <strong data-en="AI status" data-zh="AI 状态">AI status</strong>
+              <span data-en="Review pending" data-zh="等待复盘">Review pending</span>
+            </div>
+          </div>
+          <p class="subtle global-next-helper" data-en="Evidence confidence rises when training sets, food, sleep, body trend, and photos are linked before AI changes the plan." data-zh="训练组数、饮食、睡眠、身体趋势和照片联动后，AI 调整计划的证据置信度会更高。">Evidence confidence rises when training sets, food, sleep, body trend, and photos are linked before AI changes the plan.</p>
+        </section>
+
+        <section class="global-next-strip" aria-label="Today next action" hidden>
           <div class="global-next-head">
             <div>
               <p class="eyebrow" data-en="TODAY NEXT" data-zh="今天下一步">TODAY NEXT</p>

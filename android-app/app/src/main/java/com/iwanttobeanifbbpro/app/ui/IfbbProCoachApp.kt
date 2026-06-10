@@ -430,8 +430,20 @@ private fun GlobalNextActionStrip(
         onRunAiReview = onRunAiReview,
         onOpenAi = onOpenAi
     )
+    TodayCommandStrip(steps = steps, language = language)
+}
+
+
+@Composable
+private fun TodayCommandStrip(steps: List<DailyStartStep>, language: AppLanguage) {
     val flow = todayFlowCoachState(steps)
     val nextStep = flow.nextStep
+    val statusRows = listOf(
+        language.t("Training status", "训练状态") to steps.getOrNull(1),
+        language.t("Nutrition status", "饮食状态") to steps.getOrNull(2),
+        language.t("Metrics status", "身体数据状态") to steps.getOrNull(3),
+        language.t("AI status", "AI 状态") to steps.getOrNull(4)
+    )
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -439,26 +451,64 @@ private fun GlobalNextActionStrip(
         border = BorderStroke(1.dp, IfbbProGlassBorder),
         color = IfbbProGlassStrongSurface
     ) {
-        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                text = language.t("TODAY NEXT", "今天下一步"),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = nextStep?.title ?: language.t("Daily loop complete", "今日闭环已完成"),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = nextStep?.detail ?: language.t(
-                    "Review saved guidance, prepare tomorrow, and keep logging changes.",
-                    "查看已保存建议，准备明天计划，并继续记录变化。"
-                ),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Text(
+                        text = language.t("TODAY COMMAND", "今日指挥台"),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = language.t("Today Command", "今日指挥台"),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = language.t(
+                            "One command for today: Train -> Eat -> Sync -> Review. One tap daily start.",
+                            "今天只跟随一个指令：训练 -> 饮食 -> 同步 -> 复盘。一键式每日开始。"
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Text(
+                    text = "${flow.doneCount}/${flow.totalCount}",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.58f),
+                border = BorderStroke(1.dp, IfbbProGlassBorder)
+            ) {
+                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = language.t("TODAY NEXT", "今天下一步"),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = nextStep?.title ?: language.t("Daily loop complete", "今日闭环已完成"),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = nextStep?.detail ?: language.t(
+                            "Review saved guidance, prepare tomorrow, and keep logging changes.",
+                            "查看已保存建议，准备明天计划，并继续记录变化。"
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
             LinearProgressIndicator(progress = { flow.progress }, modifier = Modifier.fillMaxWidth())
             Button(
                 onClick = { nextStep?.onAction?.invoke() },
@@ -467,10 +517,16 @@ private fun GlobalNextActionStrip(
             ) {
                 Text(nextStep?.actionLabel ?: language.t("Review tomorrow", "查看明天安排"))
             }
+            DataChipGrid(
+                items = statusRows.map { (label, step) ->
+                    val status = if (step?.done == true) language.t("Done", "已完成") else language.t("Next", "待完成")
+                    "$label: $status"
+                }
+            )
             Text(
                 text = language.t(
-                    "One tap daily start: plan -> train -> eat -> sync -> review.",
-                    "一键式每日开始：计划 -> 训练 -> 饮食 -> 同步 -> 复盘。"
+                    "Evidence confidence rises when training sets, food, sleep, body trend, and photos are linked before AI changes the plan.",
+                    "训练组数、饮食、睡眠、身体趋势和照片联动后，AI 调整计划的证据置信度会更高。"
                 ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -9523,3 +9579,4 @@ private fun formatSigned(value: Double): String {
 private fun List<Int>.averageIntOrNull(): Double? = takeIf { it.isNotEmpty() }?.map { it.toDouble() }?.average()
 
 private fun List<Double>.averageDoubleOrNull(): Double? = takeIf { it.isNotEmpty() }?.average()
+
