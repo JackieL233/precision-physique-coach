@@ -262,12 +262,14 @@
       gap: 12px;
     }
 
-    .panel[data-panel="ai"][aria-label="AI Coach"] {
-      order: 1;
+    .folded-layer {
+      display: grid;
+      gap: 12px;
     }
 
-    .panel[data-panel="ai"][aria-label="AI daily overview"] {
-      order: 2;
+    .folded-layer[hidden],
+    .folded-panel[hidden] {
+      display: none;
     }
 
     .section {
@@ -373,6 +375,116 @@
       border-radius: 999px;
       padding: 0 8px;
       font-size: 12px;
+    }
+
+    .split-picker,
+    .quick-capture,
+    .sync-strip,
+    .food-log-item {
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.62);
+      backdrop-filter: blur(18px) saturate(150%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    }
+
+    .split-picker {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      padding: 7px;
+    }
+
+    .split-option {
+      border: 0;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.62);
+      color: var(--muted);
+      min-height: 54px;
+      padding: 7px;
+      display: grid;
+      gap: 2px;
+      align-content: center;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .split-option strong {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.15;
+    }
+
+    .split-option span {
+      font-size: 11px;
+      line-height: 1.2;
+      font-weight: 650;
+    }
+
+    .split-option.active {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(0, 122, 255, 0.26);
+    }
+
+    .split-option.active strong {
+      color: #fff;
+    }
+
+    .macro-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .macro-summary .metric {
+      min-height: 58px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    .quick-capture {
+      padding: 10px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .meal-input {
+      border: 1px solid rgba(209, 209, 214, 0.78);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      min-height: 48px;
+      padding: 0 13px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .food-log-item {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px;
+    }
+
+    .food-icon,
+    .sync-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--green-soft);
+      color: #063d17;
+      font-weight: 850;
+    }
+
+    .sync-strip {
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
     }
 
     .micro-status {
@@ -1540,7 +1652,7 @@
           <div class="rest-time" id="rest-time">02:00</div>
         </div>
 
-        <section class="panel" data-panel="ai" aria-label="AI daily overview">
+        <section class="folded-panel" data-folded-panel="ai" aria-label="AI daily overview" hidden>
           <div class="section glass one-tap-hero today-hero">
             <div class="section-head">
               <h2 data-en="Today Flow Coach" data-zh="今日流程教练">Today Flow Coach</h2>
@@ -1973,7 +2085,7 @@
           </details>
         </section>
 
-        <section class="panel active" data-panel="training" aria-label="Training plan">
+        <section class="folded-panel" data-folded-panel="training" aria-label="Training plan" hidden>
           <div class="section glass one-tap-hero plan-hero">
             <div class="section-head">
               <h2 data-en="Plan Flow Coach" data-zh="计划流程教练">Plan Flow Coach</h2>
@@ -1998,6 +2110,21 @@
               <div class="metric"><span class="label" data-en="Active days" data-zh="训练日">Active days</span><span class="value">4</span></div>
               <div class="metric"><span class="label" data-en="Today" data-zh="今天">Today</span><span class="value" data-en="Not loaded" data-zh="未载入">Not loaded</span></div>
             </div>
+            <div class="split-picker" aria-label="Training split choices">
+              <button class="split-option" type="button">
+                <strong data-en="3-Day" data-zh="三分化">3-Day</strong>
+                <span data-en="Full body" data-zh="全身基础">Full body</span>
+              </button>
+              <button class="split-option active" type="button">
+                <strong data-en="4-Day" data-zh="四分化">4-Day</strong>
+                <span data-en="Recommended" data-zh="推荐">Recommended</span>
+              </button>
+              <button class="split-option" type="button">
+                <strong data-en="5-Day" data-zh="五分化">5-Day</strong>
+                <span data-en="Physique" data-zh="体型优先">Physique</span>
+              </button>
+            </div>
+            <p class="subtle" data-en="Recommended split: 4-Day Upper/Lower. Chosen from your weekly training days, experience, recovery, equipment, and physique goal." data-zh="推荐分化：四分化上下肢。依据每周训练天数、经验、恢复、器械和体型目标选择。"><strong>Recommended split:</strong> 4-Day Upper/Lower. Chosen from your weekly training days, experience, recovery, equipment, and physique goal.</p>
             <p class="subtle" data-en="The beginner path is template -> weekly plan -> Apply today. Profile, templates, visual map, exercise editing, and the full atlas stay underneath." data-zh="新手路径就是：模板 -> 周计划 -> 应用今天。档案、模板、视觉图、动作编辑和完整图谱都放在下方。">The beginner path is template -> weekly plan -> Apply today. Profile, templates, visual map, exercise editing, and the full atlas stay underneath.</p>
             <div class="action-row action-shortcuts">
               <button class="button" type="button" data-en="Show plan details" data-zh="展开计划细节">Show plan details</button>
@@ -2651,11 +2778,33 @@
               <div class="metric"><span class="label" data-en="Template" data-zh="模板">Template</span><span class="value" data-en="Low-Fat Protein Fix" data-zh="低脂蛋白补齐">Low-Fat Protein Fix</span></div>
               <div class="metric"><span class="label" data-en="AI gate" data-zh="AI 门控">AI gate</span><span class="value" data-en="Evidence ready" data-zh="证据可用">Evidence ready</span></div>
             </div>
+            <div class="macro-summary" aria-label="Daily remaining macros">
+              <div class="metric"><span class="label" data-en="Kcal left" data-zh="剩余热量">Kcal left</span><span class="value">870</span></div>
+              <div class="metric"><span class="label" data-en="Protein" data-zh="蛋白质">Protein</span><span class="value">57g</span></div>
+              <div class="metric"><span class="label" data-en="Carbs" data-zh="碳水">Carbs</span><span class="value">105g</span></div>
+              <div class="metric"><span class="label" data-en="Fat" data-zh="脂肪">Fat</span><span class="value">24g</span></div>
+            </div>
+            <div class="quick-capture">
+              <input class="meal-input" value="Chicken rice bowl, sauce on side" aria-label="Describe meal" data-value-en="Chicken rice bowl, sauce on side" data-value-zh="鸡肉米饭碗，酱汁另放">
+              <div class="action-row action-shortcuts">
+                <button class="button primary" type="button" data-en="Food photo" data-zh="食物照片">Food photo</button>
+                <button class="button" type="button" data-en="Describe meal" data-zh="描述这餐">Describe meal</button>
+                <button class="button ghost" type="button" data-en="Use AI estimate" data-zh="采用 AI 估算">Use AI estimate</button>
+              </div>
+            </div>
             <div class="progress green"><span style="width:84%"></span></div>
-            <p class="subtle" data-en="Portion cue: aim near P 57 g, C 95 g, F 24 g, fiber 14 g. Photograph oil, sauce, labels, menu, and bowl depth when uncertain." data-zh="份量提示：尽量接近蛋白质 57 g、碳水 95 g、脂肪 24 g、纤维 14 g；油、酱料、标签、菜单和碗深不确定时拍照。">Portion cue: aim near P 57 g, C 95 g, F 24 g, fiber 14 g. Photograph oil, sauce, labels, menu, and bowl depth when uncertain.</p>
+            <p class="subtle" data-en="AI estimate preview: Protein-first meal | 820 kcal | P 57 g | C 95 g | F 24 g. Photograph oil, sauce, labels, menu, and bowl depth when uncertain." data-zh="AI 估算预览：蛋白质优先餐 | 820 kcal | 蛋白质 57 g | 碳水 95 g | 脂肪 24 g。油、酱料、标签、菜单和碗深不确定时拍照。">AI estimate preview: Protein-first meal | 820 kcal | P 57 g | C 95 g | F 24 g. Photograph oil, sauce, labels, menu, and bowl depth when uncertain.</p>
+            <div class="food-log-item">
+              <div class="food-icon">AI</div>
+              <div>
+                <strong data-en="12:40 Chicken rice bowl" data-zh="12:40 鸡肉米饭碗">12:40 Chicken rice bowl</strong>
+                <p class="subtle" data-en="Photo + text estimate, needs portion confirmation." data-zh="照片 + 文字估算，需要确认份量。">Photo + text estimate, needs portion confirmation.</p>
+              </div>
+              <strong>820</strong>
+            </div>
             <div class="action-row action-shortcuts">
-              <button class="button" type="button" data-en="Food photo" data-zh="食物照片">Food photo</button>
-              <button class="button" type="button" data-en="Add template" data-zh="添加模板">Add template</button>
+              <button class="button" type="button" data-en="Show nutrition details" data-zh="展开饮食细节">Show nutrition details</button>
+              <button class="button" type="button" data-en="Manual edit" data-zh="手动修正">Manual edit</button>
               <button class="button ghost" type="button" data-tab-target="ai" data-en="AI review" data-zh="AI 复盘">AI review</button>
             </div>
           </div>
@@ -2668,201 +2817,201 @@
 
           <div class="section">
             <div class="section-head">
-              <h2>Nutrition Pacing</h2>
-              <p class="subtle">What is still available today and what the next meal should bias toward.</p>
+              <h2 data-en="Nutrition Pacing" data-zh="营养节奏">Nutrition Pacing</h2>
+              <p class="subtle" data-en="What is still available today and what the next meal should bias toward." data-zh="显示今天还剩多少热量和宏量营养，以及下一餐应该优先补什么。">What is still available today and what the next meal should bias toward.</p>
             </div>
             <div class="metric-grid">
-              <div class="metric"><span class="label">Pace</span><span class="value">84%</span></div>
-              <div class="metric"><span class="label">Status</span><span class="value">Protein behind</span></div>
-              <div class="metric"><span class="label">Kcal</span><span class="value">870 kcal left</span></div>
-              <div class="metric"><span class="label">Protein</span><span class="value">57 g left</span></div>
-              <div class="metric"><span class="label">Carbs</span><span class="value">105 g left</span></div>
-              <div class="metric"><span class="label">Fat</span><span class="value">24 g left</span></div>
+              <div class="metric"><span class="label" data-en="Pace" data-zh="节奏">Pace</span><span class="value">84%</span></div>
+              <div class="metric"><span class="label" data-en="Status" data-zh="状态">Status</span><span class="value" data-en="Protein behind" data-zh="蛋白质落后">Protein behind</span></div>
+              <div class="metric"><span class="label" data-en="Kcal" data-zh="热量">Kcal</span><span class="value" data-en="870 kcal left" data-zh="还剩 870 kcal">870 kcal left</span></div>
+              <div class="metric"><span class="label" data-en="Protein" data-zh="蛋白质">Protein</span><span class="value" data-en="57 g left" data-zh="还差 57 g">57 g left</span></div>
+              <div class="metric"><span class="label" data-en="Carbs" data-zh="碳水">Carbs</span><span class="value" data-en="105 g left" data-zh="还剩 105 g">105 g left</span></div>
+              <div class="metric"><span class="label" data-en="Fat" data-zh="脂肪">Fat</span><span class="value" data-en="24 g left" data-zh="还剩 24 g">24 g left</span></div>
             </div>
             <div class="progress green"><span style="width:84%"></span></div>
-            <p class="subtle"><strong>Next meal focus:</strong> prioritize a lean protein serving, then place remaining carbs around training.</p>
+            <p class="subtle" data-en="Next meal focus: prioritize a lean protein serving, then place remaining carbs around training." data-zh="下一餐重点：先安排一份低脂蛋白，再把剩余碳水放在训练前后。"><strong>Next meal focus:</strong> prioritize a lean protein serving, then place remaining carbs around training.</p>
           </div>
 
           <div class="section">
             <div class="section-head">
-              <h2>Meal Logging Coach</h2>
-              <p class="subtle">Guided loop for coach prefill, recommended template, food/menu/label photo capture, and AI nutrition review.</p>
+              <h2 data-en="Meal Logging Coach" data-zh="餐食记录教练">Meal Logging Coach</h2>
+              <p class="subtle" data-en="Guided loop for coach prefill, recommended template, food/menu/label photo capture, and AI nutrition review." data-zh="引导你完成教练预填、推荐模板、食物/菜单/标签拍照和 AI 饮食复盘。">Guided loop for coach prefill, recommended template, food/menu/label photo capture, and AI nutrition review.</p>
             </div>
             <div class="metric-grid">
-              <div class="metric"><span class="label">Next target</span><span class="value">Protein-first meal</span></div>
-              <div class="metric"><span class="label">Suggested kcal</span><span class="value">820 kcal</span></div>
-              <div class="metric"><span class="label">Template</span><span class="value">Low-Fat Protein Fix</span></div>
-              <div class="metric"><span class="label">Food photos</span><span class="value">2</span></div>
+              <div class="metric"><span class="label" data-en="Next target" data-zh="下一餐目标">Next target</span><span class="value" data-en="Protein-first meal" data-zh="蛋白质优先餐">Protein-first meal</span></div>
+              <div class="metric"><span class="label" data-en="Suggested kcal" data-zh="建议热量">Suggested kcal</span><span class="value">820 kcal</span></div>
+              <div class="metric"><span class="label" data-en="Template" data-zh="模板">Template</span><span class="value" data-en="Low-Fat Protein Fix" data-zh="低脂蛋白补齐">Low-Fat Protein Fix</span></div>
+              <div class="metric"><span class="label" data-en="Food photos" data-zh="食物照片">Food photos</span><span class="value">2</span></div>
             </div>
-            <p class="subtle"><strong>Coach cue:</strong> close the protein gap before adding extra carbs or fats.</p>
-            <p class="subtle">AI link: daily review uses logged macros, meal/menu photos, training demand, health metrics, and body-composition trend before changing calories or macros.</p>
+            <p class="subtle" data-en="Coach cue: close the protein gap before adding extra carbs or fats." data-zh="教练提示：先补齐蛋白质缺口，再增加额外碳水或脂肪。"><strong>Coach cue:</strong> close the protein gap before adding extra carbs or fats.</p>
+            <p class="subtle" data-en="AI link: daily review uses logged macros, meal/menu photos, training demand, health metrics, and body-composition trend before changing calories or macros." data-zh="AI 联动：每日复盘会结合已记录宏量、餐食/菜单照片、训练需求、健康数据和身体组成趋势，再决定是否改热量或宏量。">AI link: daily review uses logged macros, meal/menu photos, training demand, health metrics, and body-composition trend before changing calories or macros.</p>
             <div class="chip-row">
-              <span class="chip active">Weigh food when practical</span>
-              <span class="chip active">Photo portions, oil, sauce, label, and bowl depth</span>
-              <span class="chip active">Food/menu/label photo for AI nutrition estimate</span>
-              <span class="chip active">Coach prefill</span>
+              <span class="chip active" data-en="Weigh food when practical" data-zh="方便时称重">Weigh food when practical</span>
+              <span class="chip active" data-en="Photo portions, oil, sauce, label, and bowl depth" data-zh="拍份量、油、酱料、标签和碗深">Photo portions, oil, sauce, label, and bowl depth</span>
+              <span class="chip active" data-en="Food/menu/label photo for AI nutrition estimate" data-zh="食物/菜单/标签照片用于 AI 营养估算">Food/menu/label photo for AI nutrition estimate</span>
+              <span class="chip active" data-en="Coach prefill" data-zh="教练预填">Coach prefill</span>
             </div>
             <div class="action-row">
-              <button class="button primary" type="button">Prefill target</button>
-              <button class="button" type="button">Add template</button>
-              <button class="button" type="button">Food photo</button>
-              <button class="button ghost" type="button" data-tab-target="ai">AI review</button>
+              <button class="button primary" type="button" data-en="Prefill target" data-zh="预填目标餐">Prefill target</button>
+              <button class="button" type="button" data-en="Add template" data-zh="添加模板">Add template</button>
+              <button class="button" type="button" data-en="Food photo" data-zh="食物照片">Food photo</button>
+              <button class="button ghost" type="button" data-tab-target="ai" data-en="AI review" data-zh="AI 复盘">AI review</button>
             </div>
           </div>
 
           <div class="section">
             <div class="section-head">
-              <h2>Next Meal Builder</h2>
-              <p class="subtle">Turn remaining macros and training demand into the next practical meal.</p>
+              <h2 data-en="Next Meal Builder" data-zh="下一餐构建器">Next Meal Builder</h2>
+              <p class="subtle" data-en="Turn remaining macros and training demand into the next practical meal." data-zh="把剩余宏量营养和训练需求转换成下一餐的实际目标。">Turn remaining macros and training demand into the next practical meal.</p>
             </div>
-            <h3>Protein-first meal</h3>
-            <p class="subtle">Close the protein gap before adding extra carbs or fats.</p>
+            <h3 data-en="Protein-first meal" data-zh="蛋白质优先餐">Protein-first meal</h3>
+            <p class="subtle" data-en="Close the protein gap before adding extra carbs or fats." data-zh="先补齐蛋白质缺口，再增加额外碳水或脂肪。">Close the protein gap before adding extra carbs or fats.</p>
             <div class="metric-grid">
-              <div class="metric"><span class="label">Protein</span><span class="value">57 g</span></div>
-              <div class="metric"><span class="label">Carbs</span><span class="value">95 g</span></div>
-              <div class="metric"><span class="label">Fat</span><span class="value">24 g</span></div>
-              <div class="metric"><span class="label">Fiber</span><span class="value">14 g</span></div>
+              <div class="metric"><span class="label" data-en="Protein" data-zh="蛋白质">Protein</span><span class="value">57 g</span></div>
+              <div class="metric"><span class="label" data-en="Carbs" data-zh="碳水">Carbs</span><span class="value">95 g</span></div>
+              <div class="metric"><span class="label" data-en="Fat" data-zh="脂肪">Fat</span><span class="value">24 g</span></div>
+              <div class="metric"><span class="label" data-en="Fiber" data-zh="纤维">Fiber</span><span class="value">14 g</span></div>
             </div>
-            <p class="subtle">Meal timing cue: use this as the next recovery meal after today's completed session.</p>
-            <p class="subtle"><strong>Portion uncertainty cue:</strong> aim near P 57 g, C 95 g, F 24 g, fiber 14 g.</p>
-            <p class="subtle">Use a label/photo when oil, sauce, or restaurant portions are uncertain.</p>
+            <p class="subtle" data-en="Meal timing cue: use this as the next recovery meal after today's completed session." data-zh="进餐时机提示：把它作为今天训练完成后的下一顿恢复餐。">Meal timing cue: use this as the next recovery meal after today's completed session.</p>
+            <p class="subtle" data-en="Portion uncertainty cue: aim near P 57 g, C 95 g, F 24 g, fiber 14 g." data-zh="份量不确定提示：尽量接近蛋白质 57 g、碳水 95 g、脂肪 24 g、纤维 14 g。"><strong>Portion uncertainty cue:</strong> aim near P 57 g, C 95 g, F 24 g, fiber 14 g.</p>
+            <p class="subtle" data-en="Use a label/photo when oil, sauce, or restaurant portions are uncertain." data-zh="油、酱料或外食份量不确定时，使用标签或照片。">Use a label/photo when oil, sauce, or restaurant portions are uncertain.</p>
           </div>
 
           <div class="section">
             <div class="section-head">
-              <h2>Meal Assembly Guide</h2>
-              <p class="subtle">Turn the macro target into a plate, shopping cue, prep cue, and photo logging cue.</p>
+              <h2 data-en="Meal Assembly Guide" data-zh="餐盘组合指南">Meal Assembly Guide</h2>
+              <p class="subtle" data-en="Turn the macro target into a plate, shopping cue, prep cue, and photo logging cue." data-zh="把宏量目标转换成餐盘结构、采购提示、备餐提示和拍照记录提示。">Turn the macro target into a plate, shopping cue, prep cue, and photo logging cue.</p>
             </div>
-            <h3>Protein-first bodybuilding plate</h3>
-            <p class="subtle">Two palms lean protein, one fist carb if calories allow, one to two fists vegetables.</p>
+            <h3 data-en="Protein-first bodybuilding plate" data-zh="蛋白质优先健美餐盘">Protein-first bodybuilding plate</h3>
+            <p class="subtle" data-en="Two palms lean protein, one fist carb if calories allow, one to two fists vegetables." data-zh="两掌低脂蛋白；热量允许时加一拳碳水；一到两拳蔬菜。">Two palms lean protein, one fist carb if calories allow, one to two fists vegetables.</p>
             <div class="chip-row">
-              <span class="chip active">Protein anchor: chicken, white fish, lean beef, whey, tofu, or Greek yogurt</span>
-              <span class="chip active">Carb anchor: rice, potatoes, oats, fruit, or noodles</span>
-              <span class="chip active">Fat control: measure oil, nuts, cheese, and sauces</span>
-              <span class="chip active">Fiber/micros: vegetables, berries, oats, beans, or potatoes</span>
+              <span class="chip active" data-en="Protein anchor: chicken, white fish, lean beef, whey, tofu, or Greek yogurt" data-zh="蛋白质锚点：鸡肉、白鱼、瘦牛肉、乳清、豆腐或希腊酸奶">Protein anchor: chicken, white fish, lean beef, whey, tofu, or Greek yogurt</span>
+              <span class="chip active" data-en="Carb anchor: rice, potatoes, oats, fruit, or noodles" data-zh="碳水锚点：米饭、土豆、燕麦、水果或面条">Carb anchor: rice, potatoes, oats, fruit, or noodles</span>
+              <span class="chip active" data-en="Fat control: measure oil, nuts, cheese, and sauces" data-zh="脂肪控制：测量油、坚果、奶酪和酱料">Fat control: measure oil, nuts, cheese, and sauces</span>
+              <span class="chip active" data-en="Fiber/micros: vegetables, berries, oats, beans, or potatoes" data-zh="纤维/微量营养：蔬菜、浆果、燕麦、豆类或土豆">Fiber/micros: vegetables, berries, oats, beans, or potatoes</span>
             </div>
-            <p class="subtle"><strong>Shopping cue:</strong> keep lean protein, microwave rice or potatoes, Greek yogurt, and frozen vegetables stocked.</p>
-            <p class="subtle"><strong>Prep cue:</strong> batch protein and carbs separately so portions can be adjusted meal by meal.</p>
-            <p class="subtle"><strong>Photo/logging cue:</strong> photograph uncertain restaurant portions, oils, sauces, labels, and bowl depth before AI estimation.</p>
-            <p class="subtle"><strong>Avoid cue:</strong> do not spend remaining calories on snacks before protein is handled.</p>
+            <p class="subtle" data-en="Shopping cue: keep lean protein, microwave rice or potatoes, Greek yogurt, and frozen vegetables stocked." data-zh="采购提示：常备低脂蛋白、微波米饭或土豆、希腊酸奶和冷冻蔬菜。"><strong>Shopping cue:</strong> keep lean protein, microwave rice or potatoes, Greek yogurt, and frozen vegetables stocked.</p>
+            <p class="subtle" data-en="Prep cue: batch protein and carbs separately so portions can be adjusted meal by meal." data-zh="备餐提示：蛋白质和碳水分开批量准备，这样每餐份量都能调整。"><strong>Prep cue:</strong> batch protein and carbs separately so portions can be adjusted meal by meal.</p>
+            <p class="subtle" data-en="Photo/logging cue: photograph uncertain restaurant portions, oils, sauces, labels, and bowl depth before AI estimation." data-zh="拍照记录提示：AI 估算前，拍下不确定的外食份量、油、酱料、标签和碗深。"><strong>Photo/logging cue:</strong> photograph uncertain restaurant portions, oils, sauces, labels, and bowl depth before AI estimation.</p>
+            <p class="subtle" data-en="Avoid cue: do not spend remaining calories on snacks before protein is handled." data-zh="避免提示：蛋白质没补齐前，不要把剩余热量花在零食上。"><strong>Avoid cue:</strong> do not spend remaining calories on snacks before protein is handled.</p>
           </div>
 
           <div class="section">
             <div class="section-head">
-              <h2>Body Composition Guidance</h2>
-              <p class="subtle">Use body-weight trend, average intake, and phase goal before changing targets.</p>
+              <h2 data-en="Body Composition Guidance" data-zh="身体组成指导">Body Composition Guidance</h2>
+              <p class="subtle" data-en="Use body-weight trend, average intake, and phase goal before changing targets." data-zh="调整目标前，先结合体重趋势、平均摄入和当前阶段。">Use body-weight trend, average intake, and phase goal before changing targets.</p>
             </div>
             <div class="metric-grid">
-              <div class="metric"><span class="label">Status</span><span class="value">Hold targets</span></div>
-              <div class="metric"><span class="label">Target</span><span class="value">2,650 kcal</span></div>
-              <div class="metric"><span class="label">Protein target</span><span class="value">185 g</span></div>
-              <div class="metric"><span class="label">Set avg</span><span class="value">12 sets</span></div>
+              <div class="metric"><span class="label" data-en="Status" data-zh="状态">Status</span><span class="value" data-en="Hold targets" data-zh="保持目标">Hold targets</span></div>
+              <div class="metric"><span class="label" data-en="Target" data-zh="目标">Target</span><span class="value">2,650 kcal</span></div>
+              <div class="metric"><span class="label" data-en="Protein target" data-zh="蛋白目标">Protein target</span><span class="value">185 g</span></div>
+              <div class="metric"><span class="label" data-en="Set avg" data-zh="平均组数">Set avg</span><span class="value">12 sets</span></div>
             </div>
-            <p class="subtle">Recent weight, calories, protein, and training trend do not justify changing targets yet.</p>
+            <p class="subtle" data-en="Recent weight, calories, protein, and training trend do not justify changing targets yet." data-zh="近期体重、热量、蛋白质和训练趋势还不足以支持修改目标。">Recent weight, calories, protein, and training trend do not justify changing targets yet.</p>
           </div>
 
           <div class="section">
             <div class="section-head">
-              <h2>Conditioning &amp; Hydration</h2>
-              <p class="subtle">Log training-outside variables so AI does not confuse water, sodium, caffeine, or NEAT changes with fat gain or poor programming.</p>
+              <h2 data-en="Conditioning &amp; Hydration" data-zh="有氧、活动量与补水">Conditioning &amp; Hydration</h2>
+              <p class="subtle" data-en="Log training-outside variables so AI does not confuse water, sodium, caffeine, or NEAT changes with fat gain or poor programming." data-zh="记录训练之外的变量，避免 AI 把水分、钠、咖啡因或日常活动变化误判成脂肪增加或训练计划问题。">Log training-outside variables so AI does not confuse water, sodium, caffeine, or NEAT changes with fat gain or poor programming.</p>
             </div>
             <div class="metric-grid">
-              <div class="metric"><span class="label">Status</span><span class="value">Support variables logged</span></div>
-              <div class="metric"><span class="label">Step goal</span><span class="value">9,000</span></div>
-              <div class="metric"><span class="label">Cardio min</span><span class="value">20</span></div>
-              <div class="metric"><span class="label">Water L</span><span class="value">3.2</span></div>
+              <div class="metric"><span class="label" data-en="Status" data-zh="状态">Status</span><span class="value" data-en="Support variables logged" data-zh="支持变量已记录">Support variables logged</span></div>
+              <div class="metric"><span class="label" data-en="Step goal" data-zh="步数目标">Step goal</span><span class="value">9,000</span></div>
+              <div class="metric"><span class="label" data-en="Cardio min" data-zh="有氧分钟">Cardio min</span><span class="value">20</span></div>
+              <div class="metric"><span class="label" data-en="Water L" data-zh="饮水 L">Water L</span><span class="value">3.2</span></div>
             </div>
             <div class="split-row">
               <div class="field">
-                <label for="step-goal">Step goal</label>
+                <label for="step-goal" data-en="Step goal" data-zh="步数目标">Step goal</label>
                 <input id="step-goal" class="mini-input" value="9000">
               </div>
               <div class="field">
-                <label for="cardio-min">Cardio min</label>
+                <label for="cardio-min" data-en="Cardio min" data-zh="有氧分钟">Cardio min</label>
                 <input id="cardio-min" class="mini-input" value="20">
               </div>
             </div>
             <div class="split-row">
               <div class="field">
-                <label for="cardio-type">Cardio type</label>
+                <label for="cardio-type" data-en="Cardio type" data-zh="有氧类型">Cardio type</label>
                 <input id="cardio-type" class="mini-input" value="Incline walk">
               </div>
               <div class="field">
-                <label for="cardio-intensity">Cardio intensity</label>
+                <label for="cardio-intensity" data-en="Cardio intensity" data-zh="有氧强度">Cardio intensity</label>
                 <input id="cardio-intensity" class="mini-input" value="Zone 2">
               </div>
             </div>
             <div class="split-row">
               <div class="field">
-                <label for="water-liters">Water liters</label>
+                <label for="water-liters" data-en="Water liters" data-zh="饮水升数">Water liters</label>
                 <input id="water-liters" class="mini-input" value="3.2">
               </div>
               <div class="field">
-                <label for="sodium-mg">Sodium mg</label>
+                <label for="sodium-mg" data-en="Sodium mg" data-zh="钠 mg">Sodium mg</label>
                 <input id="sodium-mg" class="mini-input" value="3400">
               </div>
             </div>
             <div class="split-row">
               <div class="field">
-                <label for="caffeine-mg">Caffeine mg</label>
+                <label for="caffeine-mg" data-en="Caffeine mg" data-zh="咖啡因 mg">Caffeine mg</label>
                 <input id="caffeine-mg" class="mini-input" value="240">
               </div>
               <div class="field">
-                <label for="alcohol-servings">Alcohol servings</label>
+                <label for="alcohol-servings" data-en="Alcohol servings" data-zh="酒精份数">Alcohol servings</label>
                 <input id="alcohol-servings" class="mini-input" value="0">
               </div>
             </div>
             <div class="field">
-              <label for="digestion-notes">Digestion notes</label>
+              <label for="digestion-notes" data-en="Digestion notes" data-zh="消化备注">Digestion notes</label>
               <textarea id="digestion-notes">No bloating; slightly salty restaurant meal yesterday.</textarea>
             </div>
             <div class="chip-row">
-              <span class="chip active">scale-weight noise</span>
-              <span class="chip active">NEAT behind</span>
-              <span class="chip active">Hydration gap</span>
-              <span class="chip active">Stimulant pressure</span>
+              <span class="chip active" data-en="scale-weight noise" data-zh="体重水分噪音">scale-weight noise</span>
+              <span class="chip active" data-en="NEAT behind" data-zh="日常活动偏低">NEAT behind</span>
+              <span class="chip active" data-en="Hydration gap" data-zh="补水缺口">Hydration gap</span>
+              <span class="chip active" data-en="Stimulant pressure" data-zh="兴奋剂压力">Stimulant pressure</span>
             </div>
           </div>
 
           <div class="section">
             <div class="section-head">
-              <h2>Meal Templates</h2>
-              <p class="subtle">Quick-add reliable meals, then refine with portions, labels, or photos.</p>
+              <h2 data-en="Meal Templates" data-zh="餐食模板">Meal Templates</h2>
+              <p class="subtle" data-en="Quick-add reliable meals, then refine with portions, labels, or photos." data-zh="快速添加可靠餐食，再用份量、标签或照片细化。">Quick-add reliable meals, then refine with portions, labels, or photos.</p>
             </div>
             <div class="rows">
               <div class="meal">
-                <strong>Lean Protein Bowl</strong>
+                <strong data-en="Lean Protein Bowl" data-zh="低脂蛋白碗">Lean Protein Bowl</strong>
                 <p class="subtle">620 kcal | P 52 g | C 72 g | F 12 g | fiber 8 g</p>
-                <button class="button" type="button">Add</button>
+                <button class="button" type="button" data-en="Add" data-zh="添加">Add</button>
               </div>
               <div class="meal">
-                <strong>Pre-Workout Carbs</strong>
+                <strong data-en="Pre-Workout Carbs" data-zh="训练前碳水">Pre-Workout Carbs</strong>
                 <p class="subtle">520 kcal | P 38 g | C 76 g | F 8 g | fiber 9 g</p>
-                <button class="button" type="button">Add</button>
+                <button class="button" type="button" data-en="Add" data-zh="添加">Add</button>
               </div>
               <div class="meal">
-                <strong>Low-Fat Protein Fix</strong>
+                <strong data-en="Low-Fat Protein Fix" data-zh="低脂蛋白补齐">Low-Fat Protein Fix</strong>
                 <p class="subtle">320 kcal | P 45 g | C 22 g | F 4 g | fiber 2 g</p>
-                <button class="button" type="button">Add</button>
+                <button class="button" type="button" data-en="Add" data-zh="添加">Add</button>
               </div>
             </div>
           </div>
 
           <div class="section">
             <div class="section-head">
-              <h2>Nutrition</h2>
-              <p class="subtle">Daily calories, macros, and food-photo follow-up.</p>
+              <h2 data-en="Nutrition" data-zh="饮食">Nutrition</h2>
+              <p class="subtle" data-en="Daily calories, macros, and food-photo follow-up." data-zh="每日热量、宏量营养和食物照片跟进。">Daily calories, macros, and food-photo follow-up.</p>
             </div>
             <div class="metric-grid">
-              <div class="metric"><span class="label">Calories</span><span class="value">1,780/2,650</span></div>
-              <div class="metric"><span class="label">Protein</span><span class="value">128/185 g</span></div>
-              <div class="metric"><span class="label">Carbs</span><span class="value">205/310 g</span></div>
-              <div class="metric"><span class="label">Fat</span><span class="value">46/70 g</span></div>
+              <div class="metric"><span class="label" data-en="Calories" data-zh="热量">Calories</span><span class="value">1,780/2,650</span></div>
+              <div class="metric"><span class="label" data-en="Protein" data-zh="蛋白质">Protein</span><span class="value">128/185 g</span></div>
+              <div class="metric"><span class="label" data-en="Carbs" data-zh="碳水">Carbs</span><span class="value">205/310 g</span></div>
+              <div class="metric"><span class="label" data-en="Fat" data-zh="脂肪">Fat</span><span class="value">46/70 g</span></div>
             </div>
             <div class="progress green"><span style="width:69%"></span></div>
             <div class="action-row">
-              <button class="button primary" type="button">Add meal</button>
-              <button class="button" type="button">Attach photo</button>
+              <button class="button primary" type="button" data-en="Add meal" data-zh="添加餐食">Add meal</button>
+              <button class="button" type="button" data-en="Attach photo" data-zh="添加照片">Attach photo</button>
             </div>
           </div>
 
@@ -2870,27 +3019,27 @@
 
           <div class="section">
             <div class="section-head">
-              <h2>Photo Evidence</h2>
-              <p class="subtle">Classified photos tell AI whether an image is food, form, equipment, label, or physique progress.</p>
+              <h2 data-en="Photo Evidence" data-zh="照片证据">Photo Evidence</h2>
+              <p class="subtle" data-en="Classified photos tell AI whether an image is food, form, equipment, label, or physique progress." data-zh="分类照片会告诉 AI：图片是食物、动作、器械、标签还是体型进度。">Classified photos tell AI whether an image is food, form, equipment, label, or physique progress.</p>
             </div>
             <div class="chip-row">
-              <span class="chip active">Food or label photo: 1</span>
-              <span class="chip">Exercise form frame: 0</span>
-              <span class="chip">Equipment photo: 0</span>
-              <span class="chip">Physique progress photo: 0</span>
-              <span class="chip">Menu or nutrition label: 1</span>
+              <span class="chip active" data-en="Food or label photo: 1" data-zh="食物或标签照片：1">Food or label photo: 1</span>
+              <span class="chip" data-en="Exercise form frame: 0" data-zh="动作技术帧：0">Exercise form frame: 0</span>
+              <span class="chip" data-en="Equipment photo: 0" data-zh="器械照片：0">Equipment photo: 0</span>
+              <span class="chip" data-en="Physique progress photo: 0" data-zh="体型进度照片：0">Physique progress photo: 0</span>
+              <span class="chip" data-en="Menu or nutrition label: 1" data-zh="菜单或营养标签：1">Menu or nutrition label: 1</span>
             </div>
-            <p class="subtle"><strong>Latest:</strong> Food or label photo | chicken-bowl.jpg | portion estimate, visible oil, sauce, and bowl depth.</p>
+            <p class="subtle" data-en="Latest: Food or label photo | chicken-bowl.jpg | portion estimate, visible oil, sauce, and bowl depth." data-zh="最新：食物或标签照片 | chicken-bowl.jpg | 份量估算、可见油脂、酱料和碗深。"><strong>Latest:</strong> Food or label photo | chicken-bowl.jpg | portion estimate, visible oil, sauce, and bowl depth.</p>
           </div>
 
           <div class="rows">
             <div class="meal">
-              <strong>Meal 1: oats, whey, berries</strong>
+              <strong data-en="Meal 1: oats, whey, berries" data-zh="第 1 餐：燕麦、乳清、浆果">Meal 1: oats, whey, berries</strong>
               <p class="subtle">620 kcal | P 48 g | C 82 g | F 12 g | fiber 11 g</p>
             </div>
             <div class="meal">
-              <strong>Meal photo estimate</strong>
-              <p class="subtle">Chicken rice bowl, likely 720-860 kcal. AI should ask for bowl size and visible oil before finalizing.</p>
+              <strong data-en="Meal photo estimate" data-zh="餐食照片估算">Meal photo estimate</strong>
+              <p class="subtle" data-en="Chicken rice bowl, likely 720-860 kcal. AI should ask for bowl size and visible oil before finalizing." data-zh="鸡肉米饭碗，可能 720-860 kcal。AI 在最终估算前应询问碗大小和可见油脂。">Chicken rice bowl, likely 720-860 kcal. AI should ask for bowl size and visible oil before finalizing.</p>
             </div>
           </div>
         </section>
@@ -2899,13 +3048,13 @@
           <div class="section glass one-tap-hero metrics-hero">
             <div class="section-head">
               <h2 data-en="Metrics Flow Coach" data-zh="身体数据流程教练">Metrics Flow Coach</h2>
-              <p class="subtle" data-en="Sync health data, fill the minimum body check-in, and keep recovery evidence ready for AI." data-zh="同步健康数据，补齐最小身体记录，并让恢复证据可用于 AI。">Sync health data, fill the minimum body check-in, and keep recovery evidence ready for AI.</p>
+              <p class="subtle" data-en="Auto-refresh health and sleep data, fill the minimum body check-in, and keep recovery evidence ready for AI." data-zh="自动刷新健康与睡眠数据，补齐最小身体记录，并让恢复证据可用于 AI。">Auto-refresh health and sleep data, fill the minimum body check-in, and keep recovery evidence ready for AI.</p>
             </div>
             <div class="coach-stage">
               <div>
                 <p class="eyebrow" data-en="NEXT METRICS ACTION" data-zh="下一步数据动作">NEXT METRICS ACTION</p>
-                <h3 class="next-action-title" data-en="Sync today's metrics" data-zh="同步今天身体数据">Sync today's metrics</h3>
-                <p class="subtle" data-en="Pull weight, body fat, sleep, steps, resting HR, and calorie burn before AI reviews the day." data-zh="在 AI 复盘前拉取体重、体脂、睡眠、步数、静息心率和消耗热量。">Pull weight, body fat, sleep, steps, resting HR, and calorie burn before AI reviews the day.</p>
+                <h3 class="next-action-title" data-en="Auto health refresh ready" data-zh="健康数据自动刷新就绪">Auto health refresh ready</h3>
+                <p class="subtle" data-en="After permission, the app refreshes weight, body fat, sleep, steps, resting HR, and calorie burn on app open." data-zh="授权后，App 打开时会自动刷新体重、体脂、睡眠、步数、静息心率和消耗热量。">After permission, the app refreshes weight, body fat, sleep, steps, resting HR, and calorie burn on app open.</p>
               </div>
               <div class="action-orb">
                 <div class="exercise-photo-slot">
@@ -2913,12 +3062,19 @@
                 </div>
               </div>
             </div>
-            <button class="primary-play" type="button" data-en="Sync today" data-zh="同步今天">Sync today</button>
+            <button class="primary-play" type="button" data-en="Refresh now" data-zh="立即刷新">Refresh now</button>
             <div class="metric-grid">
               <div class="metric"><span class="label" data-en="Health" data-zh="健康">Health</span><span class="value" data-en="Authorized" data-zh="已授权">Authorized</span></div>
               <div class="metric"><span class="label" data-en="Weight" data-zh="体重">Weight</span><span class="value">82.4 kg</span></div>
+              <div class="metric"><span class="label" data-en="Sleep" data-zh="睡眠">Sleep</span><span class="value">7.2 h</span></div>
               <div class="metric"><span class="label" data-en="Recovery" data-zh="恢复">Recovery</span><span class="value">71</span></div>
-              <div class="metric"><span class="label" data-en="Physique" data-zh="体型">Physique</span><span class="value">82</span></div>
+            </div>
+            <div class="sync-strip">
+              <div class="sync-icon">HC</div>
+              <div>
+                <strong data-en="Auto refresh on app open" data-zh="打开 App 自动刷新">Auto refresh on app open</strong>
+                <p class="subtle" data-en="Xiaomi/Mi Fitness, Huawei Health, watches, scales, and phone health records are readable when they write compatible Health Connect records." data-zh="小米/Mi Fitness、华为运动健康、手表、体脂秤和手机健康记录在写入兼容 Health Connect 记录后即可读取。">Xiaomi/Mi Fitness, Huawei Health, watches, scales, and phone health records are readable when they write compatible Health Connect records.</p>
+              </div>
             </div>
             <p class="subtle" data-en="AI uses body weight, waist, sleep, steps, resting HR, recovery ratings, progress photos, and measurement trends before changing training or calories." data-zh="AI 在改变训练或热量前，会同时看体重、腰围、睡眠、步数、静息心率、恢复评分、体型照片和围度趋势。">AI uses body weight, waist, sleep, steps, resting HR, recovery ratings, progress photos, and measurement trends before changing training or calories.</p>
             <div class="action-row action-shortcuts">
@@ -3668,6 +3824,9 @@
       document.querySelectorAll("[data-en][data-zh]").forEach((element) => {
         element.textContent = lang === "zh" ? element.dataset.zh : element.dataset.en;
       });
+      document.querySelectorAll("[data-value-en][data-value-zh]").forEach((element) => {
+        element.value = lang === "zh" ? element.dataset.valueZh : element.dataset.valueEn;
+      });
       document.querySelectorAll("[data-aria-en][data-aria-zh]").forEach((element) => {
         element.setAttribute("aria-label", lang === "zh" ? element.dataset.ariaZh : element.dataset.ariaEn);
       });
@@ -3683,6 +3842,18 @@
     function setLanguage(lang) {
       currentLang = lang === "zh" ? "zh" : "en";
       applyTextLanguage(currentLang);
+    }
+
+    function mountFoldedPanels() {
+      document.querySelectorAll("[data-folded-panel]").forEach((layer) => {
+        const target = document.querySelector(`.panel[data-panel="${layer.dataset.foldedPanel}"]`);
+        if (!target) return;
+        layer.hidden = false;
+        layer.classList.remove("folded-panel");
+        layer.classList.add("folded-layer");
+        layer.removeAttribute("data-folded-panel");
+        target.appendChild(layer);
+      });
     }
 
     function activateTab(tabName) {
@@ -3746,6 +3917,7 @@
 
     completeSet.addEventListener("click", startRestTimer);
     heroCompleteSet.addEventListener("click", startRestTimer);
+    mountFoldedPanels();
     setLanguage("en");
     activateTab(currentTab);
   </script>

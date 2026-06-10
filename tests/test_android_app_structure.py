@@ -1183,6 +1183,7 @@ class AndroidAppStructureTest(unittest.TestCase):
             "Icons.Filled.MonitorHeart",
             "Icons.Filled.AutoAwesome",
             "contentDescription = tab.localizedTitle(language)",
+            "AppTab.NUTRITION -> language.t(\"Nutrition\", \"饮食\")",
             "AppTab.METRICS -> language.t(\"Metrics\", \"身体数据\")",
             "AppTab.AI_COACH -> language.t(\"AI\", \"AI\")",
         ]
@@ -1221,6 +1222,16 @@ class AndroidAppStructureTest(unittest.TestCase):
                 self.assertNotIn(placeholder, preview)
         self.assertNotIn('data-tab="today"', preview)
         self.assertNotIn('data-tab="plan"', preview)
+        self.assertEqual(
+            ["training", "nutrition", "metrics", "ai"],
+            re.findall(r'<section class="panel(?: active)?" data-panel="([^"]+)"', preview),
+        )
+        self.assertIn('data-folded-panel="training"', preview)
+        self.assertIn('data-folded-panel="ai"', preview)
+        self.assertIn("mountFoldedPanels", preview)
+        self.assertIn("target.appendChild(layer)", preview)
+        self.assertNotIn('data-panel="training-plan"', preview)
+        self.assertNotIn('data-panel="daily-overview"', preview)
 
     def test_metrics_health_data_layer_uses_localized_labels(self) -> None:
         ui = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/IfbbProCoachApp.kt").read_text(
@@ -1286,6 +1297,75 @@ class AndroidAppStructureTest(unittest.TestCase):
             'data-zh="右大腿 cm"',
             'data-zh="恢复输入"',
             'data-zh="手动补录"',
+        ]
+        for term in preview_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, preview)
+
+    def test_nutrition_detail_layers_use_localized_copy(self) -> None:
+        ui = (APP / "app/src/main/java/com/iwanttobeanifbbpro/app/ui/IfbbProCoachApp.kt").read_text(
+            encoding="utf-8"
+        )
+        preview = (APP / "preview/index.html").read_text(encoding="utf-8")
+        expected_ui_terms = [
+            "private fun MealAssemblyGuide.localizedTitle",
+            "private fun MealAssemblyGuide.localizedPlateStructure",
+            "private fun MealAssemblyGuide.localizedProteinAnchor",
+            "private fun MealAssemblyGuide.localizedCarbAnchor",
+            "private fun MealAssemblyGuide.localizedFatControl",
+            "private fun MealAssemblyGuide.localizedFiberMicros",
+            "private fun MealAssemblyGuide.localizedShoppingCue",
+            "private fun MealAssemblyGuide.localizedPrepCue",
+            "private fun MealAssemblyGuide.localizedPhotoLoggingCue",
+            "private fun MealAssemblyGuide.localizedAvoidCue",
+            "guide.localizedTitle(language)",
+            "guide.localizedPlateStructure(language)",
+            "guide.localizedProteinAnchor(language)",
+            "guide.localizedCarbAnchor(language)",
+            "guide.localizedFatControl(language)",
+            "guide.localizedFiberMicros(language)",
+            "guide.localizedShoppingCue(language)",
+            "guide.localizedPrepCue(language)",
+            "guide.localizedPhotoLoggingCue(language)",
+            "guide.localizedAvoidCue(language)",
+            "BodyCompositionGuidance.localizedStatusLabel",
+            "BodyCompositionGuidance.localizedPhaseGoal",
+            "ConditioningHydrationGuidance.localizedStatusLabel",
+            "localizedConditioningText",
+            "language.t(\"Step goal\", \"步数目标\")",
+            "language.t(\"Water L\", \"饮水 L\")",
+            "language.t(\"Digestion, bloating, high-salt meal, cramps, pump\", \"消化、胀气、高盐餐、抽筋、泵感\")",
+        ]
+        for term in expected_ui_terms:
+            with self.subTest(term=term):
+                self.assertIn(term, ui)
+
+        forbidden_ui_terms = [
+            "Text(guide.title",
+            "text = guide.plateStructure",
+            "guide.proteinAnchor,",
+            "guide.carbAnchor,",
+            "guide.fatControl,",
+            "guide.fiberMicros",
+        ]
+        for term in forbidden_ui_terms:
+            with self.subTest(term=term):
+                self.assertNotIn(term, ui)
+
+        preview_terms = [
+            'data-zh="营养节奏"',
+            'data-zh="餐食记录教练"',
+            'data-zh="下一餐构建器"',
+            'data-zh="餐盘组合指南"',
+            'data-zh="蛋白质锚点：鸡肉、白鱼、瘦牛肉、乳清、豆腐或希腊酸奶"',
+            'data-zh="拍照记录提示：AI 估算前，拍下不确定的外食份量、油、酱料、标签和碗深。"',
+            'data-zh="身体组成指导"',
+            'data-zh="有氧、活动量与补水"',
+            'data-zh="餐食模板"',
+            'data-zh="添加餐食"',
+            'data-zh="食物照片"',
+            'data-zh="照片证据"',
+            'data-zh="餐食照片估算"',
         ]
         for term in preview_terms:
             with self.subTest(term=term):
@@ -1903,11 +1983,13 @@ class AndroidAppStructureTest(unittest.TestCase):
         for term in expected_terms:
             with self.subTest(term=term):
                 self.assertIn(term, combined)
-        self.assertIn('.panel[data-panel="ai"][aria-label="AI Coach"]', html)
-        self.assertIn('.panel[data-panel="ai"][aria-label="AI daily overview"]', html)
-        self.assertLess(
-            html.index('.panel[data-panel="ai"][aria-label="AI Coach"]'),
-            html.index('.panel[data-panel="ai"][aria-label="AI daily overview"]'),
+        self.assertIn('<section class="panel" data-panel="ai" aria-label="AI Coach">', html)
+        self.assertIn('<section class="folded-panel" data-folded-panel="ai" aria-label="AI daily overview" hidden>', html)
+        self.assertIn('<section class="folded-panel" data-folded-panel="training" aria-label="Training plan" hidden>', html)
+        self.assertIn("mountFoldedPanels", html)
+        self.assertEqual(
+            ["training", "nutrition", "metrics", "ai"],
+            re.findall(r'<section class="panel(?: active)?" data-panel="([^"]+)"', html),
         )
 
     def test_skill_assets_define_exercise_visual_guide_categories(self) -> None:

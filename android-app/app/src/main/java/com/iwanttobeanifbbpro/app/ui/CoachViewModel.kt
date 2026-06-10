@@ -262,6 +262,9 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val snapshot = withContext(Dispatchers.IO) { healthRepository.permissionSnapshot() }
             uiState = uiState.copy(healthSnapshot = snapshot, isHealthSyncing = false)
+            if (snapshot.permissionsGranted) {
+                syncHealthData()
+            }
         }
     }
 
@@ -272,7 +275,7 @@ class CoachViewModel(application: Application) : AndroidViewModel(application) {
                 available = true,
                 permissionsGranted = permissionsGranted,
                 message = if (permissionsGranted) {
-                    "Health Connect permissions granted. Sync today's metrics next."
+                    "Health Connect permissions granted. Automatic daily refresh is ready."
                 } else {
                     "Some Health Connect permissions were not granted; manual metrics still work."
                 }

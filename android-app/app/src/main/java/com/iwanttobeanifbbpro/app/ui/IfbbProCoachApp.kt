@@ -397,14 +397,241 @@ private fun AppTab.shortTitle(language: AppLanguage): String {
 private fun AppTab.localizedTitle(language: AppLanguage): String {
     return when (this) {
         AppTab.TRAINING -> language.t("Training", "训练")
-        AppTab.NUTRITION -> language.t("Nutrition", "饮食营养")
+        AppTab.NUTRITION -> language.t("Nutrition", "饮食")
         AppTab.METRICS -> language.t("Metrics", "身体数据")
-        AppTab.AI_COACH -> language.t("AI Coach", "AI 教练")
+        AppTab.AI_COACH -> language.t("AI", "AI")
     }
 }
 
 private fun AppLanguage.t(en: String, zh: String): String {
     return if (this == AppLanguage.CHINESE) zh else en
+}
+
+private fun BodyCompositionGuidance.localizedStatusLabel(language: AppLanguage): String {
+    return when (statusLabel) {
+        "Need trend data" -> language.t("Need trend data", "需要趋势数据")
+        "Small calorie increase" -> language.t("Small calorie increase", "小幅增加热量")
+        "Small calorie decrease" -> language.t("Small calorie decrease", "小幅降低热量")
+        "Hold targets" -> language.t("Hold targets", "保持目标")
+        else -> statusLabel
+    }
+}
+
+private fun BodyCompositionGuidance.localizedPhaseGoal(language: AppLanguage): String {
+    return when (phaseGoal) {
+        "Fat loss" -> language.t("Fat loss", "减脂")
+        "Lean gain" -> language.t("Lean gain", "精益增肌")
+        "Maintain/Recomp" -> language.t("Maintain/Recomp", "维持/重组")
+        "Physique improvement" -> language.t("Physique improvement", "体型提升")
+        else -> phaseGoal
+    }
+}
+
+private fun BodyCompositionGuidance.localizedRationale(language: AppLanguage): String {
+    return when (rationale) {
+        "Log body weight and food for at least four days before changing targets." -> language.t(
+            "Log body weight and food for at least four days before changing targets.",
+            "调整目标前，至少连续四天记录体重和饮食。"
+        )
+        "Recent weight trend is below the phase target, so a small increase is safer than a large jump." -> language.t(
+            "Recent weight trend is below the phase target, so a small increase is safer than a large jump.",
+            "近期体重趋势低于阶段目标，小幅增加比大幅跳升更稳妥。"
+        )
+        "Recent weight trend is above the phase target, so a small decrease is enough before reassessing." -> language.t(
+            "Recent weight trend is above the phase target, so a small decrease is enough before reassessing.",
+            "近期体重趋势高于阶段目标，先小幅降低再重新评估。"
+        )
+        "Recent weight, calories, protein, and training trend do not justify changing targets yet." -> language.t(
+            "Recent weight, calories, protein, and training trend do not justify changing targets yet.",
+            "近期体重、热量、蛋白质和训练趋势还不足以支持修改目标。"
+        )
+        else -> rationale
+    }
+}
+
+private fun BodyCompositionGuidance.localizedNextAction(language: AppLanguage): String {
+    return when (nextAction) {
+        "Keep current targets, weigh in consistently, and complete meal logs." -> language.t(
+            "Keep current targets, weigh in consistently, and complete meal logs.",
+            "保持当前目标，稳定称重，并补完整餐食记录。"
+        )
+        "Fix protein consistency before changing calories aggressively." -> language.t(
+            "Fix protein consistency before changing calories aggressively.",
+            "先稳定蛋白质摄入，再大幅调整热量。"
+        )
+        "Confirm training output before using scale trend alone." -> language.t(
+            "Confirm training output before using scale trend alone.",
+            "先确认训练输出，再单独依据体重趋势调整。"
+        )
+        "Hold calories for another check-in and reassess with the next trend window." -> language.t(
+            "Hold calories for another check-in and reassess with the next trend window.",
+            "热量先保持到下一次打卡，再用新的趋势窗口重新评估。"
+        )
+        "Add mostly carbs around training or lean protein if protein is behind." -> language.t(
+            "Add mostly carbs around training or lean protein if protein is behind.",
+            "优先在训练前后增加碳水；如果蛋白落后，就补低脂蛋白。"
+        )
+        "Remove calories from low-satiety fats/snacks before cutting training carbs." -> language.t(
+            "Remove calories from low-satiety fats/snacks before cutting training carbs.",
+            "先从低饱腹感脂肪或零食里减少热量，再削减训练碳水。"
+        )
+        else -> nextAction
+    }
+}
+
+private fun ConditioningHydrationGuidance.localizedStatusLabel(language: AppLanguage): String {
+    return statusLabel.localizedConditioningText(language)
+}
+
+private fun String.localizedConditioningText(language: AppLanguage): String {
+    if (language != AppLanguage.CHINESE) return this
+    var localized = this
+    val replacements = listOf(
+        "Cut/recomp support ready" to "减脂/重组支持变量就绪",
+        "NEAT behind" to "日常活动偏低",
+        "Hydration gap" to "补水缺口",
+        "Stimulant pressure" to "兴奋剂压力",
+        "Recovery confounder" to "恢复干扰因素",
+        "Cardio optional" to "有氧可选",
+        "Support variables logged" to "支持变量已记录",
+        "No cardio logged; use steps first, then low-intensity cardio if fat-loss pace needs help." to "未记录有氧；先补步数，如果减脂速度需要帮助，再加低强度有氧。",
+        "Cardio below today's phase target; keep it easy enough not to steal leg recovery." to "有氧低于今天阶段目标；保持轻松，避免影响腿部恢复。",
+        "High cardio load; watch leg performance, hunger, and sleep before adding more." to "有氧负荷较高；继续增加前先观察腿部表现、饥饿和睡眠。",
+        "Cardio is in a useful range for this phase." to "有氧处在当前阶段有用范围内。",
+        "Water not logged; AI should treat scale weight and pump notes with lower confidence." to "未记录饮水；AI 应降低对体重和泵感记录的置信度。",
+        "Water is low; improve hydration before judging pump, appetite, or weight spikes." to "饮水偏低；先改善补水，再判断泵感、食欲或体重波动。",
+        "Very high water intake; check sodium balance and avoid forcing fluids." to "饮水非常高；检查钠平衡，避免强行灌水。",
+        "Water intake is logged and usable for recovery and weight interpretation." to "饮水已记录，可用于恢复和体重解读。",
+        "Sodium not logged; note salty restaurant meals or unusual cramping/pump changes." to "未记录钠；请备注高盐外食、异常抽筋或泵感变化。",
+        "Sodium may be low for hard training; watch pump, dizziness, and cramping." to "对高强度训练而言钠可能偏低；注意泵感、头晕和抽筋。",
+        "High sodium can explain next-day scale weight and thirst without implying fat gain." to "高钠可能解释次日体重和口渴，不一定代表脂肪增加。",
+        "Sodium looks plausible; compare with water, sweat, and scale trend." to "钠摄入看起来合理；结合饮水、出汗和体重趋势判断。",
+        "Caffeine not logged; note late stimulants when sleep or resting HR worsens." to "未记录咖啡因；睡眠或静息心率变差时，备注晚间兴奋剂。",
+        "High caffeine; protect sleep and avoid masking fatigue." to "咖啡因偏高；保护睡眠，避免掩盖疲劳。",
+        "Moderate-high caffeine; keep timing early if sleep quality matters." to "咖啡因中高；如果睡眠质量重要，就尽量提前摄入。",
+        "Caffeine is unlikely to be the main recovery limiter." to "咖啡因不太可能是主要恢复限制因素。",
+        "Alcohol logged; treat recovery, sleep, weight, and hunger as lower-confidence signals." to "已记录酒精；恢复、睡眠、体重和饥饿信号置信度降低。",
+        "Small alcohol exposure logged; note it if sleep, appetite, or weight changes." to "记录到少量酒精；如睡眠、食欲或体重变化，请一起备注。",
+        "Not enough weight trend data; do not change calories from one scale point." to "体重趋势数据不足；不要根据单次体重改变热量。",
+        "Scale is stable day to day; use 7-14 day trend before changing calories." to "日间体重稳定；调整热量前先看 7-14 天趋势。",
+        "Walk enough to reach at least 80% of step goal before adding more calorie cuts." to "先走到至少 80% 步数目标，再考虑继续削减热量。",
+        "Log water and bring hydration into range before judging pump or scale changes." to "先记录饮水并把补水拉回范围，再判断泵感或体重变化。",
+        "Cap caffeine earlier tomorrow and compare sleep/resting HR before pushing volume." to "明天更早控制咖啡因，再比较睡眠/静息心率后决定是否加量。",
+        "Treat today's recovery and weight as confounded; hold plan changes unless trend agrees." to "把今天恢复和体重视为有干扰；除非趋势也支持，否则不改计划。",
+        "Add short easy cardio only if fat-loss pace or appetite control needs it." to "只有减脂速度或食欲控制需要时，才加短时轻松有氧。",
+        "Keep steps, cardio, water, sodium, caffeine, and digestion notes consistent for cleaner AI review." to "保持步数、有氧、饮水、钠、咖啡因和消化备注一致，让 AI 复盘更干净。",
+        "high sodium" to "高钠",
+        "low water" to "低饮水",
+        "alcohol exposure" to "酒精暴露",
+        "high cardio load" to "高有氧负荷",
+        "digestion:" to "消化："
+    )
+    replacements.forEach { (en, zh) -> localized = localized.replace(en, zh) }
+    localized = localized
+        .replace("Scale changed ", "体重变化 ")
+        .replace(" kg; possible confounders: ", " kg；可能干扰因素：")
+        .replace(
+            " kg without an obvious water/sodium/cardio note; keep watching trend.",
+            " kg，且没有明显水分/钠/有氧备注；继续观察趋势。"
+        )
+    return localized
+}
+
+private fun String.localizedTrainingText(language: AppLanguage): String {
+    if (language != AppLanguage.CHINESE) return this
+    var localized = this
+    val replacements = listOf(
+        "No loaded session" to "未载入训练",
+        "No session loaded" to "未载入训练",
+        "No active ramp" to "未生成热身递增",
+        "Ready to execute" to "可以执行",
+        "Hold before pushing" to "先稳住再推进",
+        "Reduce session stress" to "降低本次训练压力",
+        "Deload check" to "减量检查",
+        "Pain check" to "疼痛检查",
+        "Technique check" to "技术检查",
+        "Technique watch" to "技术观察",
+        "Ready for first set" to "准备第一组",
+        "Manage fatigue" to "管理疲劳",
+        "Hold or reduce" to "保持或降低",
+        "Continue next set" to "继续下一组",
+        "All sets complete" to "所有组已完成",
+        "Ready to log" to "准备记录",
+        "Incomplete session" to "训练未完成",
+        "Under-logged" to "记录不足",
+        "High fatigue" to "疲劳偏高",
+        "Productive session" to "高质量训练",
+        "Usable session" to "可用于复盘",
+        "Review before progressing" to "进阶前先复盘",
+        "Finish workout" to "完成训练",
+        "Complete set data" to "补全组数据",
+        "Risk review needed" to "需要风险复盘",
+        "Nutrition missing" to "缺少训练后饮食",
+        "Metrics missing" to "缺少恢复数据",
+        "Closeout locked" to "收尾已锁定",
+        "Ready for AI review" to "可以 AI 复盘",
+        "Working-load ramp" to "正式重量递增",
+        "Conservative ramp" to "保守递增",
+        "Reduced-stress ramp" to "低压力递增",
+        "Pain-limited ramp" to "疼痛限制递增",
+        "Deload-style ramp" to "减量式递增",
+        "First tracked session" to "首次记录本动作",
+        "Log sets to compare" to "记录组数后再比较",
+        "Volume up" to "容量上升",
+        "Volume down" to "容量下降",
+        "Load PR" to "重量 PR",
+        "Rep PR" to "次数 PR",
+        "Matched last time" to "接近上次表现",
+        "Plan first" to "先载入计划",
+        "Not enough data" to "数据不足",
+        "Modify or hold" to "修改或保持",
+        "Finish baseline" to "先完成基线",
+        "Add load next time" to "下次小幅加重",
+        "Add reps first" to "先加次数",
+        "Hold load" to "保持重量",
+        "Repeat and refine" to "重复并优化",
+        "Pain-aware swap" to "疼痛保护替代",
+        "Equipment unavailable" to "器械不可用",
+        "Equipment mismatch" to "器械不匹配",
+        "Technique-stability swap" to "技术稳定替代",
+        "Plan A available" to "计划动作可用",
+        "Apply plan" to "应用计划",
+        "Finish sets" to "完成组数",
+        "Complete set logs" to "补全组记录",
+        "Add form evidence" to "添加动作证据",
+        "Add session notes" to "添加训练备注",
+        "Log post-workout food" to "记录训练后饮食",
+        "Sync recovery metrics" to "同步恢复数据",
+        "View review" to "查看复盘",
+        "Run AI review" to "运行 AI 复盘",
+        "Reviewing" to "复盘中",
+        "Done" to "完成",
+        "Todo" to "待办",
+        "No previous" to "无上次记录",
+        "bodyweight/plan" to "自重/按计划",
+        "no working load" to "无正式重量",
+        "5-10 minutes" to "5-10 分钟"
+    )
+    replacements.forEach { (en, zh) -> localized = localized.replace(en, zh) }
+    localized = localized
+        .replace("After tapping Complete", "点击完成后")
+        .replace("before the next working set", "再进入下一组正式组")
+        .replace("No next-set", "暂无下一组")
+        .replace("working set(s) remaining", "个正式组剩余")
+        .replace("working sets remaining", "个正式组剩余")
+        .replace("No completed working sets logged", "还没有已完成正式组记录")
+        .replace("completed set(s) missing reps, load, or RIR", "个已完成组缺少次数、重量或 RIR")
+        .replace("pain flag(s)", "个疼痛标记")
+        .replace("technique flag(s)", "个技术标记")
+        .replace("meal(s) or food photo evidence logged", "餐或食物照片证据已记录")
+        .replace("form photo(s)", "张动作照片")
+        .replace("equipment photo(s)", "张器械照片")
+        .replace("sets", "组")
+        .replace("reps", "次")
+        .replace("Load", "重量")
+        .replace("Reps", "次数")
+        .replace("Rest", "休息")
+    return localized
 }
 
 private fun PhotoEvidenceType.localizedLabel(language: AppLanguage): String {
@@ -707,6 +934,204 @@ private fun NextMealBuilder.estimatedCalories(): Int {
     return (proteinGrams * 4 + carbsGrams * 4 + fatGrams * 9).coerceAtLeast(120)
 }
 
+private fun MealAssemblyGuide.localizedTitle(language: AppLanguage): String {
+    return when (title) {
+        "Lean correction plate" -> language.t("Lean correction plate", "低脂修正餐盘")
+        "Protein-first bodybuilding plate" -> language.t("Protein-first bodybuilding plate", "蛋白质优先健美餐盘")
+        "Training fuel plate" -> language.t("Training fuel plate", "训练供能餐盘")
+        "Post-workout recovery plate" -> language.t("Post-workout recovery plate", "训练后恢复餐盘")
+        "Fiber and micronutrient plate" -> language.t("Fiber and micronutrient plate", "纤维与微量营养餐盘")
+        "Balanced physique plate" -> language.t("Balanced physique plate", "均衡体型餐盘")
+        else -> title
+    }
+}
+
+private fun MealAssemblyGuide.localizedPlateStructure(language: AppLanguage): String {
+    return when (plateStructure) {
+        "One palm-plus lean protein, two fists vegetables, very small starch, sauce measured separately." -> language.t(
+            "One palm-plus lean protein, two fists vegetables, very small starch, sauce measured separately.",
+            "一掌多的瘦蛋白、两拳蔬菜、少量主食，酱汁单独测量。"
+        )
+        "Two palms lean protein, one fist carb if calories allow, one to two fists vegetables." -> language.t(
+            "Two palms lean protein, one fist carb if calories allow, one to two fists vegetables.",
+            "两掌瘦蛋白；热量允许时加一拳碳水；一到两拳蔬菜。"
+        )
+        "One to two palms lean protein, one to two fists easy carbs, low fat, low-to-moderate fiber." -> language.t(
+            "One to two palms lean protein, one to two fists easy carbs, low fat, low-to-moderate fiber.",
+            "一到两掌瘦蛋白、一到两拳易消化碳水，低脂、低到中等纤维。"
+        )
+        "One to two palms protein, one to two fists carbs, vegetables or fruit, fats kept moderate." -> language.t(
+            "One to two palms protein, one to two fists carbs, vegetables or fruit, fats kept moderate.",
+            "一到两掌蛋白质、一到两拳碳水、蔬菜或水果，脂肪保持中等。"
+        )
+        "One palm protein, one fist high-fiber carb, two fists colorful vegetables or fruit." -> language.t(
+            "One palm protein, one fist high-fiber carb, two fists colorful vegetables or fruit.",
+            "一掌蛋白质、一拳高纤维碳水、两拳彩色蔬菜或水果。"
+        )
+        "One palm protein, one fist carb, one thumb fat, one to two fists vegetables." -> language.t(
+            "One palm protein, one fist carb, one thumb fat, one to two fists vegetables.",
+            "一掌蛋白质、一拳碳水、一拇指脂肪、一到两拳蔬菜。"
+        )
+        else -> plateStructure
+    }
+}
+
+private fun MealAssemblyGuide.localizedProteinAnchor(language: AppLanguage): String {
+    return when (proteinAnchor) {
+        "Use chicken breast, turkey, white fish, lean beef, egg whites, whey, tofu, or Greek yogurt for about 45-65 g protein." -> language.t(
+            "Use chicken breast, turkey, white fish, lean beef, egg whites, whey, tofu, or Greek yogurt for about 45-65 g protein.",
+            "用鸡胸、火鸡、白鱼、瘦牛肉、蛋清、乳清、豆腐或希腊酸奶补约 45-65 g 蛋白质。"
+        )
+        "Use one large lean protein serving for about 30-45 g protein." -> language.t(
+            "Use one large lean protein serving for about 30-45 g protein.",
+            "使用一份较大的瘦蛋白，约 30-45 g 蛋白质。"
+        )
+        "Keep a normal protein serving so the day stays anchored without forcing extra calories." -> language.t(
+            "Keep a normal protein serving so the day stays anchored without forcing extra calories.",
+            "保持正常蛋白份量，让当天饮食有基础，但不强行增加热量。"
+        )
+        else -> proteinAnchor
+    }
+}
+
+private fun MealAssemblyGuide.localizedCarbAnchor(language: AppLanguage): String {
+    return when (carbAnchor) {
+        "Skip dense carbs unless training is still pending; use vegetables or berries." -> language.t(
+            "Skip dense carbs unless training is still pending; use vegetables or berries.",
+            "除非还有训练没完成，否则跳过高密度碳水，使用蔬菜或莓果。"
+        )
+        "Use rice, oats, potatoes, pasta, bread, bananas, or cereal 60-120 minutes around training." -> language.t(
+            "Use rice, oats, potatoes, pasta, bread, bananas, or cereal 60-120 minutes around training.",
+            "训练前后 60-120 分钟使用米饭、燕麦、土豆、意面、面包、香蕉或谷物。"
+        )
+        "Use rice, potatoes, oats, fruit, or noodles for recovery without pushing fats high." -> language.t(
+            "Use rice, potatoes, oats, fruit, or noodles for recovery without pushing fats high.",
+            "用米饭、土豆、燕麦、水果或面条恢复，同时不要把脂肪推高。"
+        )
+        "Use a measured carb serving and keep it easy to log." -> language.t(
+            "Use a measured carb serving and keep it easy to log.",
+            "使用可测量的一份碳水，让记录更容易。"
+        )
+        "Keep carbs modest and spend remaining calories on protein and vegetables." -> language.t(
+            "Keep carbs modest and spend remaining calories on protein and vegetables.",
+            "碳水保持适中，把剩余热量优先用在蛋白质和蔬菜上。"
+        )
+        else -> carbAnchor
+    }
+}
+
+private fun MealAssemblyGuide.localizedFatControl(language: AppLanguage): String {
+    return when (fatControl) {
+        "Avoid added oil, nuts, cheese, fatty sauces, and fried food for the rest of the day." -> language.t(
+            "Avoid added oil, nuts, cheese, fatty sauces, and fried food for the rest of the day.",
+            "当天剩余时间避免额外油、坚果、奶酪、高脂酱料和油炸食物。"
+        )
+        "Keep fats very low: grill, steam, air fry, and measure sauces." -> language.t(
+            "Keep fats very low: grill, steam, air fry, and measure sauces.",
+            "脂肪保持很低：烤、蒸、空气炸，并测量酱料。"
+        )
+        "Use one measured thumb of fats such as olive oil, avocado, nuts, whole eggs, or salmon if it fits the target." -> language.t(
+            "Use one measured thumb of fats such as olive oil, avocado, nuts, whole eggs, or salmon if it fits the target.",
+            "如果符合目标，可使用一拇指可测量脂肪，如橄榄油、牛油果、坚果、全蛋或三文鱼。"
+        )
+        else -> fatControl
+    }
+}
+
+private fun MealAssemblyGuide.localizedFiberMicros(language: AppLanguage): String {
+    return when (fiberMicros) {
+        "Add a high-fiber side: vegetables, berries, oats, beans, lentils, potatoes with skin, or whole grains." -> language.t(
+            "Add a high-fiber side: vegetables, berries, oats, beans, lentils, potatoes with skin, or whole grains.",
+            "添加高纤维配菜：蔬菜、莓果、燕麦、豆类、扁豆、带皮土豆或全谷物。"
+        )
+        "Add at least one vegetable or fruit serving." -> language.t(
+            "Add at least one vegetable or fruit serving.",
+            "至少加入一份蔬菜或水果。"
+        )
+        "Keep vegetables present, but do not force extra fiber if digestion or training timing would suffer." -> language.t(
+            "Keep vegetables present, but do not force extra fiber if digestion or training timing would suffer.",
+            "保留蔬菜，但如果会影响消化或训练时间，不要强行增加额外纤维。"
+        )
+        else -> fiberMicros
+    }
+}
+
+private fun MealAssemblyGuide.localizedShoppingCue(language: AppLanguage): String {
+    return when (shoppingCue) {
+        "Keep lean protein, microwave rice or potatoes, Greek yogurt, and frozen vegetables stocked." -> language.t(
+            "Keep lean protein, microwave rice or potatoes, Greek yogurt, and frozen vegetables stocked.",
+            "常备瘦蛋白、微波米饭或土豆、希腊酸奶和冷冻蔬菜。"
+        )
+        "Keep fast carbs ready: rice packs, oats, bananas, cereal, bagels, potatoes, or sports drink if needed." -> language.t(
+            "Keep fast carbs ready: rice packs, oats, bananas, cereal, bagels, potatoes, or sports drink if needed.",
+            "准备快速碳水：米饭包、燕麦、香蕉、谷物、贝果、土豆，必要时运动饮料。"
+        )
+        "Choose lean protein and vegetables; skip restaurant meals with hidden oil when possible." -> language.t(
+            "Choose lean protein and vegetables; skip restaurant meals with hidden oil when possible.",
+            "选择瘦蛋白和蔬菜；尽量避开隐藏油脂多的外食。"
+        )
+        "Use simple repeatable staples so the meal can be logged without guessing." -> language.t(
+            "Use simple repeatable staples so the meal can be logged without guessing.",
+            "使用简单、可重复的基础食材，让记录不靠猜。"
+        )
+        else -> shoppingCue
+    }
+}
+
+private fun MealAssemblyGuide.localizedPrepCue(language: AppLanguage): String {
+    return when (prepCue) {
+        "Prep this as a low-fat, easy-digesting meal so training performance is not limited by digestion." -> language.t(
+            "Prep this as a low-fat, easy-digesting meal so training performance is not limited by digestion.",
+            "做成低脂、易消化的一餐，避免消化影响训练表现。"
+        )
+        "Prep this as a recovery meal and log the cooked carb amount, protein weight, oil, and sauce." -> language.t(
+            "Prep this as a recovery meal and log the cooked carb amount, protein weight, oil, and sauce.",
+            "做成恢复餐，并记录熟碳水重量、蛋白重量、油和酱汁。"
+        )
+        "Batch protein and carbs separately so portions can be adjusted meal by meal." -> language.t(
+            "Batch protein and carbs separately so portions can be adjusted meal by meal.",
+            "蛋白质和碳水分开批量准备，这样每餐份量都能调整。"
+        )
+        else -> prepCue
+    }
+}
+
+private fun MealAssemblyGuide.localizedPhotoLoggingCue(language: AppLanguage): String {
+    return when (photoLoggingCue) {
+        "If this is the first meal, photograph the full plate and include any labels or package weights." -> language.t(
+            "If this is the first meal, photograph the full plate and include any labels or package weights.",
+            "如果这是第一餐，拍完整餐盘，并包含标签或包装重量。"
+        )
+        "Photograph uncertain restaurant portions, oils, sauces, labels, and bowl depth before AI estimation." -> language.t(
+            "Photograph uncertain restaurant portions, oils, sauces, labels, and bowl depth before AI estimation.",
+            "AI 估算前，拍下不确定的外食份量、油、酱汁、标签和碗深。"
+        )
+        else -> photoLoggingCue
+    }
+}
+
+private fun MealAssemblyGuide.localizedAvoidCue(language: AppLanguage): String {
+    return when (avoidCue) {
+        "Do not compensate by cutting tomorrow's protein or skipping recovery nutrition." -> language.t(
+            "Do not compensate by cutting tomorrow's protein or skipping recovery nutrition.",
+            "不要用明天少吃蛋白或跳过恢复营养来补偿。"
+        )
+        "Do not add fats because the meal looks small; use vegetables and lean protein for volume." -> language.t(
+            "Do not add fats because the meal looks small; use vegetables and lean protein for volume.",
+            "不要因为餐看起来少就加脂肪；用蔬菜和瘦蛋白增加体积。"
+        )
+        "Do not spend remaining calories on snacks before protein is handled." -> language.t(
+            "Do not spend remaining calories on snacks before protein is handled.",
+            "蛋白质没处理好前，不要把剩余热量花在零食上。"
+        )
+        "Do not chase perfect numbers; get close, log honestly, and let the trend guide adjustments." -> language.t(
+            "Do not chase perfect numbers; get close, log honestly, and let the trend guide adjustments.",
+            "不要追求完美数字；接近目标、诚实记录，让趋势指导调整。"
+        )
+        else -> avoidCue
+    }
+}
+
 private fun DailyLog.recommendedMealTemplate(): MealTemplate {
     val pacing = nutritionPacing()
     val hasTrainingDemand = plannedHardSets() > 0 && completedHardSets() < plannedHardSets()
@@ -829,7 +1254,7 @@ private fun ConditioningHydrationCard(
     ) {
         MetricGrid(
             metrics = listOf(
-                language.t("Status", "状态") to guidance.statusLabel,
+                language.t("Status", "状态") to guidance.localizedStatusLabel(language),
                 language.t("Score", "评分") to guidance.conditioningScore.toString(),
                 language.t("Steps", "步数") to "${log.metrics.steps}/${conditioning.stepGoal}",
                 language.t("Cardio", "有氧") to "${conditioning.cardioMinutes} min",
@@ -842,21 +1267,21 @@ private fun ConditioningHydrationCard(
             modifier = Modifier.fillMaxWidth()
         )
         Text(
-            text = guidance.nextAction,
+            text = guidance.nextAction.localizedConditioningText(language),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold
         )
         Text(
-            text = guidance.weightFluctuationCue,
+            text = guidance.weightFluctuationCue.localizedConditioningText(language),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         DataChipGrid(
             items = listOf(
-                guidance.cardioStatus,
-                guidance.hydrationStatus,
-                guidance.sodiumCue,
-                guidance.caffeineCue
+                guidance.cardioStatus.localizedConditioningText(language),
+                guidance.hydrationStatus.localizedConditioningText(language),
+                guidance.sodiumCue.localizedConditioningText(language),
+                guidance.caffeineCue.localizedConditioningText(language)
             ).filter { it.isNotBlank() }
         )
         if (!compact && onConditioningChange != null) {
@@ -864,13 +1289,13 @@ private fun ConditioningHydrationCard(
                 NumberField(
                     value = conditioning.stepGoal.toString(),
                     onChange = { onConditioningChange(conditioning.copy(stepGoal = (it.toIntOrNull() ?: conditioning.stepGoal).coerceAtLeast(0))) },
-                    label = "Step goal",
+                    label = language.t("Step goal", "步数目标"),
                     modifier = Modifier.weight(1f)
                 )
                 NumberField(
                     value = conditioning.cardioMinutes.toString(),
                     onChange = { onConditioningChange(conditioning.copy(cardioMinutes = (it.toIntOrNull() ?: conditioning.cardioMinutes).coerceAtLeast(0))) },
-                    label = "Cardio min",
+                    label = language.t("Cardio min", "有氧分钟"),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -879,14 +1304,14 @@ private fun ConditioningHydrationCard(
                     value = conditioning.cardioType,
                     onValueChange = { onConditioningChange(conditioning.copy(cardioType = it)) },
                     modifier = Modifier.weight(1f),
-                    label = { Text("Cardio type") },
+                    label = { Text(language.t("Cardio type", "有氧类型")) },
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = conditioning.cardioIntensity,
                     onValueChange = { onConditioningChange(conditioning.copy(cardioIntensity = it.ifBlank { "Zone 2" })) },
                     modifier = Modifier.weight(1f),
-                    label = { Text("Intensity") },
+                    label = { Text(language.t("Intensity", "强度")) },
                     singleLine = true
                 )
             }
@@ -894,13 +1319,13 @@ private fun ConditioningHydrationCard(
                 DecimalField(
                     value = conditioning.waterLiters?.toString().orEmpty(),
                     onChange = { onConditioningChange(conditioning.copy(waterLiters = it.toDoubleOrNull())) },
-                    label = "Water L",
+                    label = language.t("Water L", "饮水 L"),
                     modifier = Modifier.weight(1f)
                 )
                 NumberField(
                     value = conditioning.sodiumMg?.toString().orEmpty(),
                     onChange = { onConditioningChange(conditioning.copy(sodiumMg = it.toIntOrNull())) },
-                    label = "Sodium mg",
+                    label = language.t("Sodium mg", "钠 mg"),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -908,13 +1333,13 @@ private fun ConditioningHydrationCard(
                 NumberField(
                     value = conditioning.caffeineMg?.toString().orEmpty(),
                     onChange = { onConditioningChange(conditioning.copy(caffeineMg = it.toIntOrNull())) },
-                    label = "Caffeine mg",
+                    label = language.t("Caffeine mg", "咖啡因 mg"),
                     modifier = Modifier.weight(1f)
                 )
                 DecimalField(
                     value = conditioning.alcoholServings?.toString().orEmpty(),
                     onChange = { onConditioningChange(conditioning.copy(alcoholServings = it.toDoubleOrNull())) },
-                    label = "Alcohol",
+                    label = language.t("Alcohol", "酒精"),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -922,14 +1347,14 @@ private fun ConditioningHydrationCard(
                 value = conditioning.digestion,
                 onValueChange = { onConditioningChange(conditioning.copy(digestion = it)) },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Digestion, bloating, high-salt meal, cramps, pump") },
+                label = { Text(language.t("Digestion, bloating, high-salt meal, cramps, pump", "消化、胀气、高盐餐、抽筋、泵感")) },
                 minLines = 2
             )
             OutlinedTextField(
                 value = conditioning.notes,
                 onValueChange = { onConditioningChange(conditioning.copy(notes = it)) },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Conditioning notes") },
+                label = { Text(language.t("Conditioning notes", "有氧与补水备注")) },
                 minLines = 2
             )
         }
@@ -2730,6 +3155,85 @@ private fun MealFlowCoachCard(
 }
 
 @Composable
+private fun QuickMealCaptureCard(
+    log: DailyLog,
+    language: AppLanguage,
+    mealDescription: String,
+    onMealDescriptionChange: (String) -> Unit,
+    onUseAiEstimate: () -> Unit,
+    onPickMealPhoto: (String) -> Unit,
+    onOpenAi: () -> Unit
+) {
+    val pacing = log.nutritionPacing()
+    val builder = log.nextMealBuilder()
+    val totals = log.nutritionTotals()
+    val targets = log.targets
+    SectionCard(
+        title = language.t("Quick meal capture", "快速记录餐食"),
+        subtitle = language.t(
+            "Take a photo or describe the meal; AI estimates calories, protein, carbs, and fat, then you confirm the log.",
+            "拍照或描述这餐；AI 估算热量、蛋白质、碳水和脂肪，然后你确认记录。"
+        )
+    ) {
+        MetricGrid(
+            metrics = listOf(
+                language.t("Calories left", "剩余热量") to formatRemainingLocalized(pacing.caloriesRemaining, "kcal", language),
+                language.t("Protein left", "剩余蛋白质") to formatRemainingLocalized(pacing.proteinRemaining, "g", language),
+                language.t("Carbs left", "剩余碳水") to formatRemainingLocalized(pacing.carbsRemaining, "g", language),
+                language.t("Fat left", "剩余脂肪") to formatRemainingLocalized(pacing.fatRemaining, "g", language)
+            )
+        )
+        LinearProgressIndicator(
+            progress = { pacing.adherenceScore / 100f },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = mealDescription,
+            onValueChange = onMealDescriptionChange,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(language.t("Describe meal", "描述这餐")) },
+            placeholder = {
+                Text(language.t("chicken rice bowl, sauce on side", "鸡肉米饭碗，酱汁另放"))
+            },
+            minLines = 2
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            ElevatedButton(
+                onClick = {
+                    onPickMealPhoto(
+                        "Food photo nutrition estimate. Describe meal: ${mealDescription.ifBlank { builder.title }}. Capture portion size, oil, sauce, label, menu, and bowl depth."
+                    )
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(language.t("Food photo", "食物照片"))
+            }
+            ElevatedButton(onClick = onOpenAi, modifier = Modifier.weight(1f)) {
+                Text(language.t("Ask AI", "询问 AI"))
+            }
+        }
+        Text(
+            text = language.t(
+                "AI estimate preview: ${builder.localizedTitle(language)} | ${builder.estimatedCalories()} kcal | P ${builder.proteinGrams} g | C ${builder.carbsGrams} g | F ${builder.fatGrams} g.",
+                "AI 估算预览：${builder.localizedTitle(language)} | ${builder.estimatedCalories()} kcal | 蛋白质 ${builder.proteinGrams} g | 碳水 ${builder.carbsGrams} g | 脂肪 ${builder.fatGrams} g。"
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Button(onClick = onUseAiEstimate, modifier = Modifier.fillMaxWidth()) {
+            Text(language.t("Use AI estimate", "采用 AI 估算"))
+        }
+        DataChipGrid(
+            items = listOf(
+                language.t("Photo or text -> AI estimate -> meal log", "照片或文字 -> AI 估算 -> 餐食记录"),
+                language.t("Daily remaining macros stay visible", "每日剩余宏量始终可见"),
+                language.t("Totals now ${totals.calories}/${targets.calories} kcal", "当前热量 ${totals.calories}/${targets.calories} kcal")
+            )
+        )
+    }
+}
+
+@Composable
 private fun MealAssemblyGuideCard(guide: MealAssemblyGuide, language: AppLanguage) {
     SectionCard(
         title = language.t("Meal Assembly Guide", "餐盘组合指南"),
@@ -2738,37 +3242,49 @@ private fun MealAssemblyGuideCard(guide: MealAssemblyGuide, language: AppLanguag
             "把宏量目标转成餐盘结构、采购提示、备餐提示和拍照记录提示。"
         )
     ) {
-        Text(guide.title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+        Text(guide.localizedTitle(language), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
         Text(
-            text = guide.plateStructure,
+            text = guide.localizedPlateStructure(language),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         DataChipGrid(
             items = listOf(
-                guide.proteinAnchor,
-                guide.carbAnchor,
-                guide.fatControl,
-                guide.fiberMicros
+                guide.localizedProteinAnchor(language),
+                guide.localizedCarbAnchor(language),
+                guide.localizedFatControl(language),
+                guide.localizedFiberMicros(language)
             )
         )
         Text(
-            text = language.t("Shopping: ${guide.shoppingCue}", "采购：${guide.shoppingCue}"),
+            text = language.t(
+                "Shopping: ${guide.localizedShoppingCue(language)}",
+                "采购：${guide.localizedShoppingCue(language)}"
+            ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = language.t("Prep: ${guide.prepCue}", "备餐：${guide.prepCue}"),
+            text = language.t(
+                "Prep: ${guide.localizedPrepCue(language)}",
+                "备餐：${guide.localizedPrepCue(language)}"
+            ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = language.t("Photo/logging: ${guide.photoLoggingCue}", "照片/记录：${guide.photoLoggingCue}"),
+            text = language.t(
+                "Photo/logging: ${guide.localizedPhotoLoggingCue(language)}",
+                "照片/记录：${guide.localizedPhotoLoggingCue(language)}"
+            ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = language.t("Avoid: ${guide.avoidCue}", "避免：${guide.avoidCue}"),
+            text = language.t(
+                "Avoid: ${guide.localizedAvoidCue(language)}",
+                "避免：${guide.localizedAvoidCue(language)}"
+            ),
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.SemiBold
         )
@@ -2780,8 +3296,8 @@ private fun BodyCompositionCard(guidance: BodyCompositionGuidance, subtitle: Str
     SectionCard(title = language.t("Body Composition Guidance", "身体组成指导"), subtitle = subtitle) {
         MetricGrid(
             metrics = listOf(
-                language.t("Status", "状态") to guidance.statusLabel,
-                language.t("Phase", "阶段") to guidance.phaseGoal,
+                language.t("Status", "状态") to guidance.localizedStatusLabel(language),
+                language.t("Phase", "阶段") to guidance.localizedPhaseGoal(language),
                 language.t("Weight trend", "体重趋势") to guidance.weightChangeKg.formatSignedHistoryValue("kg"),
                 language.t("Avg kcal", "平均热量") to guidance.averageCalories.formatHistoryValue("kcal"),
                 language.t("Avg protein", "平均蛋白") to guidance.averageProtein.formatHistoryValue("g"),
@@ -2791,12 +3307,15 @@ private fun BodyCompositionCard(guidance: BodyCompositionGuidance, subtitle: Str
             )
         )
         Text(
-            text = guidance.rationale,
+            text = guidance.localizedRationale(language),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold
         )
         Text(
-            text = language.t("Next action: ${guidance.nextAction}", "下一步：${guidance.nextAction}"),
+            text = language.t(
+                "Next action: ${guidance.localizedNextAction(language)}",
+                "下一步：${guidance.localizedNextAction(language)}"
+            ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -3062,7 +3581,60 @@ private fun recommendedPlanTemplateId(profile: AthleteProfile): String {
     }
 }
 
+private fun TrainingPlanTemplate.localizedTitle(language: AppLanguage): String {
+    return when (id) {
+        "beginner-full-body" -> language.t("3-Day Full Body", "三分化全身基础")
+        "four-day-hypertrophy" -> language.t("4-Day Upper/Lower", "四分化上下肢")
+        "physique-priority" -> language.t("5-Day Physique Priority", "五分化体型优先")
+        else -> title
+    }
+}
+
+private fun TrainingPlanTemplate.localizedSubtitle(language: AppLanguage): String {
+    return when (id) {
+        "beginner-full-body" -> language.t(
+            "Best when you want the simplest start: three repeatable full-body days.",
+            "适合最简单地开始：每周三天，全身动作稳定重复。"
+        )
+        "four-day-hypertrophy" -> language.t(
+            "The default recommendation for most lifters: upper/lower split with recoverable volume.",
+            "多数训练者的默认推荐：上下肢分化，训练量更容易恢复。"
+        )
+        "physique-priority" -> language.t(
+            "A bodybuilding-style split for more weekly days and weak-point emphasis.",
+            "更偏健美的分化：适合更多训练日和弱项优先。"
+        )
+        else -> subtitle
+    }
+}
+
+private fun TrainingPlanTemplate.localizedBestFor(language: AppLanguage): String {
+    return when (id) {
+        "beginner-full-body" -> language.t(
+            "new lifters, return-to-training, 3 days/wk",
+            "新手、恢复训练、每周 3 天"
+        )
+        "four-day-hypertrophy" -> language.t(
+            "most intermediate lifters, 4 days/wk",
+            "多数中级训练者、每周 4 天"
+        )
+        "physique-priority" -> language.t(
+            "bodybuilding weak points, 5 days/wk",
+            "健美弱项优先、每周 5 天"
+        )
+        else -> bestFor
+    }
+}
+
+private fun recommendedPlanReason(profile: AthleteProfile, template: TrainingPlanTemplate, language: AppLanguage): String {
+    return language.t(
+        "Recommended from your ${profile.weeklyTrainingDays} training days, experience, phase, equipment, recovery, and physique goal.",
+        "根据你的每周 ${profile.weeklyTrainingDays} 天训练、经验、阶段、器械、恢复和体型目标推荐。"
+    ) + " " + template.localizedBestFor(language)
+}
+
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 private fun PlanFlowCoachCard(
     state: CoachUiState,
     selectedDay: TrainingDay,
@@ -3085,6 +3657,7 @@ private fun PlanFlowCoachCard(
         profile.currentPhase.isNotBlank() &&
         profile.availableEquipment.isNotBlank() &&
         profile.weeklyTrainingDays in 1..7
+    val templates = trainingPlanTemplates()
     val recommendedTemplate = trainingPlanTemplates().firstOrNull { it.id == recommendedPlanTemplateId(profile) }
         ?: trainingPlanTemplates().first()
     val primaryTitle: String
@@ -3104,8 +3677,8 @@ private fun PlanFlowCoachCard(
         activeDays == 0 || plannedExercises == 0 -> {
             primaryTitle = language.t("Choose starter plan", "选择起始计划")
             primaryDetail = language.t(
-                "Use ${recommendedTemplate.title} as the first ready-to-train structure, then edit details only if needed.",
-                "先使用 ${recommendedTemplate.title} 作为可直接训练的结构；需要时再展开修改细节。"
+                "Use ${recommendedTemplate.localizedTitle(language)} as the first ready-to-train structure, then edit details only if needed.",
+                "先使用 ${recommendedTemplate.localizedTitle(language)} 作为可直接训练的结构；需要时再展开修改细节。"
             )
             primaryLabel = language.t("Use recommended template", "使用推荐模板")
             primaryAction = { onApplyTemplate(recommendedTemplate.id) }
@@ -3153,9 +3726,34 @@ private fun PlanFlowCoachCard(
                 language.t("Active days", "训练日") to activeDays.toString(),
                 language.t("Exercises", "动作") to plannedExercises.toString(),
                 language.t("Hard sets", "有效组") to weeklyHardSets.toString(),
+                language.t("Recommended split", "推荐分化") to recommendedTemplate.localizedTitle(language),
                 language.t("Selected", "当前日") to selectedDay.dayName,
                 language.t("Today", "今天") to if (todayLoaded) language.t("Loaded", "已载入") else language.t("Not loaded", "未载入")
             )
+        )
+        Text(
+            text = language.t("Recommended split", "推荐分化") + ": " + recommendedTemplate.localizedTitle(language),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = recommendedPlanReason(profile, recommendedTemplate, language),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            templates.forEach { template ->
+                FilterChip(
+                    selected = plan.name == template.plan.name,
+                    onClick = { onApplyTemplate(template.id) },
+                    label = { Text(template.localizedTitle(language)) }
+                )
+            }
+        }
+        Text(
+            text = recommendedTemplate.localizedSubtitle(language),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
             text = primaryTitle,
@@ -4305,9 +4903,9 @@ private fun TrainingPage(
             }
         }
         if (showProfessionalDetails) {
-            TrainingReadinessBuilderCard(builder = readinessBuilder)
-            WarmUpRampPlanCard(plan = rampPlan)
-            NextSetCoachCard(coach = nextSet)
+            TrainingReadinessBuilderCard(builder = readinessBuilder, language = language)
+            WarmUpRampPlanCard(plan = rampPlan, language = language)
+            NextSetCoachCard(coach = nextSet, language = language)
         }
         SectionCard(
             title = language.t("Training Execution", "训练记录"),
@@ -4391,9 +4989,10 @@ private fun TrainingPage(
             }
         }
 
-        SessionQualityDashboardCard(dashboard = qualityDashboard)
+        SessionQualityDashboardCard(dashboard = qualityDashboard, language = language)
         TrainingCloseoutCoachCard(
             coach = closeoutCoach,
+            language = language,
             isLoading = state.isLoading,
             onRunDailyReview = onRunDailyReview,
             onOpenPlan = onOpenPlan,
@@ -4497,7 +5096,7 @@ private fun TrainingPage(
 }
 
 @Composable
-private fun NextSetCoachCard(coach: NextSetCoach) {
+private fun NextSetCoachCard(coach: NextSetCoach, language: AppLanguage) {
     SectionCard(
         title = "Next Set Coach",
         subtitle = "Next set target, simple equipment/action diagram, and the decision cues to execute safely."
@@ -4550,7 +5149,7 @@ private fun NextSetCoachCard(coach: NextSetCoach) {
 }
 
 @Composable
-private fun WarmUpRampPlanCard(plan: WarmUpRampPlan) {
+private fun WarmUpRampPlanCard(plan: WarmUpRampPlan, language: AppLanguage) {
     SectionCard(
         title = "Warm-up Ramp Plan",
         subtitle = "Turn readiness and the next set target into exact warm-up and ramp-up sets before the first working set."
@@ -4680,7 +5279,7 @@ private fun NextSetVisualGuide(spec: ExerciseVisualSpec) {
 }
 
 @Composable
-private fun SessionQualityDashboardCard(dashboard: SessionQualityDashboard) {
+private fun SessionQualityDashboardCard(dashboard: SessionQualityDashboard, language: AppLanguage) {
     SectionCard(
         title = "Session Quality Dashboard",
         subtitle = "Track completion, logging quality, RIR, muscle capacity, and risk before AI changes the plan."
@@ -4725,6 +5324,7 @@ private fun SessionQualityDashboardCard(dashboard: SessionQualityDashboard) {
 @Composable
 private fun TrainingCloseoutCoachCard(
     coach: TrainingCloseoutCoach,
+    language: AppLanguage,
     isLoading: Boolean,
     onRunDailyReview: () -> Unit,
     onOpenPlan: () -> Unit,
@@ -4856,7 +5456,7 @@ private fun TrainingCloseoutCoachCard(
 }
 
 @Composable
-private fun TrainingReadinessBuilderCard(builder: TrainingReadinessBuilder) {
+private fun TrainingReadinessBuilderCard(builder: TrainingReadinessBuilder, language: AppLanguage) {
     SectionCard(
         title = "Training Readiness Builder",
         subtitle = "Warm up, choose the first working set, adjust volume, and know when to stop before logging sets."
@@ -4936,9 +5536,9 @@ private fun ExerciseExecutionCard(
                     language.t("Default RIR", "默认 RIR") to (exercise.rir?.let { formatDecimal(it) } ?: "--")
                 )
             )
-            ExerciseHistoryCard(summary = exercise.exerciseHistorySummary(currentLog, recentLogs))
-            ProgressionCueCard(cue = exercise.progressionCue())
-            ExerciseSubstitutionCard(guide = exercise.exerciseSubstitutionGuide(profile))
+            ExerciseHistoryCard(summary = exercise.exerciseHistorySummary(currentLog, recentLogs), language = language)
+            ProgressionCueCard(cue = exercise.progressionCue(), language = language)
+            ExerciseSubstitutionCard(guide = exercise.exerciseSubstitutionGuide(profile), language = language)
             exercise.trackedSets().forEachIndexed { setIndex, set ->
                 if (setIndex > 0) HorizontalDivider()
                 SetRow(
@@ -4955,7 +5555,7 @@ private fun ExerciseExecutionCard(
 }
 
 @Composable
-private fun ExerciseHistoryCard(summary: ExerciseHistorySummary) {
+private fun ExerciseHistoryCard(summary: ExerciseHistorySummary, language: AppLanguage) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -4998,7 +5598,7 @@ private fun ExerciseHistoryCard(summary: ExerciseHistorySummary) {
 }
 
 @Composable
-private fun ProgressionCueCard(cue: ProgressionCue) {
+private fun ProgressionCueCard(cue: ProgressionCue, language: AppLanguage) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -5018,7 +5618,7 @@ private fun ProgressionCueCard(cue: ProgressionCue) {
 }
 
 @Composable
-private fun ExerciseSubstitutionCard(guide: ExerciseSubstitutionGuide) {
+private fun ExerciseSubstitutionCard(guide: ExerciseSubstitutionGuide, language: AppLanguage) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -5265,6 +5865,7 @@ private fun NutritionPage(
     var fat by remember { mutableStateOf("") }
     var fiber by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
+    var mealDescription by remember { mutableStateOf("") }
     var showNutritionDetails by remember { mutableStateOf(false) }
     val totals = state.dailyLog.nutritionTotals()
     val prefillMeal: (NextMealBuilder) -> Unit = { builder ->
@@ -5288,6 +5889,30 @@ private fun NutritionPage(
             onToggleDetails = { showNutritionDetails = !showNutritionDetails },
             onPrefillMeal = prefillMeal,
             onAddMealTemplate = onAddMealTemplate,
+            onPickMealPhoto = onPickMealPhoto,
+            onOpenAi = onOpenAi
+        )
+        QuickMealCaptureCard(
+            log = state.dailyLog,
+            language = language,
+            mealDescription = mealDescription,
+            onMealDescriptionChange = { mealDescription = it },
+            onUseAiEstimate = {
+                val builder = state.dailyLog.nextMealBuilder()
+                onAddMeal(
+                    mealDescription.ifBlank { builder.localizedTitle(language) },
+                    builder.estimatedCalories(),
+                    builder.proteinGrams.toDouble(),
+                    builder.carbsGrams.toDouble(),
+                    builder.fatGrams.toDouble(),
+                    builder.fiberGrams.toDouble(),
+                    language.t(
+                        "AI estimate from quick capture. Confirm portion, oil, sauce, label, and plate size when possible.",
+                        "快速记录的 AI 估算。方便时确认份量、油、酱汁、标签和餐盘大小。"
+                    )
+                )
+                mealDescription = ""
+            },
             onPickMealPhoto = onPickMealPhoto,
             onOpenAi = onOpenAi
         )
@@ -5362,70 +5987,72 @@ private fun NutritionPage(
             }
         }
 
-        SectionCard(
-            title = language.t("Add Meal", "添加餐食"),
-            subtitle = language.t(
-                "Use the coach prefill, then adjust macros manually or attach food photos for portion and label analysis.",
-                "先使用教练预填，再手动调整宏量；份量或标签不确定时添加照片。"
-            )
-        ) {
-            OutlinedTextField(
-                value = mealName,
-                onValueChange = { mealName = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(language.t("Meal", "餐食")) },
-                singleLine = true
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                NumberField(value = calories, onChange = { calories = it }, label = "kcal", modifier = Modifier.weight(1f))
-                DecimalField(value = protein, onChange = { protein = it }, label = language.t("Protein", "蛋白质"), modifier = Modifier.weight(1f))
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DecimalField(value = carbs, onChange = { carbs = it }, label = language.t("Carbs", "碳水"), modifier = Modifier.weight(1f))
-                DecimalField(value = fat, onChange = { fat = it }, label = language.t("Fat", "脂肪"), modifier = Modifier.weight(1f))
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DecimalField(value = fiber, onChange = { fiber = it }, label = language.t("Fiber", "纤维"), modifier = Modifier.weight(1f))
-                ElevatedButton(
-                    onClick = {
-                        onPickMealPhoto(
-                            "meal photo for portion estimate. Meal field: ${mealName.ifBlank { "not named" }}. Notes: ${notes.ifBlank { "none" }}"
-                        )
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(language.t("Meal photo", "餐食照片"))
-                }
-            }
-            OutlinedTextField(
-                value = notes,
-                onValueChange = { notes = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(language.t("Food source, portion, oils, label, uncertainty", "食物来源、份量、油脂、标签、不确定点")) },
-                minLines = 2
-            )
-            Button(
-                onClick = {
-                    onAddMeal(
-                        mealName,
-                        calories.toIntOrNull() ?: 0,
-                        protein.toDoubleOrNull() ?: 0.0,
-                        carbs.toDoubleOrNull() ?: 0.0,
-                        fat.toDoubleOrNull() ?: 0.0,
-                        fiber.toDoubleOrNull() ?: 0.0,
-                        notes
-                    )
-                    mealName = ""
-                    calories = ""
-                    protein = ""
-                    carbs = ""
-                    fat = ""
-                    fiber = ""
-                    notes = ""
-                },
-                modifier = Modifier.fillMaxWidth()
+        if (showNutritionDetails) {
+            SectionCard(
+                title = language.t("Manual macro edit", "手动宏量编辑"),
+                subtitle = language.t(
+                    "Use this when you weighed the food or want to correct an AI estimate.",
+                    "称重后或需要修正 AI 估算时，再使用这里。"
+                )
             ) {
-                Text(language.t("Add meal", "添加餐食"))
+                OutlinedTextField(
+                    value = mealName,
+                    onValueChange = { mealName = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(language.t("Meal", "餐食")) },
+                    singleLine = true
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    NumberField(value = calories, onChange = { calories = it }, label = "kcal", modifier = Modifier.weight(1f))
+                    DecimalField(value = protein, onChange = { protein = it }, label = language.t("Protein", "蛋白质"), modifier = Modifier.weight(1f))
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DecimalField(value = carbs, onChange = { carbs = it }, label = language.t("Carbs", "碳水"), modifier = Modifier.weight(1f))
+                    DecimalField(value = fat, onChange = { fat = it }, label = language.t("Fat", "脂肪"), modifier = Modifier.weight(1f))
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DecimalField(value = fiber, onChange = { fiber = it }, label = language.t("Fiber", "纤维"), modifier = Modifier.weight(1f))
+                    ElevatedButton(
+                        onClick = {
+                            onPickMealPhoto(
+                                "meal photo for portion estimate. Meal field: ${mealName.ifBlank { "not named" }}. Notes: ${notes.ifBlank { "none" }}"
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(language.t("Meal photo", "餐食照片"))
+                    }
+                }
+                OutlinedTextField(
+                    value = notes,
+                    onValueChange = { notes = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(language.t("Food source, portion, oils, label, uncertainty", "食物来源、份量、油脂、标签、不确定点")) },
+                    minLines = 2
+                )
+                Button(
+                    onClick = {
+                        onAddMeal(
+                            mealName,
+                            calories.toIntOrNull() ?: 0,
+                            protein.toDoubleOrNull() ?: 0.0,
+                            carbs.toDoubleOrNull() ?: 0.0,
+                            fat.toDoubleOrNull() ?: 0.0,
+                            fiber.toDoubleOrNull() ?: 0.0,
+                            notes
+                        )
+                        mealName = ""
+                        calories = ""
+                        protein = ""
+                        carbs = ""
+                        fat = ""
+                        fiber = ""
+                        notes = ""
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(language.t("Add meal", "添加餐食"))
+                }
             }
         }
 
@@ -5487,32 +6114,32 @@ private fun MetricsFlowCoachCard(
     val primaryAction: () -> Unit
     when {
         state.isHealthSyncing -> {
-            primaryTitle = language.t("Syncing health data", "正在同步健康数据")
+            primaryTitle = language.t("Refreshing health data", "正在刷新健康数据")
             primaryDetail = language.t(
-                "Wait for Health Connect to finish, then review any missing body or recovery fields.",
-                "等待 Health Connect 完成同步，然后检查是否还缺身体或恢复字段。"
+                "The app is pulling the latest Health Connect body, sleep, steps, heart-rate, and calorie records.",
+                "App 正在拉取最新 Health Connect 身体、睡眠、步数、心率和消耗记录。"
             )
-            primaryLabel = language.t("Syncing", "同步中")
+            primaryLabel = language.t("Refreshing", "刷新中")
             primaryEnabled = false
             primaryAction = {}
         }
         !snapshot.permissionsGranted -> {
             primaryTitle = language.t("Connect health data", "连接健康数据")
             primaryDetail = language.t(
-                "Authorize Health Connect when available; use manual entry for Xiaomi, Huawei, scale, watch, or phone data that is not exposed yet.",
-                "可用时授权 Health Connect；小米、华为、体脂秤、手表或手机数据尚未开放时用手动记录补齐。"
+                "Authorize once. After that, the app refreshes available Health Connect data on open; Xiaomi, Huawei, scale, watch, or phone data can flow in when their source app writes compatible records.",
+                "授权一次即可。之后 App 打开时会自动刷新可用的 Health Connect 数据；小米、华为、体脂秤、手表或手机数据只要来源 App 写入兼容记录，就可以进入分析。"
             )
             primaryLabel = language.t("Connect health data", "连接健康数据")
             primaryEnabled = true
             primaryAction = onConnectHealthData
         }
         metrics.healthSyncedAt.isBlank() -> {
-            primaryTitle = language.t("Sync today's metrics", "同步今天身体数据")
+            primaryTitle = language.t("Auto health refresh ready", "健康数据自动刷新就绪")
             primaryDetail = language.t(
-                "Pull weight, body fat, steps, sleep, resting heart rate, and calorie burn before AI reviews the day.",
-                "在 AI 复盘前拉取体重、体脂、步数、睡眠、静息心率和消耗热量。"
+                "Health data refreshes on app open after permission. Tap refresh only when you want to pull weight, body fat, sleep, steps, resting HR, and calorie burn again before AI review.",
+                "授权后，App 打开时会自动刷新健康数据。只有在 AI 复盘前想重新拉取体重、体脂、睡眠、步数、静息心率和消耗热量时，才需要手动刷新。"
             )
-            primaryLabel = language.t("Sync today", "同步今天")
+            primaryLabel = language.t("Refresh now", "立即刷新")
             primaryEnabled = true
             primaryAction = onSyncHealthData
         }
@@ -5550,14 +6177,14 @@ private fun MetricsFlowCoachCard(
     SectionCard(
         title = language.t("Metrics Flow Coach", "身体数据流程教练"),
         subtitle = language.t(
-            "Sync health data, fill the minimum body check-in, and keep recovery evidence ready for AI.",
-            "同步健康数据，补齐最小身体记录，并让恢复证据可用于 AI。"
+            "Auto-refresh health and sleep data, fill the minimum body check-in, and keep recovery evidence ready for AI.",
+            "自动刷新健康与睡眠数据，补齐最小身体记录，并让恢复证据可用于 AI。"
         )
     ) {
         MetricGrid(
             metrics = listOf(
                 language.t("Health", "健康") to when {
-                    state.isHealthSyncing -> language.t("Syncing", "同步中")
+                    state.isHealthSyncing -> language.t("Refreshing", "刷新中")
                     snapshot.permissionsGranted -> language.t("Authorized", "已授权")
                     snapshot.available -> language.t("Needs access", "需要授权")
                     else -> language.t("Manual", "手动")
@@ -5595,7 +6222,7 @@ private fun MetricsFlowCoachCard(
                 )
             }
             TextButton(onClick = onSyncHealthData, enabled = !state.isHealthSyncing, modifier = Modifier.weight(1f)) {
-                Text(language.t("Sync", "同步"))
+                Text(language.t("Refresh", "刷新"))
             }
             TextButton(onClick = onPickPhysiquePhoto, modifier = Modifier.weight(1f)) {
                 Text(language.t("Photo", "照片"))
@@ -5604,6 +6231,7 @@ private fun MetricsFlowCoachCard(
         DataChipGrid(
             items = listOf(
                 language.t("Health Connect or manual fallback", "Health Connect 或手动补录"),
+                language.t("Auto refresh on app open after permission", "授权后打开 App 自动刷新"),
                 language.t("Weight, waist, sleep, steps, HR", "体重、腰围、睡眠、步数、心率"),
                 language.t("Progress photo linked to measurements", "体型照片联动围度"),
                 if (showDetails) {
@@ -5898,6 +6526,10 @@ private fun HealthSnapshot.localizedMessage(language: AppLanguage): String {
             "Health Connect permissions granted. Sync today's metrics next.",
             "Health Connect 权限已授权。下一步同步今天的身体数据。"
         )
+        message == "Health Connect permissions granted. Automatic daily refresh is ready." -> language.t(
+            "Health Connect permissions granted. Automatic daily refresh is ready.",
+            "Health Connect 权限已授权。每日自动刷新已就绪。"
+        )
         message == "Some Health Connect permissions were not granted; manual metrics still work." -> language.t(
             "Some Health Connect permissions were not granted; manual metrics still work.",
             "部分 Health Connect 权限未授权；仍可手动记录身体数据。"
@@ -5941,8 +6573,8 @@ private fun HealthConnectCard(
     SectionCard(
         title = language.t("Health Connect", "健康数据连接"),
         subtitle = language.t(
-            "Read user-authorized body and recovery records from Health Connect, then feed them into daily AI review.",
-            "读取用户授权的身体与恢复记录，并纳入每日 AI 复盘。"
+            "After permission, refresh user-authorized body, sleep, and recovery records on app open, then feed them into daily AI review.",
+            "授权后，打开 App 时刷新用户授权的身体、睡眠与恢复记录，并纳入每日 AI 复盘。"
         )
     ) {
         MetricGrid(
@@ -5965,6 +6597,7 @@ private fun HealthConnectCard(
                 "Xiaomi/Mi Fitness -> Health Connect",
                 "Huawei Health -> Health Connect or Health Kit",
                 "Scale/watch/phone -> Health Connect",
+                language.t("Auto refresh on app open", "打开 App 自动刷新"),
                 language.t("Manual fallback", "手动补录")
             )
         )

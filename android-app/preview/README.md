@@ -13,10 +13,10 @@ The preview mirrors the current Android app structure:
 - Daily detail layers that keep setup, checklist, evidence, trend, and tomorrow planning available without crowding the first screen
 - Start Here / 从这里开始 detail loop with training plan, training execution, food, metrics, and AI review steps
 - Android structure parity for `AppLanguage`, `updateLanguage`, `DailyStartStep`, `StartHereCoachCard`, and `StartHereStepRow`
-- Training zone plan entry with `Plan Flow Coach`, `NEXT PLAN ACTION`, `Apply today`, template and training shortcuts, and selected-day visual-map readiness before weekly-plan editing layers
+- Training zone plan entry with `Plan Flow Coach`, `NEXT PLAN ACTION`, `Apply today`, `Recommended split`, 3/4/5-day split choices, template and training shortcuts, and selected-day visual-map readiness before weekly-plan editing layers
 - One-tap Training preview with `Workout Flow Coach`, `one-tap-hero`, `Complete set + start rest`, lightweight `action-shortcuts`, and an exercise image slot before the professional analysis layers
-- One-tap Nutrition preview with `Meal Flow Coach`, `NEXT MEAL ACTION`, `Prefill next meal`, food-photo and template shortcuts, and an AI nutrition review path before the nutrition analysis layers
-- One-tap Metrics preview with `Metrics Flow Coach`, `NEXT METRICS ACTION`, `Sync today`, progress-photo shortcut, and AI review path before body-data analysis layers
+- One-tap Nutrition preview with `Meal Flow Coach`, `NEXT MEAL ACTION`, food photo, `Describe meal`, `Use AI estimate`, a remaining macro summary, and an AI nutrition review path before the nutrition analysis layers
+- One-tap Metrics preview with `Metrics Flow Coach`, `NEXT METRICS ACTION`, `Auto health refresh ready`, `Refresh now`, progress-photo shortcut, sleep data, and AI review path before body-data analysis layers
 - One-tap AI review preview with `AI Review Flow Coach`, `NEXT AI REVIEW ACTION`, `Run daily review`, photo and mode shortcuts, and the AI evidence bundle before setup or data-map details
 - AI Setup & Review Readiness with API key, base URL, model, photo context, missing setup, and AI review ready states
 - Daily Execution Plan for priority focus, primary action, data quality gate, AI review gate, and plan adjustment signal
