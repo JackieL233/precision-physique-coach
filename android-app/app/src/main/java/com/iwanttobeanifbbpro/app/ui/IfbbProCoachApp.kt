@@ -5065,6 +5065,81 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawExerciseVisual(
 }
 
 @Composable
+private fun TodayReadinessGateCard(
+    log: DailyLog,
+    readinessBuilder: TrainingReadinessBuilder,
+    nextSet: NextSetCoach,
+    restPrescription: AiRestPrescription,
+    language: AppLanguage
+) {
+    val pacing = log.nutritionPacing()
+    val decision = when (readinessBuilder.statusLabel) {
+        "Ready to execute" -> language.t("Push carefully", "谨慎推进")
+        "Hold before pushing" -> language.t("Hold today", "今天保持")
+        "Reduce session stress" -> language.t("Reduce volume", "降低容量")
+        else -> language.t("Recover first", "先恢复")
+    }
+    val fuelGate = when {
+        pacing.carbsRemaining > 60 -> language.t("Carbs available", "碳水可用")
+        pacing.proteinRemaining > 30 -> language.t("Protein behind", "蛋白质落后")
+        pacing.caloriesRemaining < -150 -> language.t("Over target", "热量已超")
+        log.meals.isEmpty() -> language.t("Log food first", "先记录饮食")
+        else -> language.t("Fuel acceptable", "供能可接受")
+    }
+    val rirGate = nextSet.plannedRir?.let { "RIR ${formatDecimal(it)}" } ?: language.t("Log RIR", "记录 RIR")
+    val restGate = if (restPrescription.recommendedRestSeconds > 0) {
+        "${restPrescription.recommendedRestSeconds}s"
+    } else {
+        "--"
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, IfbbProGlassBorder),
+        color = IfbbProGlassStrongSurface
+    ) {
+        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
+            Text(
+                text = language.t("Today Readiness Gate", "今日准备闸门"),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = language.t(
+                    "Push / Hold / Reduce / Recover: decide before the first hard set, then let AI compare the result after training.",
+                    "推进 / 保持 / 减量 / 恢复：先在第一组正式组前做决定，训练后再让 AI 对照结果。"
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            MetricGrid(
+                metrics = listOf(
+                    language.t("Training decision", "训练决策") to decision,
+                    language.t("Fuel gate", "供能闸门") to fuelGate,
+                    language.t("RIR gate", "RIR 闸门") to rirGate,
+                    language.t("Rest gate", "休息闸门") to restGate
+                )
+            )
+            Text(
+                text = readinessBuilder.recoveryGate,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            DataChipGrid(
+                items = listOf(
+                    language.t("today readiness gate", "今日准备闸门"),
+                    language.t("push hold reduce recover", "推进 保持 减量 恢复"),
+                    language.t("Sleep + HR + soreness + RIR", "睡眠 + 心率 + 酸痛 + RIR"),
+                    language.t("warm-up decides first working set", "热身决定第一组正式组"),
+                    language.t("fuel before load progression", "加重量前先看供能")
+                )
+            )
+        }
+    }
+}
+
+@Composable
 private fun WorkoutFlowCoachCard(
     log: DailyLog,
     readinessBuilder: TrainingReadinessBuilder,
@@ -5156,6 +5231,13 @@ private fun WorkoutFlowCoachCard(
             "首屏训练路径：载入计划、热身、记录下一组、休息、收尾，然后运行 AI 复盘。"
         )
     ) {
+        TodayReadinessGateCard(
+            log = log,
+            readinessBuilder = readinessBuilder,
+            nextSet = nextSet,
+            restPrescription = restPrescription,
+            language = language
+        )
         MetricGrid(
             metrics = listOf(
                 language.t("Step", "步骤") to stepLabel,
